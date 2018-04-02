@@ -1,8 +1,3 @@
 <resources>
     <string name="app_name">Productify</string>
-    <string name= "assign">Assignments</string>
-    <string name= "newAssign">Create New Assignment</string>
-    <string name="assignName">Assignment Name</string>
-    <string name="assignDate">Due Date</string>
-    <string name="assignLength">Total Anticipated Length</string>
 </resources>
