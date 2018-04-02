@@ -16,7 +16,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Assignment"></activity>
+        <activity android:name=".Assignment" />
+        <activity android:name=".ExistingAssignmentsToday"></activity>
     </application>
 
 </manifest>
