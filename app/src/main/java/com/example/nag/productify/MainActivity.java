@@ -8,14 +8,10 @@ import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button assign;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        assign = (Button) findViewById(R.id.makeAssignBut);
-
     }
 
     public void assignNew (View view)
@@ -23,7 +19,5 @@ public class MainActivity extends AppCompatActivity {
         Intent assign = new Intent(MainActivity.this, Assignment.class);
         startActivity(assign);
     }
-
-
 
 }

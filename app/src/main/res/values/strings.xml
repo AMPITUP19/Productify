@@ -15,4 +15,7 @@
     <string name="sun">Sunday</string>
     <string name="create">Create Assignment</string>
     <string name="view">View Existing Assignments</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
 </resources>
