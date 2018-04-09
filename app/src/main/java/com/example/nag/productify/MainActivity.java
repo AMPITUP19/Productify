@@ -55,9 +55,9 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
 {
 
     GoogleAccountCredential mCredential;
-    private TextView mOutputText;
-    private Button mCallApiButton;
-    private Button signoutButton;
+    Button integrateCalendarBut;
+    TextView outputText;
+
     ProgressDialog mProgress;
 
     static final int REQUEST_ACCOUNT_PICKER = 1000;
@@ -78,52 +78,31 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        LinearLayout activityLayout = new LinearLayout(this);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT);
-        activityLayout.setLayoutParams(lp);
-        activityLayout.setOrientation(LinearLayout.VERTICAL);
-        activityLayout.setPadding(16, 16, 16, 16);
+        setContentView(R.layout.activity_main);
 
-        ViewGroup.LayoutParams tlp = new ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
+        integrateCalendarBut = (Button) findViewById(R.id.integrateCalendarBut);
 
-
-        mCallApiButton = new Button(this);
-        mCallApiButton.setText(BUTTON_TEXT);
-        mCallApiButton.setOnClickListener(new View.OnClickListener() {
+        integrateCalendarBut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-              mCallApiButton.setEnabled(false);
-                mOutputText.setText("");
+                integrateCalendarBut.setEnabled(false);
+                integrateCalendarBut.setText("");
                 getResultsFromApi();
-                mCallApiButton.setEnabled(true);
+                integrateCalendarBut.setEnabled(true);
             }
         });
-        activityLayout.addView(mCallApiButton);
 
-        mOutputText = new TextView(this);
-        mOutputText.setLayoutParams(tlp);
-        mOutputText.setPadding(16, 16, 16, 16);
-        mOutputText.setVerticalScrollBarEnabled(true);
-        mOutputText.setMovementMethod(new ScrollingMovementMethod());
-        mOutputText.setText(
-                "Click the \'" + BUTTON_TEXT +"\' button to test the API.");
-        activityLayout.addView(mOutputText);
+
+        outputText = (TextView) findViewById(R.id.outputText);
 
         mProgress = new ProgressDialog(this);
         mProgress.setMessage("Calling Google Calendar API ...");
-
-        setContentView(activityLayout);
 
         // Initialize credentials and service object.
         mCredential = GoogleAccountCredential.usingOAuth2(
                 getApplicationContext(), Arrays.asList(SCOPES))
                 .setBackOff(new ExponentialBackOff());
     }
-
 
     /**
      * Attempt to call the API, after verifying that all the preconditions are
@@ -138,7 +117,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         } else if (mCredential.getSelectedAccountName() == null) {
             chooseAccount();
         } else if (! isDeviceOnline()) {
-            mOutputText.setText("No network connection available.");
+            outputText.setText("No network connection available.");
         } else {
             new MakeRequestTask(mCredential).execute();
         }
@@ -196,7 +175,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         switch(requestCode) {
             case REQUEST_GOOGLE_PLAY_SERVICES:
                 if (resultCode != RESULT_OK) {
-                    mOutputText.setText(
+                    outputText.setText(
                             "This app requires Google Play Services. Please install " +
                                     "Google Play Services on your device and relaunch this app.");
                 } else {
@@ -388,7 +367,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
 
         @Override
         protected void onPreExecute() {
-            mOutputText.setText("");
+            outputText.setText("");
             mProgress.show();
         }
 
@@ -396,10 +375,10 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         protected void onPostExecute(List<String> output) {
             mProgress.hide();
             if (output == null || output.size() == 0) {
-                mOutputText.setText("No results returned.");
+                outputText.setText("No results returned.");
             } else {
                 output.add(0, "Data retrieved using the Google Calendar API:");
-                mOutputText.setText(TextUtils.join("\n", output));
+                outputText.setText(TextUtils.join("\n", output));
             }
         }
 
@@ -416,11 +395,11 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                             ((UserRecoverableAuthIOException) mLastError).getIntent(),
                             MainActivity.REQUEST_AUTHORIZATION);
                 } else {
-                    mOutputText.setText("The following error occurred:\n"
+                    outputText.setText("The following error occurred:\n"
                             + mLastError.getMessage());
                 }
             } else {
-                mOutputText.setText("Request cancelled.");
+                outputText.setText("Request cancelled.");
             }
         }
     }
