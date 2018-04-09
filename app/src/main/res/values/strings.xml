@@ -5,7 +5,7 @@
     <string name="assignName">Assignment Name</string>
     <string name="assignDate">Due Date</string>
     <string name="assignLength">Total Anticipated Length</string>
-    <string name="assignDays">Days of the Week to Work</string>
+    <string name="assignDays">Days of the Week to Work:</string>
     <string name="mon">Monday</string>
     <string name="tues">Tuesday</string>
     <string name="wed">Wednesday</string>
