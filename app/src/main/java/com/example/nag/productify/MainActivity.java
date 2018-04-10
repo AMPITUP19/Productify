@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
 {
 
     GoogleAccountCredential mCredential;
-    Button integrateCalendarBut;
+    Button integrateCalendarBut, newAssignBut, calendarBut, existBut;
     TextView outputText;
 
     ProgressDialog mProgress;
@@ -80,6 +80,9 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        newAssignBut = (Button) findViewById(R.id.newAssignBut);
+        existBut = (Button) findViewById(R.id.existBut);
+        calendarBut = (Button) findViewById(R.id.calendarBut);
         integrateCalendarBut = (Button) findViewById(R.id.integrateCalendarBut);
 
         integrateCalendarBut.setOnClickListener(new View.OnClickListener() {
@@ -121,6 +124,24 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         } else {
             new MakeRequestTask(mCredential).execute();
         }
+    }
+
+    public void newAssign (View view)
+    {
+        Intent assign = new Intent (MainActivity.this,Assignment.class);
+        startActivity(assign);
+    }
+
+    public void exist(View view)
+    {
+        Intent exist = new Intent (MainActivity.this,ExistingAssignmentsToday.class);
+        startActivity(exist);
+    }
+
+    public void goToCalendar (View view)
+    {
+        Intent calendar = new Intent (MainActivity.this,Calendar.class);
+        startActivity(calendar);
     }
 
     /**
