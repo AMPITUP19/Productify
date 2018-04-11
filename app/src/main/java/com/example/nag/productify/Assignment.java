@@ -19,13 +19,13 @@ public class Assignment extends AppCompatActivity {
         viewBut = (Button) findViewById(R.id.viewBut);
     }
 
-    public void goCreate (View view)
+    public void goToPreview (View view)
     {
-        Intent create = new Intent (Assignment.this, AssignmentsPreview.class);
-        startActivity(create);
+        Intent prev = new Intent (Assignment.this, AssignmentsPreview.class);
+        startActivity(prev);
     }
 
-    public void goExist (View view)
+    public void goToExist (View view)
     {
         Intent exist  = new Intent (Assignment.this, ExistingAssignmentsToday.class);
         startActivity(exist);

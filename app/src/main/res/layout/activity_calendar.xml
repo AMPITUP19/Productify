@@ -8,4 +8,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
+    <Button
+        android:id="@+id/returnHomeBut"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="goHome"
+        android:text="@string/returnHome"
+        android:textColor="#000000"
+        android:textSize="30sp" />
+
 </LinearLayout>
