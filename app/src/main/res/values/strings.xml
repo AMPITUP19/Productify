@@ -27,4 +27,7 @@
     <string name="accesscalendar">Access Calendar</string>
     <string name="timesToWorkText"> Times To Work </string>
     <string name="preview">Preview</string>
+    <string name="startDateText">Start Date</string>
+    <string name="endDateText">Due Date</string>
+    <string name="tableTop">Year Month Day Hour Minute</string>
 </resources>
