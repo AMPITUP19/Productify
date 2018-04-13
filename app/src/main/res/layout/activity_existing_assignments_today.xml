@@ -193,7 +193,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:onClick="goToHome"
-        android:text="@string/returnHome"
+        android:text="returnHomeBut"
         android:textColor="#000000"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
