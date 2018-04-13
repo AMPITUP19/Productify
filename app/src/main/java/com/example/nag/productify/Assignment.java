@@ -35,6 +35,8 @@ public class Assignment extends AppCompatActivity {
         CheckBox sat = findViewById(R.id.checkSat);
         CheckBox sun = findViewById(R.id.checkSun);
 
+        //Hello
+
     }
 
     public void goToPreview (View view)
