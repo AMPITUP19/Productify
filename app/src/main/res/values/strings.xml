@@ -27,7 +27,7 @@
     <string name="accesscalendar">Access Calendar</string>
     <string name="timesToWorkText"> Times To Work </string>
     <string name="preview">Preview</string>
-    <string name="returnHome"> Return to the Home Screen</string>
+    <string name="returnHomeBut"> Return to the Home Screen</string>
     <string name="existing">Existing </string>
     <string name="upcoming">Upcoming </string>
     <string name="sampleTodayDate">Today: March 11, 2018 </string>
@@ -44,4 +44,6 @@
     <string name="sampleWorkTime2">March 7th: 1PM - 3PM (50%)</string>
     <string name="sampleWorkTime3">March 9th: 7PM - 9PM (75%)</string>
     <string name="sampleWorkTime4">March 10th: 4PM - 6PM (100%)</string>
+    <string name="homeBut">Home</string>
+
 </resources>
