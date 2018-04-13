@@ -11,6 +11,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.w3c.dom.Text;
+
 public class AssignmentsPreview extends AppCompatActivity {
 
     Button confirmBut, editBut, cancelBut;
@@ -26,6 +28,8 @@ public class AssignmentsPreview extends AppCompatActivity {
         confirmBut = (Button) findViewById(R.id.confirmBut);
         editBut = (Button) findViewById(R.id.editBut);
         cancelBut = (Button) findViewById(R.id.cancelBut);
+
+        String home = findViewById(R.id.heading);
 
     }
 
