@@ -11,6 +11,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.w3c.dom.Text;
+
 public class AssignmentsPreview extends AppCompatActivity {
 
     Button confirmBut, editBut, cancelBut;
@@ -27,6 +29,15 @@ public class AssignmentsPreview extends AppCompatActivity {
         editBut = (Button) findViewById(R.id.editBut);
         cancelBut = (Button) findViewById(R.id.cancelBut);
 
+        TextView heading = findViewById(R.id.heading);
+        TextView previewText = findViewById(R.id.previewText);
+        TextView assignmentName = findViewById(R.id.assignmentName);
+        TextView dueDateText = findViewById(R.id.dueDateText);
+        TextView timeWorkHeading = findViewById(R.id.timeWorkHeading);
+        TextView date1text = findViewById(R.id.date1text);
+        TextView date2text = findViewById(R.id.date2text);
+        TextView date3text = findViewById(R.id.date3text);
+        TextView date4text = findViewById(R.id.date4text);
     }
 
     private void showToast (String text)
