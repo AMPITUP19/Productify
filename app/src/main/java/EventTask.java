@@ -2,16 +2,17 @@ import android.annotation.TargetApi;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.TimeZone;
 
 @TargetApi(26)
 
 /**
- * An Event object will store the start-date, end-date, name, and estimated duration of an assignment. Hours are in military time.
+ * An EventTask object will store the start-date, end-date, name, and estimated duration of an assignment. Hours are in military time.
  * @author NAG
  *
  */
-public class Event {
+public class EventTask {
 
 	private int startYear;
 	private int startMonth;
@@ -42,7 +43,7 @@ public class Event {
 	/*
 	 * An empty constructor for an Event object.
 	 */
-	public Event()
+	public EventTask()
 	{
 		startYear = 1;
 		startMonth = 1;
@@ -75,7 +76,7 @@ public class Event {
 	/*
 	 * An Event object;
 	 */
-	public Event(int sy, int sm, int sd, int sh, int smin, int ey, int em, int ed, int eh, int emin, String nm, double pred)
+	public EventTask(int sy, int sm, int sd, int sh, int smin, int ey, int em, int ed, int eh, int emin, String nm, double pred)
 	{
 		startYear = sy;
 		startMonth = sm;
@@ -342,9 +343,6 @@ public class Event {
 		return makeLDET();
 	}
 
-	// ---------------OTHER METHODS---------------
-
-
 	// ---------------HELPER METHODS---------------
 
 	/**
@@ -446,6 +444,7 @@ public class Event {
 		LocalDateTime LDET = LocalDateTime.parse(infoString, timeFormat);
 		return LDET;
 	}
+
 
 	/* Use in future to take time zones into account
 	public ZonedDateTime getZDST()
