@@ -3,7 +3,7 @@
     <string name= "assign">Assignments</string>
     <string name="assignName">Assignment Name</string>
     <string name="assignDate">Due Date</string>
-    <string name="assignLength">Total Anticipated Length</string>
+    <string name="assignLength">Total Anticipated Length in Hours</string>
     <string name="assignDays">Days of the Week to Work:</string>
     <string name="mon">Monday</string>
     <string name="tues">Tuesday</string>
@@ -44,4 +44,10 @@
     <string name="sampleWorkTime2">March 7th: 1PM - 3PM (50%)</string>
     <string name="sampleWorkTime3">March 9th: 7PM - 9PM (75%)</string>
     <string name="sampleWorkTime4">March 10th: 4PM - 6PM (100%)</string>
+    <string name="assignYear">Year</string>
+    <string name="assignMonth">Month</string>
+    <string name="assignDay">Day</string>
+    <string name="assignHour">Hour (0-24)</string>
+    <string name="assignMinute">Minute</string>
+    <string name="start">Start Date</string>
 </resources>

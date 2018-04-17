@@ -68,18 +68,153 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="@string/newAssign"
+            android:hint="@string/assignName"
             android:inputType="text"
             android:textSize="30sp" />
 
-        <EditText
-            android:id="@+id/assignmentDueDate"
+        <TextView
+            android:id="@+id/startDateText"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:ems="10"
-            android:hint="@string/assignDate"
-            android:inputType="datetime|date|time"
-            android:textSize="30sp" />
+            android:layout_height="wrap_content"
+            android:text="@string/start"
+            android:textAlignment="center"
+            android:textColor="#000000"
+            android:textSize="35sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/assignmentStartYear"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="@string/assignYear"
+                android:inputType="datetime|date|time"
+                android:textSize="30sp" />
+
+            <EditText
+                android:id="@+id/assignmentStartMonth"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="@string/assignMonth"
+                android:inputType="datetime|date|time"
+                android:textSize="30sp" />
+
+            <EditText
+                android:id="@+id/assignmentStartDay"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="@string/assignDay"
+                android:inputType="datetime|date|time"
+                android:textSize="30sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/assignmentStartHour"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="@string/assignHour"
+                android:inputType="datetime|date|time"
+                android:textSize="30sp" />
+
+            <EditText
+                android:id="@+id/assignmentStartMinute"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="@string/assignMinute"
+                android:inputType="datetime|date|time"
+                android:textSize="30sp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/dueDateText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/assignDate"
+            android:textSize="35sp"
+            android:textColor="#000000"
+            android:textAlignment="center"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/assignmentDueYear"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="@string/assignYear"
+                android:inputType="datetime|date|time"
+                android:textSize="30sp" />
+
+            <EditText
+                android:id="@+id/assignmentDueMonth"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="@string/assignMonth"
+                android:inputType="datetime|date|time"
+                android:textSize="30sp" />
+
+            <EditText
+                android:id="@+id/assignmentDueDay"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="@string/assignDay"
+                android:inputType="datetime|date|time"
+                android:textSize="30sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/assignmentDueHour"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="@string/assignHour"
+                android:inputType="datetime|date|time"
+                android:textSize="30sp" />
+
+            <EditText
+                android:id="@+id/assignmentDueMinute"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="@string/assignMinute"
+                android:inputType="datetime|date|time"
+                android:textSize="30sp" />
+        </LinearLayout>
 
         <EditText
             android:id="@+id/assignmentLength"
@@ -99,53 +234,72 @@
             android:textColor="#000000"
             android:textSize="35sp" />
 
-        <CheckBox
-            android:id="@+id/checkMon"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/mon"
-            android:textSize="30sp" />
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
 
-        <CheckBox
-            android:id="@+id/checkTues"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/tues"
-            android:textSize="30sp" />
+            <CheckBox
+                android:id="@+id/checkMon"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/mon"
+                android:textSize="25sp" />
 
-        <CheckBox
-            android:id="@+id/checkWed"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/wed"
-            android:textSize="30sp" />
+            <CheckBox
+                android:id="@+id/checkTues"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/tues"
+                android:textSize="25sp" />
 
-        <CheckBox
-            android:id="@+id/checkThurs"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/thurs"
-            android:textSize="30sp" />
+        </LinearLayout>
 
-        <CheckBox
-            android:id="@+id/checkFri"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/fri"
-            android:textSize="30sp" />
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
 
-        <CheckBox
-            android:id="@+id/checkSat"
+            <CheckBox
+                android:id="@+id/checkWed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/wed"
+                android:textSize="25sp" />
+
+            <CheckBox
+                android:id="@+id/checkThurs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/thurs"
+                android:textSize="25sp" />
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/sat"
-            android:textSize="30sp" />
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <CheckBox
+                android:id="@+id/checkFri"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/fri"
+                android:textSize="25sp" />
+
+            <CheckBox
+                android:id="@+id/checkSat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/sat"
+                android:textSize="25sp" />
+        </LinearLayout>
 
         <CheckBox
             android:id="@+id/checkSun"
@@ -153,29 +307,35 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/sun"
-            android:textSize="30sp" />
+            android:textSize="25sp" />
 
-        <Button
-            android:id="@+id/createBut"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:onClick="goToPreview"
-            android:text="@string/create"
-            android:textAlignment="center"
-            android:textColor="#000000"
-            android:textSize="30sp" />
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/viewBut"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:onClick="goToExist"
-            android:text="@string/view"
-            android:textAlignment="center"
-            android:textColor="#000000"
-            android:textSize="30sp" />
+            <Button
+                android:id="@+id/createBut"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="goToPreview"
+                android:text="@string/create"
+                android:textAlignment="center"
+                android:textColor="#000000"
+                android:textSize="30sp" />
+
+            <Button
+                android:id="@+id/viewBut"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="goToExist"
+                android:text="@string/view"
+                android:textAlignment="center"
+                android:textColor="#000000"
+                android:textSize="30sp" />
+        </LinearLayout>
 
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>
