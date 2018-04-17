@@ -1,3 +1,5 @@
+package com.example.nag.productify;
+
 import android.annotation.TargetApi;
 
 import java.time.*;
@@ -8,7 +10,7 @@ import java.util.TimeZone;
 @TargetApi(26)
 
 /**
- * An EventTask object will store the start-date, end-date, name, and estimated duration of an assignment. Hours are in military time.
+ * An com.example.nag.productify.EventTask object will store the start-date, end-date, name, and estimated duration of an assignment. Hours are in military time.
  * @author NAG
  *
  */

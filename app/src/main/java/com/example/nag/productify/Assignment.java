@@ -97,8 +97,11 @@ public class Assignment extends AppCompatActivity {
 
                 double predicted = Double.parseDouble(assignmentLength.getText().toString());
 
-                //Event event  =  new Event(syear, smonth, sday, shour, sminute, dyear, dmonth,
-                  //      dday, dhour, dminute, name, predicted);
+                EventTask event  =  new EventTask (syear, smonth, sday, shour, sminute, dyear, dmonth,
+                        dday, dhour, dminute, name, predicted);
+
+                Intent intent = new Intent (Assignment.this, AssignmentsPreview.class);
+
             }
             else
             {
