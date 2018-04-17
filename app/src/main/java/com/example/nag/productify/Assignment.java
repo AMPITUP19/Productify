@@ -50,7 +50,6 @@ public class Assignment extends AppCompatActivity {
         Intent exist  = new Intent (Assignment.this, ExistingAssignmentsToday.class);
         startActivity(exist);
     }
-
-    public void
+    
 
 }

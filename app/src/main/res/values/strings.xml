@@ -45,5 +45,7 @@
     <string name="sampleWorkTime3">March 9th: 7PM - 9PM (75%)</string>
     <string name="sampleWorkTime4">March 10th: 4PM - 6PM (100%)</string>
     <string name="homeBut">Home</string>
+    <string name="heading">Home</string>
+
 
 </resources>
