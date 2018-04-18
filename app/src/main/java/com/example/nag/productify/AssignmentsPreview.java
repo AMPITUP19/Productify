@@ -24,7 +24,6 @@ public class AssignmentsPreview extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_assignments_preview);
 
-
         confirmBut = (Button) findViewById(R.id.confirmBut);
         editBut = (Button) findViewById(R.id.editBut);
         cancelBut = (Button) findViewById(R.id.cancelBut);
