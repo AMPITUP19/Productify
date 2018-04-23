@@ -17,6 +17,6 @@
         android:text="@string/returnHome"
         android:textColor="#000000"
         android:textSize="30sp"
-        tools:text="@string/returnHomeBut" />
+        tools:text="@string/returnHome" />
 
 </LinearLayout>
