@@ -18,7 +18,6 @@ import java.util.TimeZone;
 /**
  * An com.example.nag.productify.EventTask object will store the start-date, end-date, name, and estimated duration of an assignment. Hours are in military time.
  * @author NAG
- *
  */
 public class EventTask {
 
