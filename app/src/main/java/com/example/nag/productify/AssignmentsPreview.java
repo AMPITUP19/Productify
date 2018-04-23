@@ -2,16 +2,11 @@ package com.example.nag.productify;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import org.w3c.dom.Text;
 
 public class AssignmentsPreview extends AppCompatActivity {
 
@@ -46,8 +41,8 @@ public class AssignmentsPreview extends AppCompatActivity {
 
     public void goConfirm (View view)
     {
-        Intent confirm =  new Intent (AssignmentsPreview.this, Calendar.class);
-        showToast("Your Assignment Has Been Added to the Calendar.");
+        Intent confirm =  new Intent (AssignmentsPreview.this, CalendarScreen.class);
+        showToast("Your Assignment Has Been Added to the CalendarScreen.");
         startActivity(confirm);
     }
 

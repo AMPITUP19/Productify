@@ -29,7 +29,7 @@
             android:name=".AssignmentsPreview"
             android:label="Producitfy" />
         <activity
-            android:name=".Calendar"
+            android:name=".CalendarScreen"
             android:label="Productify" />
         <activity
             android:name=".ExistingAssignmentsToday"

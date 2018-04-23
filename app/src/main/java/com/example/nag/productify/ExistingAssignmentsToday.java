@@ -27,7 +27,7 @@ public class ExistingAssignmentsToday extends AppCompatActivity {
 
     public void goToCalendar (View view)
     {
-        Intent cal = new Intent (ExistingAssignmentsToday.this, Calendar.class);
+        Intent cal = new Intent (ExistingAssignmentsToday.this, CalendarScreen.class);
         startActivity(cal);
     }
 }
