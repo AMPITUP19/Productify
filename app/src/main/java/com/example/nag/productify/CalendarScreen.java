@@ -8,9 +8,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CalendarView;
 
-import com.google.api.services.calendar.model.CalendarListEntry;
+import java.util.Calendar;
 
-public class Calendar extends AppCompatActivity {
+public class CalendarScreen extends AppCompatActivity {
 
     Button returnHomeBut;
     CalendarView mCalendarView;
@@ -28,17 +28,23 @@ public class Calendar extends AppCompatActivity {
                 //i is year
                 //i1 is month where January is 0
                 //i2 is day
-
+                mCalendarView.getDate();
                 int month = i1+1;
                 int day = i2;
                 int year  = i;
 
-               Intent intent  = new Intent (Calendar.this,Date.class );
-               intent.putExtra("month", month);
-               intent.putExtra("day", day);
-               intent.putExtra("year", year);
-               startActivity(intent);
+                Calendar c = Calendar.getInstance();
+                c.set(year, month, day);
 
+                int dayofweek = c.get(Calendar.DAY_OF_WEEK);
+                Intent intent  = new Intent (CalendarScreen.this,Date.class );
+                intent.putExtra("month", month);
+                intent.putExtra("day", day);
+                intent.putExtra("year", year);
+                intent.putExtra("dayofweek", dayofweek);
+                startActivity(intent);
+
+               //day of the week?
             }
         });
 
@@ -46,7 +52,7 @@ public class Calendar extends AppCompatActivity {
 
     public void goHome(View view)
     {
-        Intent home = new Intent (Calendar.this, MainActivity.class);
+        Intent home = new Intent (CalendarScreen.this, MainActivity.class);
         startActivity(home);
     }
 }
