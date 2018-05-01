@@ -7,10 +7,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import java.io.Serializable;
 
 public class AssignmentsPreview extends AppCompatActivity {
 
     Button confirmBut, editBut, cancelBut;
+
 
 
 
@@ -32,6 +34,8 @@ public class AssignmentsPreview extends AppCompatActivity {
         TextView date2text = findViewById(R.id.date2text);
         TextView date3text = findViewById(R.id.date3text);
         TextView date4text = findViewById(R.id.date4text);
+
+        EventTask event = (EventTask) getIntent().getExtras().getSerializable("event");
     }
 
     private void showToast (String text)

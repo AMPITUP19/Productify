@@ -201,7 +201,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.881"
-        tools:text="@string/homeBut" />
+        tools:text="@string/returnHome" />
 
     <Button
         android:id="@+id/calendarBut2"

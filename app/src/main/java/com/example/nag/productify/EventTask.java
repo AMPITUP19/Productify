@@ -11,6 +11,7 @@ import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.FreeBusyRequest;
 import com.google.api.services.calendar.model.FreeBusyResponse;
 
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.*;
@@ -25,7 +26,7 @@ import java.util.TimeZone;
  * An com.example.nag.productify.EventTask object will store the start-date, end-date, name, and estimated duration of an assignment. Hours are in military time.
  * @author NAG
  */
-public class EventTask {
+public class EventTask implements Serializable{
 
 	private int startYear;
 	private int startMonth;

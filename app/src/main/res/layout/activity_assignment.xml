@@ -93,7 +93,7 @@
                 android:layout_weight="1"
                 android:ems="10"
                 android:hint="@string/assignYear"
-                android:inputType="datetime|date|time"
+                android:inputType="number"
                 android:textSize="30sp" />
 
             <EditText
@@ -103,7 +103,7 @@
                 android:layout_weight="1"
                 android:ems="10"
                 android:hint="@string/assignMonth"
-                android:inputType="datetime|date|time"
+                android:inputType="number"
                 android:textSize="30sp" />
 
             <EditText
@@ -113,7 +113,7 @@
                 android:layout_weight="1"
                 android:ems="10"
                 android:hint="@string/assignDay"
-                android:inputType="datetime|date|time"
+                android:inputType="number"
                 android:textSize="30sp" />
 
         </LinearLayout>
@@ -130,7 +130,7 @@
                 android:layout_weight="1"
                 android:ems="10"
                 android:hint="@string/assignHour"
-                android:inputType="datetime|date|time"
+                android:inputType="number"
                 android:textSize="30sp" />
 
             <EditText
@@ -140,7 +140,7 @@
                 android:layout_weight="1"
                 android:ems="10"
                 android:hint="@string/assignMinute"
-                android:inputType="datetime|date|time"
+                android:inputType="number"
                 android:textSize="30sp" />
         </LinearLayout>
 
@@ -165,7 +165,7 @@
                 android:layout_weight="1"
                 android:ems="10"
                 android:hint="@string/assignYear"
-                android:inputType="datetime|date|time"
+                android:inputType="number"
                 android:textSize="30sp" />
 
             <EditText
@@ -175,7 +175,7 @@
                 android:layout_weight="1"
                 android:ems="10"
                 android:hint="@string/assignMonth"
-                android:inputType="datetime|date|time"
+                android:inputType="number"
                 android:textSize="30sp" />
 
             <EditText
@@ -185,7 +185,7 @@
                 android:layout_weight="1"
                 android:ems="10"
                 android:hint="@string/assignDay"
-                android:inputType="datetime|date|time"
+                android:inputType="number"
                 android:textSize="30sp" />
 
         </LinearLayout>
@@ -202,7 +202,7 @@
                 android:layout_weight="1"
                 android:ems="10"
                 android:hint="@string/assignHour"
-                android:inputType="datetime|date|time"
+                android:inputType="number"
                 android:textSize="30sp" />
 
             <EditText
@@ -212,7 +212,7 @@
                 android:layout_weight="1"
                 android:ems="10"
                 android:hint="@string/assignMinute"
-                android:inputType="datetime|date|time"
+                android:inputType="number"
                 android:textSize="30sp" />
         </LinearLayout>
 

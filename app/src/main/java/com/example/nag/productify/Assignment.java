@@ -1,5 +1,7 @@
 package com.example.nag.productify;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.app.usage.UsageEvents;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +17,8 @@ import android.widget.Toast;
 import com.google.api.services.calendar.model.Event;
 
 import org.w3c.dom.Text;
+
+import java.util.Calendar;
 
 public class Assignment extends AppCompatActivity {
 
@@ -101,6 +105,24 @@ public class Assignment extends AppCompatActivity {
 
                 Intent intent = new Intent (Assignment.this, AssignmentsPreview.class);
 
+                Calendar calendar = Calendar.getInstance();
+
+                calendar.set(Calendar.HOUR_OF_DAY,dhour );
+                calendar.set(Calendar.MINUTE,dminute);
+                calendar.set(Calendar.DAY_OF_MONTH,dday);
+                calendar.set(Calendar.MONTH,dmonth);
+                calendar.set(Calendar.YEAR,dyear);
+
+                Intent intent1 =  new Intent(getApplicationContext(),NotificationReceiver.class);
+
+                PendingIntent pendingIntent =  PendingIntent.getBroadcast(getApplicationContext(), 100, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),AlarmManager.INTERVAL_DAY, pendingIntent);
+
+                intent.putExtra("event", event);
+
+                startActivity(intent);
             }
             else
             {
