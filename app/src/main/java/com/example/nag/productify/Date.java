@@ -14,16 +14,19 @@ public class Date extends AppCompatActivity {
         setContentView(R.layout.activity_date);
 
         Bundle bundle = getIntent().getExtras();
-        int month  = bundle.getInt("month");
+        String month  = bundle.getString("month");
         int year  = bundle.getInt("year");
         int day = bundle.getInt("day");
-        int dayofweek = bundle.getInt("dayofweek");
+        String dayofweek = bundle.getString("dayofweek");
 
         currentDayText = findViewById(R.id.currentDayText);
         currentMonthText = findViewById(R.id.currentMonthText);
         currentYearText = findViewById(R.id.currentYearText);
         dayOfWeekText = findViewById(R.id.dayOfWeekText);
 
-        currentDayText.setText();
+        currentDayText.setText(""+day);
+        currentMonthText.setText(month);
+        currentYearText.setText(""+year);
+        dayOfWeekText.setText(dayofweek);
     }
 }
