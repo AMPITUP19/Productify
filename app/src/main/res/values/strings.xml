@@ -52,5 +52,7 @@
     <string name="start">Start Date</string>
     <string name="heading">Home</string>
     <string name="signOutBut">Sign out</string>
+    <string name="dayofweek">Day of Week</string>
+
 
 </resources>

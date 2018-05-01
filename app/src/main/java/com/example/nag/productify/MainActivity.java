@@ -5,6 +5,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException;
@@ -46,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
 {
 
     GoogleAccountCredential mCredential;
-    Button integrateCalendarBut, newAssignBut, calendarBut, existBut;
+    Button integrateCalendarBut, newAssignBut, calendarBut, existBut, signOutBut;
     TextView outputText;
 
     ProgressDialog mProgress;
@@ -75,6 +77,18 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         existBut = (Button) findViewById(R.id.existBut);
         calendarBut = (Button) findViewById(R.id.calendarBut);
         integrateCalendarBut = (Button) findViewById(R.id.integrateCalendarBut);
+        signOutBut = (Button) findViewById(R.id.signOutBut);
+
+
+      /*private void signOut()
+        {
+            mCredential.signOut().addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            // ...
+                        }
+                    });
+        }*/
 
         integrateCalendarBut.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,7 +99,17 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                 integrateCalendarBut.setEnabled(true);
             }
         });
-
+        
+        /*@Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                // ...
+                case R.id.signOutBut:
+                    signOut();
+                    break;
+                // ...
+            }
+        }*/
 
         outputText = (TextView) findViewById(R.id.outputText);
 
