@@ -1,9 +1,15 @@
 package com.example.nag.productify;
 
+import android.accounts.Account;
 import android.annotation.TargetApi;
+import android.content.Intent;
 
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.util.DateTime;
+import com.google.api.services.calendar.Calendar;
+import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.FreeBusyRequest;
+import com.google.api.services.calendar.model.FreeBusyResponse;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -33,11 +39,19 @@ public class EventTask {
 	private int endHour;
 	private int endMinute;
 
+	private Boolean mon;
+	private Boolean tues;
+	private Boolean wed;
+	private Boolean thurs;
+	private Boolean fri;
+	private Boolean sat;
+	private Boolean sund;
+
 	private String name;
 	private double predictedTime;
 
-	private DateTime ldst;
-	private DateTime ldet;
+	private DateTime dst;
+	private DateTime det;
 
 	/* Use later to take time zones into account
 	private TimeZone tz;
@@ -64,11 +78,19 @@ public class EventTask {
 		endHour = 2;
 		endMinute = 2;
 
+		mon = true;
+		tues = true;
+		wed = true;
+		thurs = true;
+		fri = true;
+		sat = true;
+		sund = true;
+
 		name = "Unset";
 		predictedTime = 0;
 
-		ldst = makeLDST();
-		ldet = makeLDET();
+		dst = makeDST();
+		det = makeDET();
 
 		/* Use later to take time zones into account
 		tz = TimeZone.getDefault();
@@ -83,7 +105,7 @@ public class EventTask {
 	/*
 	 * An com.example.nag.productify.EventTask object;
 	 */
-	public EventTask(int sy, int sm, int sd, int sh, int smin, int ey, int em, int ed, int eh, int emin, String nm, double pred)
+	public EventTask(int sy, int sm, int sd, int sh, int smin, int ey, int em, int ed, int eh, int emin, String nm, double pred, Boolean mo, Boolean tu, Boolean we, Boolean th, Boolean fr, Boolean sa, Boolean su)
 	{
 		startYear = sy;
 		startMonth = sm;
@@ -97,11 +119,19 @@ public class EventTask {
 		endHour = eh;
 		endMinute = emin;
 
+		mon = mo;
+		tues = tu;
+		wed = we;
+		thurs = th;
+		fri = fr;
+		sat = sa;
+		sund = su;
+
 		name = nm;
 		predictedTime = pred;
 
-		ldst = makeLDST();
-		ldet = makeLDET();
+		dst = makeDST();
+		det = makeDET();
 
 		/* Use in future to take time zones into account
 		tz = TimeZone.getDefault();
@@ -202,6 +232,69 @@ public class EventTask {
 	public void setEMIN(int emin)
 	{
 		endMinute = emin;
+	}
+
+	/**
+	 * Determines if Monday is an available day
+	 * @param monday if true, means that Monday is available for working, if false, means that Monday is not available
+	 */
+	public void setMon(Boolean monday)
+	{
+		mon = monday;
+	}
+
+	/**
+	 * Determines if Tuesday is an available day
+	 * @param tuesday if true, means that Tuesday is available for working, if false, means that Tuesday is not available
+	 */
+	public void setTues(Boolean tuesday)
+	{
+		tues = tuesday;
+	}
+
+	/**
+	 * Determines if Wednesday is an available day
+	 * @param wednesday if true, means that Wednesday is available for working, if false, means that Wednesday is not available
+	 */
+	public void setWed(Boolean wednesday)
+	{
+		wed = wednesday;
+	}
+
+	/**
+	 * Determines if Thursday is an available day
+	 * @param thursday if true, means that Thursday is available for working, if false, means that Thursday is not available
+	 */
+	public void setThurs(Boolean thursday)
+	{
+		thurs = thursday;
+	}
+
+	/**
+	 * Determines if Friday is an available day
+	 * @param friday if true, means that Friday is available for working, if false, means that Friday is not available
+	 */
+	public void setFri(Boolean friday)
+	{
+		fri = friday;
+	}
+
+	/**
+	 * Determines if Saturday is an available day
+	 * @param saturday if true, means that Saturday is available for working, if false, means that Saturday is not available
+	 */
+	public void setSat(Boolean saturday)
+	{
+		sat = saturday;
+	}
+
+	/**
+	 * Determines if Sunday is an available day
+	 * @param sunday if true, means that Sunday is available for working, if false, means that Sunday is not available
+	 */
+	public void setSund(Boolean sunday)
+	{
+		sund = sunday;
 	}
 
 	/**
@@ -315,6 +408,68 @@ public class EventTask {
 	}
 
 	/**
+	 * Gets the user's availability for Monday
+	 * @return the availability of Monday
+	 */
+	public Boolean getMon()
+	{
+		return mon;
+	}
+
+	/**
+	 * Gets the user's availability for Tuesday
+	 * @return the availability of Tuesday
+	 */
+	public Boolean getTues()
+	{
+		return tues;
+	}
+
+	/**
+	 * Gets the user's availability for Wednesday
+	 * @return the availability of Wednesday
+	 */
+	public Boolean getWed()
+	{
+		return wed;
+	}
+
+	/**
+	 * Gets the user's availability for Thursday
+	 * @return the availability of Thursday
+	 */
+	public Boolean getThurs()
+	{
+		return thurs;
+	}
+
+	/**
+	 * Gets the user's availability for Friday
+	 * @return the availability of Friday
+	 */
+	public Boolean getFri()
+	{
+		return fri;
+	}
+
+	/**
+	 * Gets the user's availability for Saturday
+	 * @return the availability of Saturday
+	 */
+	public Boolean getSat()
+	{
+		return sat;
+	}
+
+	/**
+	 * Gets the user's availability for Sunday
+	 * @return the availability of Sunday
+	 */
+	public Boolean getSund()
+	{
+		return sund;
+	}
+	/**
 	 * Gets the assignment's name
 	 * @return name of the com.example.nag.productify.EventTask
 	 */
@@ -336,28 +491,53 @@ public class EventTask {
 	 * Returns the assignment's start-date as a DateTime
 	 * @return the start-date of the com.example.nag.productify.EventTask
 	 */
-	public DateTime getLDST()
+	public DateTime getDST()
 	{
-		return makeLDST();
+		return makeDST();
 	}
 
 	/**
 	 * Returns the assignment's end-date as a DateTime
 	 * @return the end-date of the com.example.nag.productify.EventTask
 	 */
-	public DateTime getLDET()
+	public DateTime getDET()
 	{
-		return makeLDET();
+		return makeDET();
 	}
 
 	// ---------------FUNCTIONAL METHODS---------------
 
-	/*(public String checkIfFree(DateTime startTimeCheck, DateTime endTimeCheck)
+	public void createEvents(GoogleAccountCredential mCredential, DateTime start, DateTime end)
+	{
+		ArrayList<Event> dailyEvents = new ArrayList<Event>();
+		int freeDays = 10; // Hardcoded momentarily, will need to be calculated
+		int scheduledDays = 10; //Hardcoded momentarily, will need to be calculated
+
+		for(int i = 0; i < scheduledDays; i++)
+		{
+			Event event = new Event();
+			event.setSummary(name + "Assignment " + i + 1);
+
+
+			dailyEvents.add(event);
+		}
+		Account calendarId = mCredential.getSelectedAccount();
+
+
+	}
+	/*public String checkIfFree(DateTime startTimeCheck, DateTime endTimeCheck)
 	{
 		FreeBusyRequest req = new FreeBusyRequest();
 		req.setTimeMin(startTimeCheck);
 		req.setTimeMax(endTimeCheck);
+
+		Calendar.Freebusy.Query fbquery = client.freebusy().query(req);
+
+		FreeBusyResponse fbresponse = fbquery.execute();
+
 	}*/
+
+
 
 	// ---------------HELPER METHODS---------------
 
@@ -441,25 +621,25 @@ public class EventTask {
 	 * Creates a DateTime object for the assignment's start-date
 	 * @return the start-date of the com.example.nag.productify.EventTask
 	 */
-	private DateTime makeLDST()
+	private DateTime makeDST()
 	{
 		String infoString = makeInfoStringStart();
 		//DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
-		DateTime LDST = DateTime.parseRfc3339(infoString);
-		return LDST;
+		DateTime DST = DateTime.parseRfc3339(infoString);
+		return DST;
 	}
 
 	/**
 	 * Creates a DateTime object for the assignment's end-date
 	 * @return the end-date of the com.example.nag.productify.EventTask
 	 */
-	private DateTime makeLDET()
+	private DateTime makeDET()
 	{
 		String infoString = makeInfoStringEnd();
 		// DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-		DateTime LDET = DateTime.parseRfc3339(infoString);
-		return LDET;
+		DateTime DET = DateTime.parseRfc3339(infoString);
+		return DET;
 	}
 
 
@@ -477,5 +657,5 @@ public class EventTask {
 
 
 
-	
+
 }
