@@ -19,7 +19,6 @@ import com.google.api.client.util.ExponentialBackOff;
 
 import com.google.api.services.calendar.CalendarScopes;
 import com.google.api.client.util.DateTime;
-
 import com.google.api.services.calendar.model.*;
 
 import android.Manifest;
@@ -120,6 +119,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         mCredential = GoogleAccountCredential.usingOAuth2(
                 getApplicationContext(), Arrays.asList(SCOPES))
                 .setBackOff(new ExponentialBackOff());
+
     }
 
     /**
