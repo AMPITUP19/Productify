@@ -50,6 +50,9 @@
     <string name="assignHour">Hour (0-24)</string>
     <string name="assignMinute">Minute</string>
     <string name="start">Start Date</string>
-    <string name="heading">Heading</string>
-    <string name="dayofweek">D.O.W</string>
+    <string name="heading">Home</string>
+    <string name="signOutBut">Sign out</string>
+    <string name="dayofweek">Day of Week</string>
+
+
 </resources>

@@ -7,6 +7,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.google.api.services.calendar.Calendar;
+import com.google.api.services.calendar.model.Event;
+import com.google.api.services.calendar.model.Events;
+
+import java.util.List;
+
 
 public class AssignmentsPreview extends AppCompatActivity {
 
@@ -14,11 +20,11 @@ public class AssignmentsPreview extends AppCompatActivity {
 
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_assignments_preview);
-
 
         confirmBut = (Button) findViewById(R.id.confirmBut);
         editBut = (Button) findViewById(R.id.editBut);
@@ -33,6 +39,8 @@ public class AssignmentsPreview extends AppCompatActivity {
         TextView date2text = findViewById(R.id.date2text);
         TextView date3text = findViewById(R.id.date3text);
         TextView date4text = findViewById(R.id.date4text);
+
+        EventTask event1 = (EventTask) getIntent().getExtras().getSerializable("event");
     }
 
     private void showToast (String text)
