@@ -557,10 +557,10 @@ public class EventTask {
 
 		if(startDay < 10)
 		{
-			infoString += "0" + startDay + " ";
+			infoString += "0" + startDay + "T";
 		}
 		else
-			infoString += startDay + " ";
+			infoString += startDay + "T";
 
 		if(startHour < 10)
 		{
@@ -571,10 +571,10 @@ public class EventTask {
 
 		if(startMinute < 10)
 		{
-			infoString += "0" + startMinute;
+			infoString += "0" + startMinute + ":00.00Z";
 		}
 		else
-			infoString += startMinute;
+			infoString += startMinute + ":00.00Z";
 
 		return infoString;
 	}
@@ -595,10 +595,10 @@ public class EventTask {
 
 		if(endDay < 10)
 		{
-			infoString += "0" + endDay + " ";
+			infoString += "0" + endDay + "T";
 		}
 		else
-			infoString += endDay + " ";
+			infoString += endDay + "T";
 
 		if(endHour < 10)
 		{
@@ -609,10 +609,10 @@ public class EventTask {
 
 		if(endMinute < 10)
 		{
-			infoString += "0" + endMinute;
+			infoString += "0" + endMinute + ":00.00Z";
 		}
 		else
-			infoString += endMinute;
+			infoString += endMinute + ":00.00Z";
 
 		return infoString;
 	}
@@ -624,7 +624,7 @@ public class EventTask {
 	private DateTime makeDST()
 	{
 		String infoString = makeInfoStringStart();
-		//DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+		DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
 		DateTime DST = DateTime.parseRfc3339(infoString);
 		return DST;
