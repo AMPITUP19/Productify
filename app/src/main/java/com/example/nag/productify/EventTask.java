@@ -9,15 +9,18 @@ import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.EventDateTime;
+import com.google.api.services.calendar.model.EventReminder;
 import com.google.api.services.calendar.model.FreeBusyRequest;
 import com.google.api.services.calendar.model.FreeBusyResponse;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -511,11 +514,9 @@ public class EventTask implements Serializable{
 
 	/**
 	 * Puts events into the Google Calendar.
-	 * @param mCredential the user's Google account
 	 */
-	public void createEvents(GoogleAccountCredential mCredential) {
+	public ArrayList<String> createEvents() throws IOException {
 
-        ArrayList<Event> dailyEvents = new ArrayList<Event>();
         int scheduledDays = getDaysBetween();
         double eventLength = predictedTime / ((double) scheduledDays);
 
@@ -523,61 +524,74 @@ public class EventTask implements Serializable{
         int minuteLength = (int) (eventLength - ((int) eventLength)) * 60;
 
         for (int j = getSY(); j <= getEY(); j++) {
-            int year = j;
 
+            int year = j;
             for (int k = getSM(); k <= getEM(); k++) {
+
                 int month = k;
 
                 for (int d = getSD() + 1; d < getED(); d++) {
+
                     int day = d;
 
-                    LocalDateTime checkDate = LocalDateTime.of(year, month, day, 0,0);
+                    LocalDateTime checkDate = LocalDateTime.of(year, month, day, 0, 0);
                     String dayOfWeek = checkDate.getDayOfWeek().toString();
 
-                    if(!mon && dayOfWeek == "MONDAY")
-                    {
+                    if (!mon && dayOfWeek == "MONDAY") {
 
-                    }
-                    else if(!tues && dayOfWeek == "TUESDAY")
-                    {
+                    } else if (!tues && dayOfWeek == "TUESDAY") {
 
-                    }
-                    else if(!wed && dayOfWeek == "WEDNESDAY")
-                    {
+                    } else if (!wed && dayOfWeek == "WEDNESDAY") {
 
-                    }
-                    else if(!thurs && dayOfWeek == "THURSDAY")
-                    {
+                    } else if (!thurs && dayOfWeek == "THURSDAY") {
 
-                    }
-                    else if(!fri && dayOfWeek == "FRIDAY")
-                    {
+                    } else if (!fri && dayOfWeek == "FRIDAY") {
 
-                    }
-                    else if(!sat && dayOfWeek == "SATURDAY")
-                    {
+                    } else if (!sat && dayOfWeek == "SATURDAY") {
 
-                    }
-                    else if(!sund && dayOfWeek == "SUNDAY")
-                    {
+                    } else if (!sund && dayOfWeek == "SUNDAY") {
 
-                    }
-                    else {
+                    } else {
                         DateTime beginTime = createDateTime(year, month, day, 0, 0);
                         DateTime endTime = createDateTime(year, month, day, hourLength, minuteLength);
 
                         Event event = new Event();
                         event.setSummary(name + "Assignment: " + month + "/" + day + "/" + year);
-                        dailyEvents.add(event);
+
+                        EventDateTime start = new EventDateTime();
+                        start.setDateTime(beginTime);
+                        start.setTimeZone("America/New_York");
+                        event.setStart(start);
+
+                        EventDateTime finish = new EventDateTime();
+                        finish.setDateTime(endTime);
+                        finish.setTimeZone("America/New York");
+                        event.setEnd(finish);
+
+                        EventReminder[] reminderOverrides = new EventReminder[]{
+                                new EventReminder().setMethod("email").setMinutes(24 * 60),
+                                new EventReminder().setMethod("popup").setMinutes(10),
+                        };
+
+                        Event.Reminders reminders = new Event.Reminders()
+                                .setUseDefault(false)
+                                .setOverrides(Arrays.asList(reminderOverrides));
+                        event.setReminders(reminders);
+
+                        Event events = mService.events().insert("primary", event)
+                                .execute();
+
+                        ArrayList<String> items = new ArrayList<>();
+
+                        String eventObj = events.getSummary().toString();
+
+                        items.add(eventObj);
+
                     }
                 }
             }
         }
-
-		Account calendarId = mCredential.getSelectedAccount();
-
-
-	}
+    }
 
 	/**
 	 * Calculates the number of days from the state date to the end date
@@ -649,7 +663,7 @@ public class EventTask implements Serializable{
 	 * Creates a string containing the information of the assignment's start date
 	 * @return start date infoString of the com.example.nag.productify.EventTask
 	 */
-	private String makeInfoStringStart()
+	/*private String makeInfoStringStart()
 	{
 		String infoString = startYear + "-";
 		if(startMonth < 10)
@@ -681,13 +695,13 @@ public class EventTask implements Serializable{
 			infoString += startMinute + ":00.00Z";
 
 		return infoString;
-	}
+	}*/
 
 	/**
 	 * Creates a string containing the information of the assignment's end date
 	 * @return end date infoString of the com.example.nag.productify.EventTask
 	 */
-	private String makeInfoStringEnd()
+	/*private String makeInfoStringEnd()
 	{
 		String infoString = endYear + "-";
 		if(endMonth < 10)
@@ -719,7 +733,7 @@ public class EventTask implements Serializable{
 			infoString += endMinute + ":00.00Z";
 
 		return infoString;
-	}
+	}*/
 
     /**
      * Creates a DateTime to be used in the arraylist of Events
@@ -727,7 +741,7 @@ public class EventTask implements Serializable{
      */
     private DateTime createDateTime(int year, int month, int day, int hour, int minute)
     {
-        String infoString = year + "-";
+        /*String infoString = year + "-";
         if(month < 10)
         {
             infoString += "0" + month + "-";
@@ -756,8 +770,9 @@ public class EventTask implements Serializable{
         else
             infoString += minute + ":00.00Z";
 
-      DateTime DT = DateTime.parseRfc3339(infoString);
-      return DT;
+      DateTime DT = DateTime.parseRfc3339(infoString);*/
+        DateTime DT = new DateTime(year+"-"+month+"-"+day+"T"+hour+":"+minute+":00-04:00");
+        return DT;
     }
 
 	/**
@@ -766,10 +781,11 @@ public class EventTask implements Serializable{
 	 */
 	private DateTime makeDST()
 	{
-		String infoString = makeInfoStringStart();
+		//String infoString = makeInfoStringStart();
 		//DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
-		DateTime DST = DateTime.parseRfc3339(infoString);
+		//DateTime DST = DateTime.parseRfc3339(infoString);
+        DateTime DST = new DateTime(startYear+"-"+startMonth+"-"+startDay+"T"+startHour+":"+startMinute+":00-04:00");
 		return DST;
 	}
 
@@ -779,10 +795,11 @@ public class EventTask implements Serializable{
      */
     private DateTime makeDET()
     {
-        String infoString = makeInfoStringEnd();
+        //String infoString = makeInfoStringEnd();
         //DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
-        DateTime DET = DateTime.parseRfc3339(infoString);
+        //DateTime DET = DateTime.parseRfc3339(infoString);
+        DateTime DET = new DateTime(endYear+"-"+endMonth+"-"+endDay+"T"+endHour+":"+endMinute+":00-04:00");
         return DET;
     }
 
@@ -797,8 +814,5 @@ public class EventTask implements Serializable{
 		return zdet;
 	}
 	*/
-
-
-
 
 }
