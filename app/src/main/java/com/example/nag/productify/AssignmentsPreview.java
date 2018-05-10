@@ -40,7 +40,30 @@ public class AssignmentsPreview extends AppCompatActivity {
         TextView date3text = findViewById(R.id.date3text);
         TextView date4text = findViewById(R.id.date4text);
 
-        EventTask event1 = (EventTask) getIntent().getExtras().getSerializable("event");
+        //EventTask event1 = (EventTask) getIntent().getExtras().getSerializable("event");
+
+        Bundle bundle = getIntent().getExtras();
+        int sYear = bundle.getInt("sy");
+        int sMonth = bundle.getInt("sm");
+        int sDay = bundle.getInt("sd");
+        int sHour = bundle.getInt("sh");
+        int sMinute = bundle.getInt("smin");
+        int dYear = bundle.getInt("dy");
+        int dMonth = bundle.getInt("dm");
+        int dDay = bundle.getInt("dd");
+        int dHour = bundle.getInt("dh");
+        int dMinute = bundle.getInt("dmin");
+        String name = bundle.getString("nm");
+        double predictedLength = bundle.getInt("predicted");
+        Boolean mon = bundle.getBoolean("mo");
+        Boolean tues = bundle.getBoolean("tu");
+        Boolean wed = bundle.getBoolean("we");
+        Boolean thurs = bundle.getBoolean("th");
+        Boolean fri = bundle.getBoolean("fr");
+        Boolean sat = bundle.getBoolean("sa");
+        Boolean sun = bundle.getBoolean("su");
+
+        EventTask event1 = new EventTask(sYear, sMonth, sDay, sHour, sMinute, dYear, dMonth, dDay, dHour, dMinute, name, predictedLength, mon, tues, wed, thurs, fri, sat, sun);
     }
 
     private void showToast (String text)

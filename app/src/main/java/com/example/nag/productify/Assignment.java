@@ -61,6 +61,7 @@ public class Assignment extends AppCompatActivity {
         CheckBox checkFri = findViewById(R.id.checkFri);
         CheckBox checkSat = findViewById(R.id.checkSat);
         CheckBox checkSun = findViewById(R.id.checkSun);
+
     }
 
     private void showToast (String text)
@@ -83,27 +84,55 @@ public class Assignment extends AppCompatActivity {
         else
         {
             if (checkMon.isChecked()|| checkTues.isChecked()||checkWed.isChecked()||checkThurs
-                    .isChecked()||checkFri.isChecked()||checkSat.isChecked()||checkSun.isChecked())
+                  .isChecked()||checkFri.isChecked()||checkSat.isChecked()||checkSun.isChecked())
             {
                 String name = assignmentName.getText().toString();
 
-                int syear = Integer.parseInt(assignmentStartYear.getText().toString());
-                int smonth = Integer.parseInt(assignmentStartMonth.getText().toString());
-                int sday = Integer.parseInt(assignmentStartDay.getText().toString());
-                int shour = Integer.parseInt(assignmentStartHour.getText().toString());
-                int sminute = Integer.parseInt(assignmentStartMinute.getText().toString());
+                Integer syear = Integer.parseInt(assignmentStartYear.getText().toString());
+                Integer smonth = Integer.parseInt(assignmentStartMonth.getText().toString());
+                Integer sday = Integer.parseInt(assignmentStartDay.getText().toString());
+                Integer shour = Integer.parseInt(assignmentStartHour.getText().toString());
+                Integer sminute = Integer.parseInt(assignmentStartMinute.getText().toString());
 
-                int dyear = Integer.parseInt(assignmentDueYear.getText().toString());
-                int dmonth = Integer.parseInt(assignmentDueMonth.getText().toString());
-                int dday = Integer.parseInt(assignmentDueDay.getText().toString());
-                int dhour =  Integer.parseInt(assignmentDueHour.getText().toString());
-                int dminute =  Integer.parseInt(assignmentDueMinute.getText().toString());
+                Integer dyear = Integer.parseInt(assignmentDueYear.getText().toString());
+                Integer dmonth = Integer.parseInt(assignmentDueMonth.getText().toString());
+                Integer dday = Integer.parseInt(assignmentDueDay.getText().toString());
+                Integer dhour =  Integer.parseInt(assignmentDueHour.getText().toString());
+                Integer dminute =  Integer.parseInt(assignmentDueMinute.getText().toString());
 
-                double predicted = Double.parseDouble(assignmentLength.getText().toString());
+                Double predicted = Double.parseDouble(assignmentLength.getText().toString());
 
-                EventTask event  =  new EventTask (syear, smonth, sday, shour, sminute, dyear, dmonth, dday, dhour, dminute, name, predicted, true, true, true, true, true, true, true);
+                Boolean monday = checkMon.isChecked();
+                Boolean tuesday = checkTues.isChecked();
+                Boolean wednesday = checkWed.isChecked();
+                Boolean thursday = checkThurs.isChecked();
+                Boolean friday = checkFri.isChecked();
+                Boolean saturday = checkSat.isChecked();
+                Boolean sunday = checkSun.isChecked();
 
-                Intent intent = new Intent (Assignment.this, AssignmentsPreview.class);
+                EventTask event  =  new EventTask (syear, smonth, sday, shour, sminute, dyear, dmonth, dday, dhour, dminute, name, predicted, monday, tuesday, wednesday, thursday, friday, saturday, sunday);
+
+                Intent intent = new Intent (this, AssignmentsPreview.class);
+                intent.putExtra("nm",name);
+                intent.putExtra("sy",syear);
+                intent.putExtra("sm",smonth);
+                intent.putExtra("sh",shour);
+                intent.putExtra("smin",sminute);
+                intent.putExtra("dy",dyear);
+                intent.putExtra("dm",dmonth);
+                intent.putExtra("dd",dday);
+                intent.putExtra("dh",dhour);
+                intent.putExtra("dmin",dminute);
+                intent.putExtra("pred",predicted);
+                intent.putExtra("mo",monday);
+                intent.putExtra("tu",tuesday);
+                intent.putExtra("we",wednesday);
+                intent.putExtra("th",thursday);
+                intent.putExtra("fr",friday);
+                intent.putExtra("sa",saturday);
+                intent.putExtra("su",sunday);
+
+                startActivity(intent);
 
                 Calendar calendar = Calendar.getInstance();
 
@@ -126,7 +155,7 @@ public class Assignment extends AppCompatActivity {
             }
             else
             {
-                showToast ("Please select at least one day to work.");
+               showToast ("Please select at least one day to work.");
             }
         }
     }
