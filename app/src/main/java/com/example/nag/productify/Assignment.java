@@ -132,7 +132,7 @@ public class Assignment extends AppCompatActivity {
                 intent.putExtra("sa",saturday);
                 intent.putExtra("su",sunday);
 
-                startActivity(intent);
+                //startActivity(intent);
 
                 Calendar calendar = Calendar.getInstance();
 

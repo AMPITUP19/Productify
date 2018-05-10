@@ -1,58 +1,55 @@
 package com.example.nag.productify;
 
-//used google calendar tutorials on google calendar api website
+import com.google.android.gms.common.ConnectionResult;
+        import com.google.android.gms.common.GoogleApiAvailability;
+        import com.google.api.client.extensions.android.http.AndroidHttp;
+        import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+        import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException;
+        import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 
-import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.view.View;import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.tasks.OnCompleteListener;
+        import com.google.api.client.http.HttpTransport;
+        import com.google.api.client.json.JsonFactory;
+        import com.google.api.client.json.jackson2.JacksonFactory;
+        import com.google.api.client.util.ExponentialBackOff;
 
-import com.google.api.client.extensions.android.http.AndroidHttp;
-import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
-import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException;
-import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
+        import com.google.api.services.calendar.CalendarScopes;
+        import com.google.api.client.util.DateTime;
 
-import com.google.api.client.http.HttpTransport;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson2.JacksonFactory;
-import com.google.api.client.util.ExponentialBackOff;
+        import com.google.api.services.calendar.model.*;
 
-import com.google.api.services.calendar.CalendarScopes;
-import com.google.api.client.util.DateTime;
-import com.google.api.services.calendar.model.*;
-import com.google.api.services.calendar.Calendar;
+        import android.Manifest;
+        import android.accounts.AccountManager;
+        import android.app.Activity;
+        import android.app.Dialog;
+        import android.app.ProgressDialog;
+        import android.content.Context;
+        import android.content.Intent;
+        import android.content.SharedPreferences;
+        import android.net.ConnectivityManager;
+        import android.net.NetworkInfo;
+        import android.os.AsyncTask;
+        import android.os.Bundle;
+        import android.support.annotation.NonNull;
+        import android.text.TextUtils;
+        import android.text.method.ScrollingMovementMethod;
+        import android.view.View;
+        import android.view.ViewGroup;
+        import android.widget.Button;
+        import android.widget.LinearLayout;
+        import android.widget.TextView;
 
-import android.Manifest;
-import android.accounts.AccountManager;
-import android.app.Dialog;
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.os.AsyncTask;
-import android.support.annotation.NonNull;
-import android.text.TextUtils;
-import android.widget.Button;
-import android.widget.TextView;
+        import java.io.IOException;
+        import java.util.ArrayList;
+        import java.util.Arrays;
+        import java.util.List;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+        import pub.devrel.easypermissions.AfterPermissionGranted;
+        import pub.devrel.easypermissions.EasyPermissions;
 
-import pub.devrel.easypermissions.AfterPermissionGranted;
-import pub.devrel.easypermissions.EasyPermissions;
-
-public class MainActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks
-{
-
+public class GoogleAPIOriginalCode extends Activity implements EasyPermissions.PermissionCallbacks {
     GoogleAccountCredential mCredential;
-    Button integrateCalendarBut, newAssignBut, calendarBut, existBut, signOutBut;
-    TextView outputText;
-
+    private TextView mOutputText;
+    private Button mCallApiButton;
     ProgressDialog mProgress;
 
     static final int REQUEST_ACCOUNT_PICKER = 1000;
@@ -60,11 +57,9 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
     static final int REQUEST_PERMISSION_GET_ACCOUNTS = 1003;
 
-    private static final String BUTTON_TEXT = "Call Google CalendarScreen API";
-    private static final String signout_text = "Sign out";
+    private static final String BUTTON_TEXT = "Call Google Calendar API";
     private static final String PREF_ACCOUNT_NAME = "accountName";
     private static final String[] SCOPES = { CalendarScopes.CALENDAR_READONLY };
-
 
     /**
      * Create the main activity.
@@ -73,65 +68,52 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        LinearLayout activityLayout = new LinearLayout(this);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+        activityLayout.setLayoutParams(lp);
+        activityLayout.setOrientation(LinearLayout.VERTICAL);
+        activityLayout.setPadding(16, 16, 16, 16);
 
-        newAssignBut = (Button) findViewById(R.id.newAssignBut);
-        existBut = (Button) findViewById(R.id.existBut);
-        calendarBut = (Button) findViewById(R.id.calendarBut);
-        integrateCalendarBut = (Button) findViewById(R.id.integrateCalendarBut);
-        signOutBut = (Button) findViewById(R.id.signOutBut);
+        ViewGroup.LayoutParams tlp = new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
 
-
-      /*private void signOut()
-        {
-            mCredential.signOut().addOnCompleteListener(this, new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            // ...
-                        }
-                    });
-        }*/
-
-        integrateCalendarBut.setOnClickListener(new View.OnClickListener() {
+        mCallApiButton = new Button(this);
+        mCallApiButton.setText(BUTTON_TEXT);
+        mCallApiButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                integrateCalendarBut.setEnabled(false);
-                integrateCalendarBut.setText("");
+                mCallApiButton.setEnabled(false);
+                mOutputText.setText("");
                 getResultsFromApi();
-                integrateCalendarBut.setEnabled(true);
+                mCallApiButton.setEnabled(true);
             }
         });
-        
-        /*@Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-                // ...
-                case R.id.signOutBut:
-                    signOut();
-                    break;
-                // ...
-            }
-        }*/
+        activityLayout.addView(mCallApiButton);
 
-        outputText = (TextView) findViewById(R.id.outputText);
+        mOutputText = new TextView(this);
+        mOutputText.setLayoutParams(tlp);
+        mOutputText.setPadding(16, 16, 16, 16);
+        mOutputText.setVerticalScrollBarEnabled(true);
+        mOutputText.setMovementMethod(new ScrollingMovementMethod());
+        mOutputText.setText(
+                "Click the \'" + BUTTON_TEXT +"\' button to test the API.");
+        activityLayout.addView(mOutputText);
 
         mProgress = new ProgressDialog(this);
-        mProgress.setMessage("Calling Google CalendarScreen API ...");
+        mProgress.setMessage("Calling Google Calendar API ...");
+
+        setContentView(activityLayout);
 
         // Initialize credentials and service object.
         mCredential = GoogleAccountCredential.usingOAuth2(
                 getApplicationContext(), Arrays.asList(SCOPES))
                 .setBackOff(new ExponentialBackOff());
-
-    /*    // Initialize Calendar service with valid OAuth credentials
-        Calendar service = new Calendar.Builder(httpTransport, jsonFactory, credentials)
-                .setApplicationName("applicationName").build();
-
-        // Retrieve the calendar
-        com.google.api.services.calendar.model.Calendar calendar =
-                service.calendars().get('primary').execute(); */
-
     }
+
+
 
     /**
      * Attempt to call the API, after verifying that all the preconditions are
@@ -146,28 +128,10 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         } else if (mCredential.getSelectedAccountName() == null) {
             chooseAccount();
         } else if (! isDeviceOnline()) {
-            outputText.setText("No network connection available.");
+            mOutputText.setText("No network connection available.");
         } else {
             new MakeRequestTask(mCredential).execute();
         }
-    }
-
-    public void newAssign (View view)
-    {
-        Intent assign = new Intent (MainActivity.this,Assignment.class);
-        startActivity(assign);
-    }
-
-    public void exist(View view)
-    {
-        Intent exist = new Intent (MainActivity.this,ExistingAssignmentsToday.class);
-        startActivity(exist);
-    }
-
-    public void goToCalendar (View view)
-    {
-        Intent calendar = new Intent (MainActivity.this,CalendarScreen.class);
-        startActivity(calendar);
     }
 
     /**
@@ -222,7 +186,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         switch(requestCode) {
             case REQUEST_GOOGLE_PLAY_SERVICES:
                 if (resultCode != RESULT_OK) {
-                    outputText.setText(
+                    mOutputText.setText(
                             "This app requires Google Play Services. Please install " +
                                     "Google Play Services on your device and relaunch this app.");
                 } else {
@@ -343,14 +307,14 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
             final int connectionStatusCode) {
         GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
         Dialog dialog = apiAvailability.getErrorDialog(
-                MainActivity.this,
+                GoogleAPIOriginalCode.this,
                 connectionStatusCode,
                 REQUEST_GOOGLE_PLAY_SERVICES);
         dialog.show();
     }
 
     /**
-     * An asynchronous task that handles the Google CalendarScreen API call.
+     * An asynchronous task that handles the Google Calendar API call.
      * Placing the API calls in their own task ensures the UI stays responsive.
      */
     private class MakeRequestTask extends AsyncTask<Void, Void, List<String>> {
@@ -362,12 +326,12 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
             JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
             mService = new com.google.api.services.calendar.Calendar.Builder(
                     transport, jsonFactory, credential)
-                    .setApplicationName("Google CalendarScreen API Android Quickstart")
+                    .setApplicationName("Google Calendar API Android Quickstart")
                     .build();
         }
 
         /**
-         * Background task to call Google CalendarScreen API.
+         * Background task to call Google Calendar API.
          * @param params no parameters needed for this task.
          */
         @Override
@@ -414,7 +378,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
 
         @Override
         protected void onPreExecute() {
-            outputText.setText("");
+            mOutputText.setText("");
             mProgress.show();
         }
 
@@ -422,10 +386,10 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         protected void onPostExecute(List<String> output) {
             mProgress.hide();
             if (output == null || output.size() == 0) {
-                outputText.setText("No results returned.");
+                mOutputText.setText("No results returned.");
             } else {
-                output.add(0, "Data retrieved using the Google CalendarScreen API:");
-                outputText.setText(TextUtils.join("\n", output));
+                output.add(0, "Data retrieved using the Google Calendar API:");
+                mOutputText.setText(TextUtils.join("\n", output));
             }
         }
 
@@ -442,14 +406,12 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                             ((UserRecoverableAuthIOException) mLastError).getIntent(),
                             MainActivity.REQUEST_AUTHORIZATION);
                 } else {
-                    outputText.setText("The following error occurred:\n"
+                    mOutputText.setText("The following error occurred:\n"
                             + mLastError.getMessage());
                 }
             } else {
-                outputText.setText("Request cancelled.");
+                mOutputText.setText("Request cancelled.");
             }
         }
     }
-
-
 }
