@@ -69,6 +69,11 @@ public class AssignmentsPreview extends Activity implements EasyPermissions.Perm
     private static final String BUTTON_TEXT = "Add an event to your schedule";
     private static final String PREF_ACCOUNT_NAME = "accountName";
 
+    private String name;
+    private int sYear, sMonth, sDay, sHour, sMinute, dYear, dMonth, dDay, dHour, dMinute;
+    private EventTask  event1;
+    private ArrayList <DateTime> interims;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,17 +100,17 @@ public class AssignmentsPreview extends Activity implements EasyPermissions.Perm
         //EventTask event1 = (EventTask) getIntent().getExtras().getSerializable("event");
 
         Bundle bundle = getIntent().getExtras();
-        String name = bundle.getString("nm");
-        int sYear = bundle.getInt("sy");
-        int sMonth = bundle.getInt("sm");
-        int sDay = bundle.getInt("sd");
-        int sHour = bundle.getInt("sh");
-        int sMinute = bundle.getInt("smin");
-        int dYear = bundle.getInt("dy");
-        int dMonth = bundle.getInt("dm");
-        int dDay = bundle.getInt("dd");
-        int dHour = bundle.getInt("dh");
-        int dMinute = bundle.getInt("dmin");
+        name = bundle.getString("nm");
+        sYear = bundle.getInt("sy");
+        sMonth = bundle.getInt("sm");
+        sDay = bundle.getInt("sd");
+        sHour = bundle.getInt("sh");
+        sMinute = bundle.getInt("smin");
+        dYear = bundle.getInt("dy");
+        dMonth = bundle.getInt("dm");
+        dDay = bundle.getInt("dd");
+        dHour = bundle.getInt("dh");
+        dMinute = bundle.getInt("dmin");
         double predictedLength = bundle.getInt("predicted");
         Boolean mon = bundle.getBoolean("mo");
         Boolean tues = bundle.getBoolean("tu");
@@ -122,7 +127,9 @@ public class AssignmentsPreview extends Activity implements EasyPermissions.Perm
                 getApplicationContext(), Arrays.asList(SCOPES))
                 .setBackOff(new ExponentialBackOff());
 
-        EventTask event1 = new EventTask(sYear, sMonth, sDay, sHour, sMinute, dYear, dMonth, dDay, dHour, dMinute, name, predictedLength, mon, tues, wed, thurs, fri, sat, sun);
+        event1 = new EventTask(sYear, sMonth, sDay, sHour, sMinute, dYear, dMonth, dDay, dHour, dMinute, name, predictedLength, mon, tues, wed, thurs, fri, sat, sun);
+
+        interims = event1.createEventDates();
 
         assignmentName.setText(name);
         dueDateText.setText(dMonth+ "/" + dDay + "/" + dYear + " at " + dHour + ":" + dMinute);
@@ -136,10 +143,14 @@ public class AssignmentsPreview extends Activity implements EasyPermissions.Perm
         //create list of items
 
         ArrayList<String> interimDates = new ArrayList<String>();
-        interimDates.add("March 25, 2018 20:00 25%");
-        interimDates.add("April 17, 2018 16:00 50%");
-        interimDates.add("April 30, 2018 18:30 75%");
-        interimDates.add("May 5, 2018 14:45 100%");
+
+        for (int n = 0; n <interims.size(); n+=2)
+        {
+            DateTime start = interims.get(n); //first item is start, second is end then repeats
+            DateTime end  = interims.get(n+1);
+            String date = (start.toString() + " to " + end.toString()); //fix this later so it is in the proper form
+            interimDates.add(date);
+        }
 
         //now somehow add all the datetime objects in the right format to be displayed (see above) does it say how much percent?
         //just do the math to find the percent probably
@@ -407,43 +418,44 @@ public class AssignmentsPreview extends Activity implements EasyPermissions.Perm
              */
             private ArrayList<String> addEvent() throws IOException {
 
-                Event thingy = new Event()
-                        .setSummary("Google I/O 2018")
-                        .setLocation("800 Howard St., San Francisco, CA 94103")
-                        .setDescription("A chance to hear more about Google's developer products.");
-
-                DateTime startDateTime = new DateTime("2018-05-28T09:00:00-07:00");
-                EventDateTime s = new EventDateTime()
-                        .setDateTime(startDateTime)
-                        .setTimeZone("America/New_York");
-                thingy.setStart(s);
-
-                DateTime endDateTime = new DateTime("2018-05-28T17:00:00-20:00");
-                EventDateTime end = new EventDateTime()
-                        .setDateTime(endDateTime)
-                        .setTimeZone("America/New_York");
-                thingy.setEnd(end);
-
-                EventReminder[] reminderOverrides = new EventReminder[]{
-                        new EventReminder().setMethod("email").setMinutes(24 * 60),
-                        new EventReminder().setMethod("popup").setMinutes(10),
-                };
-                Event.Reminders reminders = new Event.Reminders()
-                        .setUseDefault(false)
-                        .setOverrides(Arrays.asList(reminderOverrides));
-                thingy.setReminders(reminders);
-
-                Event events = mService.events().insert("primary", thingy)
-                        .execute();
-
-                Log.d("Event success?", (events.getHtmlLink()).toString());
-
                 ArrayList<String> items = new ArrayList<>();
 
-                String eventObj = events.getSummary().toString();
+                for (int i =0; i<interims.size(); i+=2) {
+                    Event thingy = new Event()
+                            .setSummary(name);
+                    DateTime startDateTime = interims.get(i);
 
-                items.add(eventObj);
+                            //new DateTime("2018-05-28T09:00:00-07:00");
+                    EventDateTime s = new EventDateTime()
+                            .setDateTime(startDateTime)
+                            .setTimeZone("America/New_York");
+                    thingy.setStart(s);
 
+                    DateTime endDateTime = interims.get(i+1);
+                            //new DateTime("2018-05-28T17:00:00-20:00");
+                    EventDateTime end = new EventDateTime()
+                            .setDateTime(endDateTime)
+                            .setTimeZone("America/New_York");
+                    thingy.setEnd(end);
+
+                    EventReminder[] reminderOverrides = new EventReminder[]{
+                            new EventReminder().setMethod("email").setMinutes(24 * 60),
+                            new EventReminder().setMethod("popup").setMinutes(10),
+                    };
+                    Event.Reminders reminders = new Event.Reminders()
+                            .setUseDefault(false)
+                            .setOverrides(Arrays.asList(reminderOverrides));
+                    thingy.setReminders(reminders);
+
+                    Event events = mService.events().insert("primary", thingy)
+                            .execute();
+
+                    Log.d("Event success?", (events.getHtmlLink()).toString());
+
+                    String eventObj = events.getSummary().toString();
+
+                    items.add(eventObj);
+                }
                 return items;
 
             }
