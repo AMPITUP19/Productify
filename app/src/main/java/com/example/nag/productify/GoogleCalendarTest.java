@@ -2,6 +2,7 @@ package com.example.nag.productify;
 //https://developers.google.com/calendar/quickstart/android#step_5_setup_the_sample
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.tasks.Task;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException;
@@ -14,6 +15,10 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.ExponentialBackOff;
 
 import com.google.api.services.calendar.CalendarScopes;
+import com.google.api.services.calendar.Calendar;
+import com.google.api.services.calendar.model.Event;
+import com.google.api.services.calendar.Calendar;
+
 import com.google.api.client.util.DateTime;
 
 import com.google.api.services.calendar.model.*;
@@ -33,11 +38,14 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsoluteLayout;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import java.io.IOException;
@@ -52,7 +60,7 @@ import pub.devrel.easypermissions.EasyPermissions;
 public class GoogleCalendarTest extends Activity implements EasyPermissions.PermissionCallbacks {
     GoogleAccountCredential mCredential;
     private TextView mOutputText;
-    private Button mCallApiButton;
+    private Button mCallApiButton, mAddButton;
     ProgressDialog mProgress;
 
     static final int REQUEST_ACCOUNT_PICKER = 1000;
@@ -61,8 +69,11 @@ public class GoogleCalendarTest extends Activity implements EasyPermissions.Perm
     static final int REQUEST_PERMISSION_GET_ACCOUNTS = 1003;
 
     private static final String BUTTON_TEXT = "Call Google Calendar API";
+    private static final String ADD_BUTTON_TEXT = "Add event to Google Calendar";
     private static final String PREF_ACCOUNT_NAME = "accountName";
-    private static final String[] SCOPES = {CalendarScopes.CALENDAR_READONLY};
+    private static final String[] SCOPES = {CalendarScopes.CALENDAR};
+
+    public com.google.api.services.calendar.Calendar service;
 
     /**
      * Create the main activity.
@@ -84,9 +95,21 @@ public class GoogleCalendarTest extends Activity implements EasyPermissions.Perm
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
 
+        mAddButton = new Button(this);
+        mAddButton.setText(ADD_BUTTON_TEXT);
+        mAddButton.setPadding(20, 50, 20, 50);
+        mAddButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mAddButton.setEnabled(false);
+                //addEvent();
+                mAddButton.setEnabled(true);
+            }
+        });
+
         mCallApiButton = new Button(this);
         mCallApiButton.setText(BUTTON_TEXT);
-        mCallApiButton.setOnClickListener(new View.OnClickListener() {
+        /*mCallApiButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mCallApiButton.setEnabled(false);
@@ -94,8 +117,9 @@ public class GoogleCalendarTest extends Activity implements EasyPermissions.Perm
                 getResultsFromApi();
                 mCallApiButton.setEnabled(true);
             }
-        });
+        }); */
         activityLayout.addView(mCallApiButton);
+        activityLayout.addView(mAddButton);
 
         mOutputText = new TextView(this);
         mOutputText.setLayoutParams(tlp);
@@ -111,10 +135,42 @@ public class GoogleCalendarTest extends Activity implements EasyPermissions.Perm
 
         setContentView(activityLayout);
 
+        Thread thread =  new Thread();
+        thread.start();
+        try
+        {
+            mCallApiButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mCallApiButton.setEnabled(false);
+                    mOutputText.setText("");
+                    getResultsFromApi();
+                    mCallApiButton.setEnabled(true);
+
+
+                }
+            });
+
+            // Initialize credentials and service object.
+            mCredential = GoogleAccountCredential.usingOAuth2(
+                    getApplicationContext(), Arrays.asList(SCOPES))
+                    .setBackOff(new ExponentialBackOff());
+        }
+        catch (IllegalThreadStateException e)
+        {
+            Log.d("Thread error", thread.toString());
+        }
+
+
         // Initialize credentials and service object.
-        mCredential = GoogleAccountCredential.usingOAuth2(
+       /* mCredential = GoogleAccountCredential.usingOAuth2(
                 getApplicationContext(), Arrays.asList(SCOPES))
-                .setBackOff(new ExponentialBackOff());
+                .setBackOff(new ExponentialBackOff()); */
+
+      /* if ( mCredential.getContext() ==  null)
+       {
+           Log.d("Context error","Context is null" + " " + mCredential.getContext().toString() + " " +  mCredential.getScope() );
+       } */
 
         //  HttpClient httpclient = new DefaultHttpClient();
         // HttpGet httpget= new HttpGet("https://www.googleapis.com/calendar/v3/calendars/calendarId/events");
@@ -142,9 +198,16 @@ public class GoogleCalendarTest extends Activity implements EasyPermissions.Perm
         } else if (!isDeviceOnline()) {
             mOutputText.setText("No network connection available.");
         } else {
-            new MakeRequestTask(mCredential).execute();
+          /*  HttpTransport transport = AndroidHttp.newCompatibleTransport();
+            JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
+            service = new com.google.api.services.calendar.Calendar.Builder(
+                    transport, jsonFactory, mCredential)
+                    .setApplicationName("Google Calendar API Android Quickstart")
+                    .build(); */
+           new MakeRequestTask(mCredential).execute();
         }
     }
+
 
     /**
      * Attempts to set the account used with the API credentials. If an account
@@ -248,6 +311,11 @@ public class GoogleCalendarTest extends Activity implements EasyPermissions.Perm
                 requestCode, permissions, grantResults, this);
     }
 
+    private void showToast (String text)
+    {
+        Toast.makeText(GoogleCalendarTest.this,text,Toast.LENGTH_SHORT).show();
+    }
+
     /**
      * Callback for when a permission is granted using the EasyPermissions
      * library.
@@ -347,6 +415,66 @@ public class GoogleCalendarTest extends Activity implements EasyPermissions.Perm
                     transport, jsonFactory, credential)
                     .setApplicationName("Google Calendar API Android Quickstart")
                     .build();
+           addEvent(mService);
+
+            if ( mCredential.getContext() ==  null)
+            {
+                Log.d("Context error","Context is null" + " " + mCredential.getContext().toString() + " " +  mCredential.getScope() );
+            }
+            else if (mCredential.getScope() == null)
+            {
+                Log.d("Scope error","Scope is null" + " " + mCredential.getScope() );
+            }
+            else
+            {
+                Log.d("No error", "Neither scope nor context are null");
+            }
+
+        }
+
+        private void addEvent (com.google.api.services.calendar.Calendar mService)
+        {
+            Event event = new Event()
+                    .setSummary("Google I/O 2015")
+                    .setLocation("800 Howard St., San Francisco, CA 94103")
+                    .setDescription("A chance to hear more about Google's developer products.");
+
+            DateTime startDateTime = new DateTime("2018-05-28T09:00:00-07:00");
+            EventDateTime start = new EventDateTime()
+                    .setDateTime(startDateTime)
+                    .setTimeZone("America/Los_Angeles");
+            event.setStart(start);
+
+            DateTime endDateTime = new DateTime("2018-05-28T17:00:00-07:00");
+            EventDateTime end = new EventDateTime()
+                    .setDateTime(endDateTime)
+                    .setTimeZone("America/Los_Angeles");
+            event.setEnd(end);
+
+            String[] recurrence = new String[] {"RRULE:FREQ=DAILY;COUNT=2"};
+            event.setRecurrence(Arrays.asList(recurrence));
+
+            EventReminder[] reminderOverrides = new EventReminder[] {
+                    new EventReminder().setMethod("email").setMinutes(24 * 60),
+                    new EventReminder().setMethod("popup").setMinutes(10),
+            };
+            Event.Reminders reminders = new Event.Reminders()
+                    .setUseDefault(false)
+                    .setOverrides(Arrays.asList(reminderOverrides));
+            event.setReminders(reminders);
+
+            String calendarId = "primary";
+
+            try {
+                event = mService.events().insert(calendarId, event).execute();
+
+                Log.d("Event", "Event created: %s\n " + event.getHtmlLink());
+                showToast("Event successfully added.");
+
+            }
+            catch(IOException e){
+                Log.d("Error", e.getStackTrace().toString() + " " + e.getMessage() + " " + e.getCause().toString());
+            }
         }
 
         /**
@@ -393,6 +521,8 @@ public class GoogleCalendarTest extends Activity implements EasyPermissions.Perm
                 }
                 eventStrings.add(
                         String.format("%s (%s)", event.getSummary(), start));   //change format to return what you want
+                //"description", "location", "start", "end" or "recurrence" are the parts of summary, in date time objects
+                //try pull substrings of this then display on calendar 
             }
             return eventStrings; //returns arraylists,
         }
@@ -436,5 +566,112 @@ public class GoogleCalendarTest extends Activity implements EasyPermissions.Perm
             }
         }
     }
+
+    //adds event to Google Calendar
+   /* private void addEvent () {
+
+
+        Event event = new Event()           //hardcoded event for testing
+                .setSummary("Google I/O 2015")
+                .setLocation("800 Howard St., San Francisco, CA 94103")
+                .setDescription("A chance to hear more about Google's developer products.");
+
+        DateTime startDateTime = new DateTime("2015-05-28T09:00:00-07:00");
+        EventDateTime start = new EventDateTime()
+                .setDateTime(startDateTime)
+                .setTimeZone("America/Los_Angeles");
+        event.setStart(start);
+
+        DateTime endDateTime = new DateTime("2015-05-28T17:00:00-07:00");
+        EventDateTime end = new EventDateTime()
+                .setDateTime(endDateTime)
+                .setTimeZone("America/Los_Angeles");
+        event.setEnd(end);
+
+        String[] recurrence = new String[]{"RRULE:FREQ=DAILY;COUNT=2"};
+        event.setRecurrence(Arrays.asList(recurrence));
+
+       /* EventAttendee[] attendees = new EventAttendee[] {
+                new EventAttendee().setEmail("lpage@example.com"),
+                new EventAttendee().setEmail("sbrin@example.com"),
+        };
+        event.setAttendees(Arrays.asList(attendees));      */
+
+        /*EventReminder[] reminderOverrides = new EventReminder[]{                   //notification but not by app
+                new EventReminder().setMethod("email").setMinutes(24 * 60),
+                new EventReminder().setMethod("popup").setMinutes(10),
+        };
+        Event.Reminders reminders = new Event.Reminders()
+                .setUseDefault(false)
+                .setOverrides(Arrays.asList(reminderOverrides));
+        event.setReminders(reminders);
+
+        HttpTransport transport = AndroidHttp.newCompatibleTransport();
+        JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
+        service = new com.google.api.services.calendar.Calendar.Builder(
+                transport, jsonFactory, mCredential)
+                .setApplicationName("Google Calendar API Android Quickstart")
+                .build();
+
+        String calendarId = "primary";
+        try {
+            if (service != null) {
+                Calendar.Events e = service.events();
+                if (e == null) {
+                    Log.d("Error e", "e is null");
+                } else {
+                    event = e.insert(calendarId, event).execute(); //.insert(calendarId, event).execute();
+                }
+                Log.d("Event", "Event created: %s\n " + event.getHtmlLink());
+                showToast("Event successfully added.");
+            }
+
+            else
+            {
+                Log.d("Service error", service.toString());
+            }
+        }
+        catch(IOException e){
+                Log.d("Error", e.getStackTrace().toString() + " " + e.getMessage() + " " + e.getCause().toString());
+            }
+        }
+
+
+
+
+
+       /* HttpTransport transport = AndroidHttp.newCompatibleTransport();
+        JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
+        GoogleAccountCredential credentials = new GoogleAccountCredential(this,);
+
+        Calendar service = new Calendar.Builder(transport, jsonFactory, credentials)
+                .setApplicationName("applicationName").build(); */
+
+      /*  mCredential = GoogleAccountCredential.usingOAuth2(
+                getApplicationContext(), Arrays.asList(SCOPES))
+                .setBackOff(new ExponentialBackOff());
+
+        HttpTransport transport = AndroidHttp.newCompatibleTransport();
+        JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
+        service = new com.google.api.services.calendar.Calendar.Builder(
+                transport, jsonFactory, mCredential)
+                .setApplicationName("Google Calendar API Android Quickstart")
+                .build();
+
+        String calendarId = "primary";
+            try {
+                Log.d("Service test", "Service is a thing");
+                event = service.events().insert(calendarId, event).execute();
+                if (event != null) {
+                    Log.d("Event", "Event created: %s\n " + event.getHtmlLink());
+                }
+                else {
+                    Log.d("Event", "Event is null");
+                }
+            } catch (IOException e) {
+                Log.d("Error", e.toString());
+            }*/
+
+
 }
 

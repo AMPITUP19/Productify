@@ -28,5 +28,7 @@ public class Date extends AppCompatActivity {
         currentMonthText.setText(month);
         currentYearText.setText(""+year);
         dayOfWeekText.setText(dayofweek);
+
+        //use list view for assignments on that day
     }
 }
