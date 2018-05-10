@@ -512,7 +512,99 @@ public class EventTask implements Serializable{
 
 	// ---------------FUNCTIONAL METHODS---------------
 
-	/**
+	public ArrayList<DateTime> createEventDates()
+    {
+        ArrayList<DateTime> dateList = new ArrayList<DateTime>();
+
+        int scheduledDays = getDaysBetween();
+        double eventLength = predictedTime / ((double) scheduledDays);
+
+        int hourLength = (int) eventLength;
+        int minuteLength = (int) (eventLength - ((int) eventLength)) * 60;
+
+        for(int j = getSY(); j == getSY(); j++)
+        {
+            int year = j;
+            for (int k = getSM(); k <= getEM(); k++) {
+
+                int month = k;
+
+                for (int d = getSD() + 1; d < getED(); d++) {
+
+                    int day = d;
+
+                    LocalDateTime checkDate = LocalDateTime.of(year, month, day, 0, 0);
+                    String dayOfWeek = checkDate.getDayOfWeek().toString();
+
+                    if (!mon && dayOfWeek == "MONDAY") {
+
+                    } else if (!tues && dayOfWeek == "TUESDAY") {
+
+                    } else if (!wed && dayOfWeek == "WEDNESDAY") {
+
+                    } else if (!thurs && dayOfWeek == "THURSDAY") {
+
+                    } else if (!fri && dayOfWeek == "FRIDAY") {
+
+                    } else if (!sat && dayOfWeek == "SATURDAY") {
+
+                    } else if (!sund && dayOfWeek == "SUNDAY") {
+
+                    } else {
+                        DateTime beginTime = createDateTime(year, month, day, 0, 0);
+                        DateTime endTime = createDateTime(year, month, day, hourLength, minuteLength);
+
+                        dateList.add(beginTime);
+                        dateList.add(endTime);
+                    }
+                }
+            }
+
+        }
+
+        if(getSY() != getEY()) {
+
+            for (int j = getSY() + 1; j == getSY(); j++) {
+                int year = j;
+                for (int k = 1; k <= getEM(); k++) {
+
+                    int month = k;
+
+                    for (int d = 1; d < getED(); d++) {
+
+                        int day = d;
+
+                        LocalDateTime checkDate = LocalDateTime.of(year, month, day, 0, 0);
+                        String dayOfWeek = checkDate.getDayOfWeek().toString();
+
+                        if (!mon && dayOfWeek == "MONDAY") {
+
+                        } else if (!tues && dayOfWeek == "TUESDAY") {
+
+                        } else if (!wed && dayOfWeek == "WEDNESDAY") {
+
+                        } else if (!thurs && dayOfWeek == "THURSDAY") {
+
+                        } else if (!fri && dayOfWeek == "FRIDAY") {
+
+                        } else if (!sat && dayOfWeek == "SATURDAY") {
+
+                        } else if (!sund && dayOfWeek == "SUNDAY") {
+
+                        } else {
+                            DateTime beginTime = createDateTime(year, month, day, 0, 0);
+                            DateTime endTime = createDateTime(year, month, day, hourLength, minuteLength);
+
+                            dateList.add(beginTime);
+                            dateList.add(endTime);
+                        }
+                    }
+                }
+            }
+        }
+        return dateList;
+    }
+    /**
 	 * Puts events into the Google Calendar.
 	 */
 	/*public ArrayList<String> createEvents() throws IOException {
@@ -526,6 +618,7 @@ public class EventTask implements Serializable{
         for (int j = getSY(); j <= getEY(); j++) {
 
             int year = j;
+
             for (int k = getSM(); k <= getEM(); k++) {
 
                 int month = k;
@@ -591,7 +684,7 @@ public class EventTask implements Serializable{
                 }
             }
         }
-    }
+    }*/
 
 	/**
 	 * Calculates the number of days from the state date to the end date
