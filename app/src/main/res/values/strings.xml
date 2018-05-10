@@ -18,7 +18,7 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="directions"> Click to Integrate Google Calendar </string>
-    <string name="calendar">Google Calendar </string>
+    <string name="calendar">Sign In</string>
     <string name="newAssign">Create New Assignment</string>
     <string name="cancel"> Cancel</string>
     <string name="edit"> Edit</string>
