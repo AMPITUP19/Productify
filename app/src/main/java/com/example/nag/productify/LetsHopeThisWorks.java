@@ -361,13 +361,13 @@ public class LetsHopeThisWorks extends Activity implements EasyPermissions.Permi
             DateTime startDateTime = new DateTime("2018-05-28T09:00:00-07:00");
             EventDateTime s = new EventDateTime()
                     .setDateTime(startDateTime)
-                    .setTimeZone("America/Los_Angeles");
+                    .setTimeZone("America/New_York");
             thingy.setStart(s);
 
             DateTime endDateTime = new DateTime("2018-05-28T17:00:00-20:00");
             EventDateTime end = new EventDateTime()
                     .setDateTime(endDateTime)
-                    .setTimeZone("America/Los_Angeles");
+                    .setTimeZone("America/New_York");
             thingy.setEnd(end);
 
             EventReminder[] reminderOverrides = new EventReminder[] {

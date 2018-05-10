@@ -515,7 +515,7 @@ public class EventTask implements Serializable{
 	/**
 	 * Puts events into the Google Calendar.
 	 */
-	public ArrayList<String> createEvents() throws IOException {
+	/*public ArrayList<String> createEvents() throws IOException {
 
         int scheduledDays = getDaysBetween();
         double eventLength = predictedTime / ((double) scheduledDays);
@@ -578,14 +578,14 @@ public class EventTask implements Serializable{
                                 .setOverrides(Arrays.asList(reminderOverrides));
                         event.setReminders(reminders);
 
-                        Event events = mService.events().insert("primary", event)
-                                .execute();
+//                        Event events = mService.events().insert("primary", event)
+  //                              .execute();
 
                         ArrayList<String> items = new ArrayList<>();
 
-                        String eventObj = events.getSummary().toString();
+    //                    String eventObj = events.getSummary().toString();
 
-                        items.add(eventObj);
+       //                 items.add(eventObj);
 
                     }
                 }
