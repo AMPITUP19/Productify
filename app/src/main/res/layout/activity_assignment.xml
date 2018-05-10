@@ -245,7 +245,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/mon"
-                android:textSize="25sp" />
+                android:textSize="25sp"
+                android:checked="false"/>
 
             <CheckBox
                 android:id="@+id/checkTues"
@@ -253,7 +254,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/tues"
-                android:textSize="25sp" />
+                android:textSize="25sp"
+                android:checked="false"/>
 
         </LinearLayout>
 
@@ -268,7 +270,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/wed"
-                android:textSize="25sp" />
+                android:textSize="25sp"
+                android:checked="false"/>
 
             <CheckBox
                 android:id="@+id/checkThurs"
@@ -276,7 +279,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/thurs"
-                android:textSize="25sp" />
+                android:textSize="25sp"
+                android:checked="false"/>
         </LinearLayout>
 
         <LinearLayout
@@ -290,7 +294,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/fri"
-                android:textSize="25sp" />
+                android:textSize="25sp"
+                android:checked="false"/>
 
             <CheckBox
                 android:id="@+id/checkSat"
@@ -298,7 +303,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/sat"
-                android:textSize="25sp" />
+                android:textSize="25sp"
+                android:checked="false"/>
         </LinearLayout>
 
         <CheckBox
@@ -307,7 +313,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/sun"
-            android:textSize="25sp" />
+            android:textSize="25sp"
+            android:checked="false"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -319,7 +326,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:onClick="goToPreview"
+                android:onClick="create"
                 android:text="@string/create"
                 android:textAlignment="center"
                 android:textColor="#000000"

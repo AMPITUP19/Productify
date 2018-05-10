@@ -625,7 +625,7 @@ public class EventTask implements Serializable{
 	private DateTime makeDST()
 	{
 		String infoString = makeInfoStringStart();
-		DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+//		DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
 		DateTime DST = DateTime.parseRfc3339(infoString);
 		return DST;

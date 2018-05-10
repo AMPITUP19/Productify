@@ -3,6 +3,7 @@ package com.example.nag.productify;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -47,6 +48,7 @@ public class AssignmentsPreview extends AppCompatActivity {
         //EventTask event1 = (EventTask) getIntent().getExtras().getSerializable("event");
 
         Bundle bundle = getIntent().getExtras();
+        String name = bundle.getString("nm");
         int sYear = bundle.getInt("sy");
         int sMonth = bundle.getInt("sm");
         int sDay = bundle.getInt("sd");
@@ -57,7 +59,6 @@ public class AssignmentsPreview extends AppCompatActivity {
         int dDay = bundle.getInt("dd");
         int dHour = bundle.getInt("dh");
         int dMinute = bundle.getInt("dmin");
-        String name = bundle.getString("nm");
         double predictedLength = bundle.getInt("predicted");
         Boolean mon = bundle.getBoolean("mo");
         Boolean tues = bundle.getBoolean("tu");
@@ -68,6 +69,15 @@ public class AssignmentsPreview extends AppCompatActivity {
         Boolean sun = bundle.getBoolean("su");
 
         EventTask event1 = new EventTask(sYear, sMonth, sDay, sHour, sMinute, dYear, dMonth, dDay, dHour, dMinute, name, predictedLength, mon, tues, wed, thurs, fri, sat, sun);
+
+        if (event1  == null)
+        {
+            Log.d("event error", "The event is null");
+        }
+        else
+        {
+            Log.d("Event no error", "Congrats you made an event");
+        }
 
         assignmentName.setText(name);
         dueDateText.setText(dMonth+ "/" + dDay + "/" + dYear + " at " + dHour + ":" + dMinute);
@@ -109,7 +119,7 @@ public class AssignmentsPreview extends AppCompatActivity {
     public void goConfirm (View view)
     {
         Intent confirm =  new Intent (AssignmentsPreview.this, CalendarScreen.class);
-        showToast("Your Assignment Has Been Added to the CalendarScreen.");
+        showToast("Your Assignment Has Been Added.");
         startActivity(confirm);
     }
 
