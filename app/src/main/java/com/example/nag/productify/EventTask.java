@@ -8,6 +8,7 @@ import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccoun
 import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.model.Event;
+import com.google.api.services.calendar.model.EventDateTime;
 import com.google.api.services.calendar.model.FreeBusyRequest;
 import com.google.api.services.calendar.model.FreeBusyResponse;
 
@@ -508,23 +509,125 @@ public class EventTask implements Serializable{
 
 	// ---------------FUNCTIONAL METHODS---------------
 
-	public void createEvents(GoogleAccountCredential mCredential, DateTime start, DateTime end)
-	{
-		ArrayList<Event> dailyEvents = new ArrayList<Event>();
-		int freeDays = 10; // Hardcoded momentarily, will need to be calculated
-		int scheduledDays = 10; //Hardcoded momentarily, will need to be calculated
+	/**
+	 * Puts events into the Google Calendar.
+	 * @param mCredential the user's Google account
+	 */
+	public void createEvents(GoogleAccountCredential mCredential) {
 
-		for(int i = 0; i < scheduledDays; i++)
-		{
-			Event event = new Event();
-			event.setSummary(name + "Assignment " + i + 1);
+        ArrayList<Event> dailyEvents = new ArrayList<Event>();
+        int scheduledDays = getDaysBetween();
+        double eventLength = predictedTime / ((double) scheduledDays);
 
+        int hourLength = (int) eventLength;
+        int minuteLength = (int) (eventLength - ((int) eventLength)) * 60;
 
-			dailyEvents.add(event);
-		}
+        for (int j = getSY(); j <= getEY(); j++) {
+            int year = j;
+
+            for (int k = getSM(); k <= getEM(); k++) {
+                int month = k;
+
+                for (int d = getSD() + 1; d < getED(); d++) {
+                    int day = d;
+
+                    LocalDateTime checkDate = LocalDateTime.of(year, month, day, 0,0);
+                    String dayOfWeek = checkDate.getDayOfWeek().toString();
+
+                    if(!mon && dayOfWeek == "MONDAY")
+                    {
+
+                    }
+                    else if(!tues && dayOfWeek == "TUESDAY")
+                    {
+
+                    }
+                    else if(!wed && dayOfWeek == "WEDNESDAY")
+                    {
+
+                    }
+                    else if(!thurs && dayOfWeek == "THURSDAY")
+                    {
+
+                    }
+                    else if(!fri && dayOfWeek == "FRIDAY")
+                    {
+
+                    }
+                    else if(!sat && dayOfWeek == "SATURDAY")
+                    {
+
+                    }
+                    else if(!sund && dayOfWeek == "SUNDAY")
+                    {
+
+                    }
+                    else {
+                        DateTime beginTime = createDateTime(year, month, day, 0, 0);
+                        DateTime endTime = createDateTime(year, month, day, hourLength, minuteLength);
+
+                        Event event = new Event();
+                        event.setSummary(name + "Assignment: " + month + "/" + day + "/" + year);
+                        dailyEvents.add(event);
+                    }
+                }
+            }
+        }
+
 		Account calendarId = mCredential.getSelectedAccount();
 
 
+	}
+
+	/**
+	 * Calculates the number of days from the state date to the end date
+	 * @return the number of days from the start date to the end date
+	 */
+	public int getDaysBetween()
+	{
+		int totalDays;
+		int removedDays;
+		LocalDateTime sDate = LocalDateTime.of(startYear, startMonth, startDay, startHour, startMinute);
+		LocalDateTime eDate = LocalDateTime.of(endYear, endMonth, endDay, endHour, endMinute);
+
+		Duration timeBetween = Duration.between(sDate, eDate);
+		totalDays = (int) timeBetween.toDays();
+		removedDays = 0;
+
+		for(LocalDateTime chosenDate = sDate.plusDays(1); chosenDate.isBefore(eDate); chosenDate = chosenDate.plusDays(1))
+		{
+			String weekDay = chosenDate.getDayOfWeek().toString();
+			if(!mon && weekDay == "MONDAY")
+			{
+				removedDays++;
+			}
+			else if(!tues && weekDay == "TUESDAY")
+			{
+				removedDays++;
+			}
+			else if(!wed && weekDay == "WEDNESDAY")
+			{
+				removedDays++;
+			}
+			else if(!thurs && weekDay == "THURSDAY")
+			{
+				removedDays++;
+			}
+			else if(!fri && weekDay == "FRIDAY")
+			{
+				removedDays++;
+			}
+			else if(!sat && weekDay == "SATURDAY")
+			{
+				removedDays++;
+			}
+			else if(!sund && weekDay == "SUNDAY")
+			{
+				removedDays++;
+			}
+		}
+
+		return (totalDays - removedDays);
 	}
 	/*public String checkIfFree(DateTime startTimeCheck, DateTime endTimeCheck)
 	{
@@ -618,6 +721,45 @@ public class EventTask implements Serializable{
 		return infoString;
 	}
 
+    /**
+     * Creates a DateTime to be used in the arraylist of Events
+     * @return the DateTime to be used in the arraylist
+     */
+    private DateTime createDateTime(int year, int month, int day, int hour, int minute)
+    {
+        String infoString = year + "-";
+        if(month < 10)
+        {
+            infoString += "0" + month + "-";
+        }
+        else
+            infoString += month + "-";
+
+        if(day < 10)
+        {
+            infoString += "0" + day + "T";
+        }
+        else
+            infoString += day + "T";
+
+        if(hour < 10)
+        {
+            infoString += "0" + hour + ":";
+        }
+        else
+            infoString += hour + ":";
+
+        if(minute < 10)
+        {
+            infoString += "0" + minute + ":00.00Z";
+        }
+        else
+            infoString += minute + ":00.00Z";
+
+      DateTime DT = DateTime.parseRfc3339(infoString);
+      return DT;
+    }
+
 	/**
 	 * Creates a DateTime object for the assignment's start-date
 	 * @return the start-date of the com.example.nag.productify.EventTask
@@ -625,24 +767,24 @@ public class EventTask implements Serializable{
 	private DateTime makeDST()
 	{
 		String infoString = makeInfoStringStart();
-		DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+		//DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
 		DateTime DST = DateTime.parseRfc3339(infoString);
 		return DST;
 	}
 
-	/**
-	 * Creates a DateTime object for the assignment's end-date
-	 * @return the end-date of the com.example.nag.productify.EventTask
-	 */
-	private DateTime makeDET()
-	{
-		String infoString = makeInfoStringEnd();
-		// DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-		DateTime DET = DateTime.parseRfc3339(infoString);
-		return DET;
-	}
+    /**
+     * Creates a dateTime object for the assignment's end-date
+     * @return the end-date of the EventTask
+     */
+    private DateTime makeDET()
+    {
+        String infoString = makeInfoStringEnd();
+        //DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
+        DateTime DET = DateTime.parseRfc3339(infoString);
+        return DET;
+    }
 
 	/* Use in future to take time zones into account
 	public ZonedDateTime getZDST()
