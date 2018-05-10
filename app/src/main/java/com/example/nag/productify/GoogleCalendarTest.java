@@ -57,7 +57,7 @@ import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
 
-public class GoogleCalendarTest extends Activity implements EasyPermissions.PermissionCallbacks {
+public class GoogleCalendarTest extends Activity implements EasyPermissions.PermissionCallbacks, Runnable {
     GoogleAccountCredential mCredential;
     private TextView mOutputText;
     private Button mCallApiButton, mAddButton;
@@ -75,6 +75,13 @@ public class GoogleCalendarTest extends Activity implements EasyPermissions.Perm
 
     public com.google.api.services.calendar.Calendar service;
 
+    /**
+     *
+     */
+    public GoogleCalendarTest ()
+    {
+
+    }
     /**
      * Create the main activity.
      *
@@ -135,9 +142,11 @@ public class GoogleCalendarTest extends Activity implements EasyPermissions.Perm
 
         setContentView(activityLayout);
 
-        Thread thread =  new Thread();
+        GoogleCalendarTest g = new GoogleCalendarTest();
+
+        Thread thread =  new Thread(g);
         thread.start();
-        try
+       /* try
         {
             mCallApiButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -180,6 +189,33 @@ public class GoogleCalendarTest extends Activity implements EasyPermissions.Perm
         //catch (IOException e){
 
         //}
+    }
+
+    public void run ()
+    {
+        try
+        {
+            mCallApiButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mCallApiButton.setEnabled(false);
+                    mOutputText.setText("");
+                    getResultsFromApi();
+                    mCallApiButton.setEnabled(true);
+
+
+                }
+            });
+
+            // Initialize credentials and service object.
+            mCredential = GoogleAccountCredential.usingOAuth2(
+                    getApplicationContext(), Arrays.asList(SCOPES))
+                    .setBackOff(new ExponentialBackOff());
+        }
+        catch (IllegalThreadStateException e)
+        {
+            Log.d("Thread error", "uh i don't even know anymore");
+        }
     }
 
 
@@ -500,7 +536,7 @@ public class GoogleCalendarTest extends Activity implements EasyPermissions.Perm
          * @throws IOException
          */
         private List<String> getDataFromApi() throws IOException {
-            // List the next 10 events from the primary calendar.
+
             DateTime now = new DateTime(System.currentTimeMillis());
             DateTime endhours = new DateTime ((System.currentTimeMillis() / (1000*60*60*24)+1)*(1000*60*60*24*7)+14400000); //mult second part by number of days
             List<String> eventStrings = new ArrayList<String>();

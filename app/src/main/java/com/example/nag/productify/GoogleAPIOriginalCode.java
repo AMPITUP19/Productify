@@ -1,61 +1,54 @@
 package com.example.nag.productify;
 
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.widget.TextView;
-
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.api.client.extensions.android.http.AndroidHttp;
-import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
-import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException;
-import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
+        import com.google.android.gms.common.GoogleApiAvailability;
+        import com.google.api.client.extensions.android.http.AndroidHttp;
+        import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+        import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException;
+        import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 
-import com.google.api.client.http.HttpTransport;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson2.JacksonFactory;
-import com.google.api.client.util.ExponentialBackOff;
+        import com.google.api.client.http.HttpTransport;
+        import com.google.api.client.json.JsonFactory;
+        import com.google.api.client.json.jackson2.JacksonFactory;
+        import com.google.api.client.util.ExponentialBackOff;
 
-import com.google.api.services.calendar.CalendarScopes;
-import com.google.api.client.util.DateTime;
+        import com.google.api.services.calendar.CalendarScopes;
+        import com.google.api.client.util.DateTime;
 
-import com.google.api.services.calendar.model.*;
+        import com.google.api.services.calendar.model.*;
 
-import android.Manifest;
-import android.accounts.AccountManager;
-import android.app.Activity;
-import android.app.Dialog;
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.text.TextUtils;
-import android.text.method.ScrollingMovementMethod;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+        import android.Manifest;
+        import android.accounts.AccountManager;
+        import android.app.Activity;
+        import android.app.Dialog;
+        import android.app.ProgressDialog;
+        import android.content.Context;
+        import android.content.Intent;
+        import android.content.SharedPreferences;
+        import android.net.ConnectivityManager;
+        import android.net.NetworkInfo;
+        import android.os.AsyncTask;
+        import android.os.Bundle;
+        import android.support.annotation.NonNull;
+        import android.text.TextUtils;
+        import android.text.method.ScrollingMovementMethod;
+        import android.view.View;
+        import android.view.ViewGroup;
+        import android.widget.Button;
+        import android.widget.LinearLayout;
+        import android.widget.TextView;
 
-import org.w3c.dom.Text;
+        import java.io.IOException;
+        import java.util.ArrayList;
+        import java.util.Arrays;
+        import java.util.List;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+        import pub.devrel.easypermissions.AfterPermissionGranted;
+        import pub.devrel.easypermissions.EasyPermissions;
 
-import pub.devrel.easypermissions.AfterPermissionGranted;
-import pub.devrel.easypermissions.EasyPermissions;
-
-public class Date extends AppCompatActivity implements EasyPermissions.PermissionCallbacks
-{
+public class GoogleAPIOriginalCode extends Activity implements EasyPermissions.PermissionCallbacks {
     GoogleAccountCredential mCredential;
-    private TextView mOutputText, currentYearText, currentMonthText, currentDayText, dayOfWeekText;
+    private TextView mOutputText;
     private Button mCallApiButton;
     ProgressDialog mProgress;
 
@@ -68,40 +61,59 @@ public class Date extends AppCompatActivity implements EasyPermissions.Permissio
     private static final String PREF_ACCOUNT_NAME = "accountName";
     private static final String[] SCOPES = { CalendarScopes.CALENDAR_READONLY };
 
-
+    /**
+     * Create the main activity.
+     * @param savedInstanceState previously saved instance data.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_date);
+        LinearLayout activityLayout = new LinearLayout(this);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+        activityLayout.setLayoutParams(lp);
+        activityLayout.setOrientation(LinearLayout.VERTICAL);
+        activityLayout.setPadding(16, 16, 16, 16);
 
-        Bundle bundle = getIntent().getExtras();
-        String month  = bundle.getString("month");
-        int year  = bundle.getInt("year");
-        int day = bundle.getInt("day");
-        String dayofweek = bundle.getString("dayofweek");
+        ViewGroup.LayoutParams tlp = new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
 
-        currentDayText = findViewById(R.id.currentDayText);
-        currentMonthText = findViewById(R.id.currentMonthText);
-        currentYearText = findViewById(R.id.currentYearText);
-        dayOfWeekText = findViewById(R.id.dayOfWeekText);
+        mCallApiButton = new Button(this);
+        mCallApiButton.setText(BUTTON_TEXT);
+        mCallApiButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCallApiButton.setEnabled(false);
+                mOutputText.setText("");
+                getResultsFromApi();
+                mCallApiButton.setEnabled(true);
+            }
+        });
+        activityLayout.addView(mCallApiButton);
 
-        currentDayText.setText(""+day);
-        currentMonthText.setText(month);
-        currentYearText.setText(""+year);
-        dayOfWeekText.setText(dayofweek);
-
-        mOutputText = (TextView) findViewById(R.id.mOutputText);
+        mOutputText = new TextView(this);
+        mOutputText.setLayoutParams(tlp);
+        mOutputText.setPadding(16, 16, 16, 16);
+        mOutputText.setVerticalScrollBarEnabled(true);
+        mOutputText.setMovementMethod(new ScrollingMovementMethod());
+        mOutputText.setText(
+                "Click the \'" + BUTTON_TEXT +"\' button to test the API.");
+        activityLayout.addView(mOutputText);
 
         mProgress = new ProgressDialog(this);
         mProgress.setMessage("Calling Google Calendar API ...");
+
+        setContentView(activityLayout);
 
         // Initialize credentials and service object.
         mCredential = GoogleAccountCredential.usingOAuth2(
                 getApplicationContext(), Arrays.asList(SCOPES))
                 .setBackOff(new ExponentialBackOff());
-
-        getResultsFromApi();
     }
+
+
 
     /**
      * Attempt to call the API, after verifying that all the preconditions are
@@ -118,7 +130,7 @@ public class Date extends AppCompatActivity implements EasyPermissions.Permissio
         } else if (! isDeviceOnline()) {
             mOutputText.setText("No network connection available.");
         } else {
-            new Date.MakeRequestTask2(mCredential).execute();
+            new MakeRequestTask(mCredential).execute();
         }
     }
 
@@ -295,7 +307,7 @@ public class Date extends AppCompatActivity implements EasyPermissions.Permissio
             final int connectionStatusCode) {
         GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
         Dialog dialog = apiAvailability.getErrorDialog(
-                Date.this,
+                GoogleAPIOriginalCode.this,
                 connectionStatusCode,
                 REQUEST_GOOGLE_PLAY_SERVICES);
         dialog.show();
@@ -305,11 +317,11 @@ public class Date extends AppCompatActivity implements EasyPermissions.Permissio
      * An asynchronous task that handles the Google Calendar API call.
      * Placing the API calls in their own task ensures the UI stays responsive.
      */
-    private class MakeRequestTask2 extends AsyncTask<Void, Void, List<String>> {
+    private class MakeRequestTask extends AsyncTask<Void, Void, List<String>> {
         private com.google.api.services.calendar.Calendar mService = null;
         private Exception mLastError = null;
 
-        MakeRequestTask2(GoogleAccountCredential credential) {
+        MakeRequestTask(GoogleAccountCredential credential) {
             HttpTransport transport = AndroidHttp.newCompatibleTransport();
             JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
             mService = new com.google.api.services.calendar.Calendar.Builder(
@@ -339,12 +351,11 @@ public class Date extends AppCompatActivity implements EasyPermissions.Permissio
          * @throws IOException
          */
         private List<String> getDataFromApi() throws IOException {
+            // List the next 10 events from the primary calendar.
             DateTime now = new DateTime(System.currentTimeMillis());
-            DateTime endhours = new DateTime ((System.currentTimeMillis() /
-                    (1000*60*60*24)+1)*(1000*60*60*24*1)+14400000); //mult second part by number of days
             List<String> eventStrings = new ArrayList<String>();
             Events events = mService.events().list("primary")
-                    .setTimeMax(endhours)     //returns data events
+                    .setMaxResults(10)
                     .setTimeMin(now)
                     .setOrderBy("startTime")
                     .setSingleEvents(true)

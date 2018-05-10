@@ -1,9 +1,5 @@
 package com.example.nag.productify;
 
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.widget.TextView;
-
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.api.client.extensions.android.http.AndroidHttp;
@@ -36,13 +32,12 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -52,10 +47,10 @@ import java.util.List;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class Date extends AppCompatActivity implements EasyPermissions.PermissionCallbacks
+public class LetsHopeThisWorks extends Activity implements EasyPermissions.PermissionCallbacks
 {
     GoogleAccountCredential mCredential;
-    private TextView mOutputText, currentYearText, currentMonthText, currentDayText, dayOfWeekText;
+    private TextView mOutputText;
     private Button mCallApiButton;
     ProgressDialog mProgress;
 
@@ -64,43 +59,60 @@ public class Date extends AppCompatActivity implements EasyPermissions.Permissio
     static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
     static final int REQUEST_PERMISSION_GET_ACCOUNTS = 1003;
 
-    private static final String BUTTON_TEXT = "Call Google Calendar API";
+    private static final String BUTTON_TEXT = "Add an event to your schedule";
     private static final String PREF_ACCOUNT_NAME = "accountName";
     private static final String[] SCOPES = { CalendarScopes.CALENDAR_READONLY };
 
-
+    /**
+     * Create the main activity.
+     * @param savedInstanceState previously saved instance data.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_date);
+        LinearLayout activityLayout = new LinearLayout(this);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+        activityLayout.setLayoutParams(lp);
+        activityLayout.setOrientation(LinearLayout.VERTICAL);
+        activityLayout.setPadding(16, 16, 16, 16);
 
-        Bundle bundle = getIntent().getExtras();
-        String month  = bundle.getString("month");
-        int year  = bundle.getInt("year");
-        int day = bundle.getInt("day");
-        String dayofweek = bundle.getString("dayofweek");
+        ViewGroup.LayoutParams tlp = new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
 
-        currentDayText = findViewById(R.id.currentDayText);
-        currentMonthText = findViewById(R.id.currentMonthText);
-        currentYearText = findViewById(R.id.currentYearText);
-        dayOfWeekText = findViewById(R.id.dayOfWeekText);
+        mCallApiButton = new Button(this);
+        mCallApiButton.setText(BUTTON_TEXT);
+        mCallApiButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCallApiButton.setEnabled(false);
+                mOutputText.setText("");
+                getResultsFromApi();
+                mCallApiButton.setEnabled(true);
+            }
+        });
+        activityLayout.addView(mCallApiButton);
 
-        currentDayText.setText(""+day);
-        currentMonthText.setText(month);
-        currentYearText.setText(""+year);
-        dayOfWeekText.setText(dayofweek);
-
-        mOutputText = (TextView) findViewById(R.id.mOutputText);
+        mOutputText = new TextView(this);
+        mOutputText.setLayoutParams(tlp);
+        mOutputText.setPadding(16, 16, 16, 16);
+        mOutputText.setVerticalScrollBarEnabled(true);
+        mOutputText.setMovementMethod(new ScrollingMovementMethod());
+        mOutputText.setText(
+                "Click the \'" + BUTTON_TEXT +"\' button to test the API.");
+        activityLayout.addView(mOutputText);
 
         mProgress = new ProgressDialog(this);
         mProgress.setMessage("Calling Google Calendar API ...");
+
+        setContentView(activityLayout);
 
         // Initialize credentials and service object.
         mCredential = GoogleAccountCredential.usingOAuth2(
                 getApplicationContext(), Arrays.asList(SCOPES))
                 .setBackOff(new ExponentialBackOff());
-
-        getResultsFromApi();
     }
 
     /**
@@ -118,7 +130,7 @@ public class Date extends AppCompatActivity implements EasyPermissions.Permissio
         } else if (! isDeviceOnline()) {
             mOutputText.setText("No network connection available.");
         } else {
-            new Date.MakeRequestTask2(mCredential).execute();
+            new LetsHopeThisWorks.MakeRequestTask3(mCredential).execute();
         }
     }
 
@@ -295,7 +307,7 @@ public class Date extends AppCompatActivity implements EasyPermissions.Permissio
             final int connectionStatusCode) {
         GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
         Dialog dialog = apiAvailability.getErrorDialog(
-                Date.this,
+                LetsHopeThisWorks.this,
                 connectionStatusCode,
                 REQUEST_GOOGLE_PLAY_SERVICES);
         dialog.show();
@@ -305,11 +317,11 @@ public class Date extends AppCompatActivity implements EasyPermissions.Permissio
      * An asynchronous task that handles the Google Calendar API call.
      * Placing the API calls in their own task ensures the UI stays responsive.
      */
-    private class MakeRequestTask2 extends AsyncTask<Void, Void, List<String>> {
+    private class MakeRequestTask3 extends AsyncTask<Void, Void, List<String>> {
         private com.google.api.services.calendar.Calendar mService = null;
         private Exception mLastError = null;
 
-        MakeRequestTask2(GoogleAccountCredential credential) {
+        MakeRequestTask3(GoogleAccountCredential credential) {
             HttpTransport transport = AndroidHttp.newCompatibleTransport();
             JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
             mService = new com.google.api.services.calendar.Calendar.Builder(
@@ -323,9 +335,10 @@ public class Date extends AppCompatActivity implements EasyPermissions.Permissio
          * @param params no parameters needed for this task.
          */
         @Override
-        protected List<String> doInBackground(Void... params) {
+        protected ArrayList<String> doInBackground(Void... params) {
             try {
-                return getDataFromApi();
+                return addEvent();
+
             } catch (Exception e) {
                 mLastError = e;
                 cancel(true);
@@ -334,34 +347,51 @@ public class Date extends AppCompatActivity implements EasyPermissions.Permissio
         }
 
         /**
-         * Fetch a list of the next 10 events from the primary calendar.
+         * Adds and returns events added to google calendar
          * @return List of Strings describing returned events.
          * @throws IOException
          */
-        private List<String> getDataFromApi() throws IOException {
-            DateTime now = new DateTime(System.currentTimeMillis());
-            DateTime endhours = new DateTime ((System.currentTimeMillis() /
-                    (1000*60*60*24)+1)*(1000*60*60*24*1)+14400000); //mult second part by number of days
-            List<String> eventStrings = new ArrayList<String>();
-            Events events = mService.events().list("primary")
-                    .setTimeMax(endhours)     //returns data events
-                    .setTimeMin(now)
-                    .setOrderBy("startTime")
-                    .setSingleEvents(true)
-                    .execute();
-            List<Event> items = events.getItems();
+        private ArrayList<String> addEvent() throws IOException {
 
-            for (Event event : items) {
-                DateTime start = event.getStart().getDateTime();
-                if (start == null) {
-                    // All-day events don't have start times, so just use
-                    // the start date.
-                    start = event.getStart().getDate();
-                }
-                eventStrings.add(
-                        String.format("%s (%s)", event.getSummary(), start));
-            }
-            return eventStrings;
+            Event thingy = new Event()
+                    .setSummary("Google I/O 2015")
+                    .setLocation("800 Howard St., San Francisco, CA 94103")
+                    .setDescription("A chance to hear more about Google's developer products.");
+
+            DateTime startDateTime = new DateTime("2015-05-28T09:00:00-07:00");
+            EventDateTime s = new EventDateTime()
+                    .setDateTime(startDateTime)
+                    .setTimeZone("America/Los_Angeles");
+            thingy.setStart(s);
+
+            DateTime endDateTime = new DateTime("2015-05-28T17:00:00-07:00");
+            EventDateTime end = new EventDateTime()
+                    .setDateTime(endDateTime)
+                    .setTimeZone("America/Los_Angeles");
+            thingy.setEnd(end);
+
+            EventReminder[] reminderOverrides = new EventReminder[] {
+                    new EventReminder().setMethod("email").setMinutes(24 * 60),
+                    new EventReminder().setMethod("popup").setMinutes(10),
+            };
+            Event.Reminders reminders = new Event.Reminders()
+                    .setUseDefault(false)
+                    .setOverrides(Arrays.asList(reminderOverrides));
+            thingy.setReminders(reminders);
+
+             Event events = mService.events().insert("primary",thingy)
+                    .execute();
+
+             Log.d("Event success?" , (events.getHtmlLink()).toString());
+
+            ArrayList<String> items = new ArrayList <> ();
+
+            String eventObj = events.getSummary().toString();
+
+            items.add(eventObj);
+
+            return items;
+
         }
 
 

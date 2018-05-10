@@ -83,14 +83,14 @@
         android:layout_marginTop="8dp"
         android:onClick="goConfirm"
         android:text="@string/confirm"
+        android:textColor="#000000"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.13"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.77"
-        android:textColor="#000000"/>
+        app:layout_constraintVertical_bias="0.942" />
 
     <Button
         android:id="@+id/editBut"
@@ -100,13 +100,14 @@
         android:layout_marginTop="8dp"
         android:onClick="goEdit"
         android:text="@string/edit"
+        android:textColor="#000000"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.499"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.77"
-        android:textColor="#000000"/>
+        app:layout_constraintVertical_bias="0.942" />
 
     <Button
         android:id="@+id/cancelBut"
@@ -118,15 +119,15 @@
         android:layout_marginTop="8dp"
         android:onClick="goCancel"
         android:text="@string/cancel"
+        android:textColor="#000000"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.88"
+        app:layout_constraintHorizontal_bias="0.878"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.77"
 
-        android:textColor="#000000"/>
+        app:layout_constraintVertical_bias="0.942" />
 
     <TextView
         android:id="@+id/timeWorkHeading"
@@ -146,74 +147,19 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.406" />
 
-    <TextView
-        android:id="@+id/date1text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <ListView
+        android:id="@+id/listviewView"
+        android:layout_width="585dp"
+        android:layout_height="189dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="@string/sampleWorkTime1"
-        android:textColor="#000000"
         android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.459" />
-
-    <TextView
-        android:id="@+id/date2text"
-        android:layout_width="wrap_content"
-        android:layout_height="47dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:text="@string/sampleWorkTime2"
-        android:textColor="#000000"
-        android:textSize="30sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.08"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.512" />
-
-    <TextView
-        android:id="@+id/date3text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/sampleWorkTime3"
-        android:textColor="#000000"
-        android:textSize="30sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.08"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.566" />
-
-    <TextView
-        android:id="@+id/date4text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/sampleWorkTime4"
-        android:textColor="#000000"
-        android:textSize="30sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.1"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.62" />
+        app:layout_constraintVertical_bias="0.58000004" />
 
 </android.support.constraint.ConstraintLayout>
