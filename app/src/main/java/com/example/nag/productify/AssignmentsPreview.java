@@ -175,8 +175,8 @@ public class AssignmentsPreview extends Activity implements EasyPermissions.Perm
     public void goConfirm (View view)
     {
         getResultsFromApi();
-        Intent confirm =  new Intent (AssignmentsPreview.this, CalendarScreen.class);
         showToast("Your Assignment Has Been Added.");
+        Intent confirm =  new Intent (AssignmentsPreview.this, CalendarScreen.class);
         startActivity(confirm);
     }
 

@@ -377,7 +377,6 @@ public class Date extends AppCompatActivity implements EasyPermissions.Permissio
             if (output == null || output.size() == 0) {
                 mOutputText.setText("No results returned.");
             } else {
-                output.add(0, "Data retrieved using the Google Calendar API:");
                 mOutputText.setText(TextUtils.join("\n", output));
             }
         }

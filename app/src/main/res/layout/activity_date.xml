@@ -53,11 +53,11 @@
     <TextView
         android:id="@+id/mOutputText"
         android:layout_width="match_parent"
-        android:layout_height="144dp"
-        android:text="No assignments today"
-        android:textSize="30sp"
-        android:paddingTop="20dp"
+        android:layout_height="323dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        android:textAlignment="center"/>
+        android:paddingTop="20dp"
+        android:text="No assignments today"
+        android:textAlignment="center"
+        android:textSize="30sp" />
 </LinearLayout>

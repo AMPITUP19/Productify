@@ -36,7 +36,6 @@
             android:label="Productify" />
         <activity android:name=".Date" />
 
-
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
