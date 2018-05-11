@@ -737,6 +737,7 @@ public class EventTask implements Serializable{
 		//return (totalDays - removedDays);
 		return 5; //hardcoded temporarily because android studio doesn't like LocalDateTime class
 	}
+
 	/*public String checkIfFree(DateTime startTimeCheck, DateTime endTimeCheck)
 	{
 		FreeBusyRequest req = new FreeBusyRequest();
@@ -865,7 +866,38 @@ public class EventTask implements Serializable{
             infoString += minute + ":00.00Z";
 
       DateTime DT = DateTime.parseRfc3339(infoString);*/
-        DateTime DT = new DateTime(year+"-"+month+"-"+day+"T"+hour+":"+minute+":00-04:00");
+        String monthStr;
+        String dayStr;
+        String hourStr;
+        String minuteStr;
+        String yearStr = year + "-";
+        if(month < 10)
+        {
+            monthStr = "0" + month + "-";
+        }
+        else
+            monthStr = month + "-";
+        if(day < 10)
+        {
+            dayStr = "0" + day + "T";
+        }
+        else
+            dayStr = day + "T";
+        if(hour < 10)
+        {
+            hourStr = "0" + hour + ":";
+        }
+        else
+            hourStr = hour + ":";
+        if(minute < 10)
+        {
+            minuteStr = "0" + minute + ":00-04:00";
+        }
+        else
+            minuteStr = minute + ":00-04:00";
+
+        DateTime DT = new DateTime(yearStr + monthStr + dayStr + hourStr + minuteStr);
+        //DateTime DT = new DateTime(year+"-"+month+"-"+day+"T"+hour+":"+minute+":00-04:00");
         return DT;
     }
 
@@ -879,7 +911,38 @@ public class EventTask implements Serializable{
 		//DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
 		//DateTime DST = DateTime.parseRfc3339(infoString);
-        DateTime DST = new DateTime(startYear+"-"+startMonth+"-"+startDay+"T"+startHour+":"+startMinute+":00-04:00");
+
+        String monthStr;
+        String dayStr;
+        String hourStr;
+        String minuteStr;
+        String yearStr = startYear + "-";
+        if(startMonth < 10)
+        {
+            monthStr = "0" + startMonth + "-";
+        }
+        else
+            monthStr = startMonth + "-";
+        if(startDay < 10)
+        {
+            dayStr = "0" + startDay + "T";
+        }
+        else
+            dayStr = startDay + "T";
+        if(startHour < 10)
+        {
+            hourStr = "0" + startHour + ":";
+        }
+        else
+            hourStr = startHour + ":";
+        if(startMinute < 10)
+        {
+            minuteStr = "0" + startMinute + ":00-04:00";
+        }
+        else
+            minuteStr = startMinute + ":00-04:00";
+
+        DateTime DST = new DateTime(yearStr + monthStr + dayStr + hourStr + minuteStr);
 		return DST;
 	}
 
@@ -893,7 +956,38 @@ public class EventTask implements Serializable{
         //DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
         //DateTime DET = DateTime.parseRfc3339(infoString);
-        DateTime DET = new DateTime(endYear+"-"+endMonth+"-"+endDay+"T"+endHour+":"+endMinute+":00-04:00");
+        String monthStr;
+        String dayStr;
+        String hourStr;
+        String minuteStr;
+        String yearStr = endYear + "-";
+        if(endMonth < 10)
+        {
+            monthStr = "0" + endMonth + "-";
+        }
+        else
+            monthStr = endMonth + "-";
+        if(endDay < 10)
+        {
+            dayStr = "0" + endDay + "T";
+        }
+        else
+            dayStr = endDay + "T";
+        if(endHour < 10)
+        {
+            hourStr = "0" + endHour + ":";
+        }
+        else
+            hourStr = endHour + ":";
+        if(endMinute < 10)
+        {
+            minuteStr = "0" + endMinute + ":00-04:00";
+        }
+        else
+            minuteStr = endMinute + ":00-04:00";
+
+        DateTime DET = new DateTime(yearStr + monthStr + dayStr + hourStr + minuteStr);
+
         return DET;
     }
 
