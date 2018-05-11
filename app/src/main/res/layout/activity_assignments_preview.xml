@@ -5,7 +5,10 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AssignmentsPreview">
+    tools:context=".AssignmentsPreview"
+    android:background="@drawable/background">
+    <!-- The background image was taken from
+    https://fineartamerica.com/featured/blue-sky-abstract-low-polygon-background-aloysius-patrimonio.html -->
 
     <TextView
         android:id="@+id/heading"
@@ -13,6 +16,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginTop="32dp"
+        android:fontFamily="@font/advent_pro_semibold"
         android:text="@string/heading"
         android:textColor="#000000"
         android:textSize="60sp"
@@ -28,14 +32,15 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginTop="8dp"
+        android:fontFamily="@font/advent_pro_semibold"
         android:text="@string/preview"
+        android:textColor="#000000"
         android:textSize="40sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.156"
-        android:textColor="#000000"/>
+        app:layout_constraintVertical_bias="0.156" />
 
     <TextView
         android:id="@+id/assignmentName"
@@ -45,15 +50,16 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="24dp"
         android:layout_marginTop="8dp"
+        android:fontFamily="@font/advent_pro_semibold"
         android:text="@string/assignmentName"
+        android:textColor="#000000"
         android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.01"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.257"
-        android:textColor="#000000"/>
+        app:layout_constraintVertical_bias="0.257" />
 
     <TextView
         android:id="@+id/dueDateText"
@@ -63,6 +69,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:fontFamily="@font/advent_pro_semibold"
         android:text="@string/sampleDueDate"
         android:textColor="#000000"
         android:textSize="30sp"
@@ -83,7 +90,7 @@
         android:layout_marginTop="8dp"
         android:onClick="goConfirm"
         android:text="@string/confirm"
-        android:textColor="#000000"
+        android:textColor="@android:color/background_light"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -100,7 +107,7 @@
         android:layout_marginTop="8dp"
         android:onClick="goEdit"
         android:text="@string/edit"
-        android:textColor="#000000"
+        android:textColor="@android:color/background_light"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -119,7 +126,7 @@
         android:layout_marginTop="8dp"
         android:onClick="goCancel"
         android:text="@string/cancel"
-        android:textColor="#000000"
+        android:textColor="@android:color/background_light"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -137,8 +144,9 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:textColor="#000000"
+        android:fontFamily="@font/advent_pro_semibold"
         android:text="@string/timesToWorkText"
+        android:textColor="#000000"
         android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

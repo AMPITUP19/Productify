@@ -354,20 +354,20 @@ public class LetsHopeThisWorks extends Activity implements EasyPermissions.Permi
         private ArrayList<String> addEvent() throws IOException {
 
             Event thingy = new Event()
-                    .setSummary("Google I/O 2015")
+                    .setSummary("Google I/O 2018")
                     .setLocation("800 Howard St., San Francisco, CA 94103")
                     .setDescription("A chance to hear more about Google's developer products.");
 
-            DateTime startDateTime = new DateTime("2015-05-28T09:00:00-07:00");
+            DateTime startDateTime = new DateTime("2018-05-28T09:00:00-07:00");
             EventDateTime s = new EventDateTime()
                     .setDateTime(startDateTime)
-                    .setTimeZone("America/Los_Angeles");
+                    .setTimeZone("America/New_York");
             thingy.setStart(s);
 
-            DateTime endDateTime = new DateTime("2015-05-28T17:00:00-07:00");
+            DateTime endDateTime = new DateTime("2018-05-28T17:00:00-20:00");
             EventDateTime end = new EventDateTime()
                     .setDateTime(endDateTime)
-                    .setTimeZone("America/Los_Angeles");
+                    .setTimeZone("America/New_York");
             thingy.setEnd(end);
 
             EventReminder[] reminderOverrides = new EventReminder[] {

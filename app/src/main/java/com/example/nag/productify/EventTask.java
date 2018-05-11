@@ -671,14 +671,14 @@ public class EventTask implements Serializable{
                                 .setOverrides(Arrays.asList(reminderOverrides));
                         event.setReminders(reminders);
 
-                        Event events = mService.events().insert("primary", event)
-                                .execute();
+//                        Event events = mService.events().insert("primary", event)
+  //                              .execute();
 
                         ArrayList<String> items = new ArrayList<>();
 
-                        String eventObj = events.getSummary().toString();
+    //                    String eventObj = events.getSummary().toString();
 
-                        items.add(eventObj);
+       //                 items.add(eventObj);
 
                     }
                 }
