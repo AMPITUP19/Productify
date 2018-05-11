@@ -41,7 +41,7 @@ public class NotificationReceiver extends BroadcastReceiver {
                 setContentIntent(pendingIntent).
                 setContentText("You have a task to complete").
                 setContentTitle("Productify Notification").
-//                setSound(alarmSound).
+//                setSound(alarmSound)...
         setAutoCancel(true);
         notificationManager.notify(100,builder.build());
 

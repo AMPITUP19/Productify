@@ -158,12 +158,6 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         startActivity(assign);
     }
 
-    public void exist(View view)
-    {
-        Intent exist = new Intent (MainActivity.this,ExistingAssignmentsToday.class);
-        startActivity(exist);
-    }
-
     public void goToCalendar (View view)
     {
         Intent calendar = new Intent (MainActivity.this,CalendarScreen.class);

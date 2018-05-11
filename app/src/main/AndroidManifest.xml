@@ -31,9 +31,6 @@
         <activity
             android:name=".CalendarScreen"
             android:label="Productify" />
-        <activity
-            android:name=".ExistingAssignmentsToday"
-            android:label="Productify" />
         <activity android:name=".Date" />
 
         <meta-data

@@ -31,6 +31,10 @@ public class Assignment extends AppCompatActivity {
     CheckBox checkMon, checkTues, checkWed, checkThurs, checkFri, checkSat, checkSun;
     Boolean mon, tues, wed, thurs, fri, sat, sun;
 
+    /**
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -66,7 +66,7 @@ public class LetsHopeThisWorks extends Activity implements EasyPermissions.Permi
     /**
      * Create the main activity.
      * @param savedInstanceState previously saved instance data.
-     */
+     *///
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

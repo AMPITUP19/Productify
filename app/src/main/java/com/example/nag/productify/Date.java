@@ -104,6 +104,17 @@ public class Date extends AppCompatActivity implements EasyPermissions.Permissio
     }
 
     /**
+     * Upon button click, user is returned to the main screen
+     * @param view
+     */
+    public void goMain (View view)
+    {
+        Intent i = new Intent(Date.this, MainActivity.class);
+
+        startActivity(i);
+    }
+
+    /**
      * Attempt to call the API, after verifying that all the preconditions are
      * satisfied. The preconditions are: Google Play Services installed, an
      * account was selected and the device currently has online access. If any
@@ -375,12 +386,16 @@ public class Date extends AppCompatActivity implements EasyPermissions.Permissio
         protected void onPostExecute(List<String> output) {
             mProgress.hide();
             if (output == null || output.size() == 0) {
-                mOutputText.setText("No results returned.");
+                mOutputText.setText("No assignments schedule for this day.");
             } else {
                 mOutputText.setText(TextUtils.join("\n", output));
             }
         }
 
+        /**
+         *
+         *
+         */
         @Override
         protected void onCancelled() {
             mProgress.hide();
@@ -402,4 +417,5 @@ public class Date extends AppCompatActivity implements EasyPermissions.Permissio
             }
         }
     }
+
 }

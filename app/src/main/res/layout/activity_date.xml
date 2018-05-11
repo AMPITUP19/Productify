@@ -9,13 +9,22 @@
     android:orientation="vertical"
     android:gravity="center">
 
+    <Button
+        android:id="@+id/returnHomebut"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/returnHome"
+        android:textSize="20sp"
+        android:onClick="goMain"/>
+
     <TextView
         android:id="@+id/currentYearText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/assignYear"
+        android:textColor="#ffffff"
         android:textSize="50sp"
-        android:textColor="#ffffff" />
+        android:layout_marginTop="20dp"/>
 
     <TextView
         android:id="@+id/currentMonthText"
@@ -26,7 +35,7 @@
         android:textColor="#ffffff"
         android:background="#206757"
         android:gravity="center"
-        android:layout_marginTop="40dp"/>
+        android:layout_marginTop="15dp"/>
 
     <TextView
         android:id="@+id/currentDayText"
@@ -51,7 +60,7 @@
     <TextView
         android:id="@+id/mOutputText"
         android:layout_width="match_parent"
-        android:layout_height="323dp"
+        android:layout_height="280dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:paddingTop="20dp"

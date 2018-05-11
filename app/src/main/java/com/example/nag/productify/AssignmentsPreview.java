@@ -131,10 +131,12 @@ public class AssignmentsPreview extends Activity implements EasyPermissions.Perm
 
         interims = event1.createEventDates();
 
+        Log.d("interims", interims.toString());
+
         assignmentName.setText(name);
         dueDateText.setText(dMonth+ "/" + dDay + "/" + dYear + " at " + dHour + ":" + dMinute);
 
-        populateListView ();
+        //populateListView ();
 
     }
 
@@ -284,7 +286,7 @@ public class AssignmentsPreview extends Activity implements EasyPermissions.Perm
          * @param permissions The requested permissions. Never null.
          * @param grantResults The grant results for the corresponding permissions
          *     which is either PERMISSION_GRANTED or PERMISSION_DENIED. Never null.
-         */
+         *///
         @Override
         public void onRequestPermissionsResult(int requestCode,
                   @NonNull String[] permissions,

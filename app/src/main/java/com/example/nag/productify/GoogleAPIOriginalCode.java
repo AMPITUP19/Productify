@@ -375,7 +375,9 @@ public class GoogleAPIOriginalCode extends Activity implements EasyPermissions.P
             return eventStrings;
         }
 
-
+        /**
+         *
+         */
         @Override
         protected void onPreExecute() {
             mOutputText.setText("");

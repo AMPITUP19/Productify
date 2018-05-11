@@ -530,7 +530,7 @@ public class GoogleCalendarTest extends Activity implements EasyPermissions.Perm
         }
 
         /**
-         * Fetch a list of the next 10 events from the primary calendar.
+         * Fetch a list of events within the next week from Google calendar
          *
          * @return List of Strings describing returned events.
          * @throws IOException
