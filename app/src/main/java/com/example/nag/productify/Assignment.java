@@ -13,6 +13,7 @@ import android.widget.CheckBox;
 import android.widget.CheckedTextView;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,7 +31,8 @@ public class Assignment extends AppCompatActivity {
     Button createBut, viewBut;
     TextView assignmentText, newAssignmentText, dueDateText, daysText;
     EditText assignmentName, assignmentDueYear, assignmentDueMonth, assignmentDueDay, assignmentDueHour, assignmentDueMinute, assignmentLength, assignmentStartYear, assignmentStartMonth, assignmentStartDay, assignmentStartHour, assignmentStartMinute;
-    CheckedTextView checkMon, checkTues, checkWed, checkThurs, checkFri, checkSat, checkSun;
+    CheckBox checkMon, checkTues, checkWed, checkThurs, checkFri, checkSat, checkSun;
+    Boolean mon, tues, wed, thurs, fri, sat, sun;
 
     @Override
     /**
@@ -67,58 +69,82 @@ public class Assignment extends AppCompatActivity {
         checkMon.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                checkMon.setChecked(true);
+                mon = b;
             }
         });
 
-        final CheckBox checkTues = findViewById(R.id.checkTues);
+
+        final CheckBox checkTues = linearlayoutview1.findViewById(R.id.checkTues);
+        if (checkTues==null)
+        {
+            Log.d("CheckBox issue", "Tues is null");
+        }
         checkTues.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                checkTues.setChecked(true);
+                tues = b;
             }
         });
 
-        final CheckBox checkWed = findViewById(R.id.checkWed);
+        final CheckBox checkWed = linearlayoutview2.findViewById(R.id.checkWed);
+        if (checkWed==null)
+        {
+            Log.d("CheckBox issue", "Wed is null");
+        }
         checkWed.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                checkWed.setChecked(true);
+                wed =b;
             }
         });
 
-        final  CheckBox checkThurs = findViewById(R.id.checkThurs);
-
+        final  CheckBox checkThurs = linearlayoutview2.findViewById(R.id.checkThurs);
+        if (checkThurs==null)
+        {
+            Log.d("CheckBox issue", "Thurs is null");
+        }
         checkThurs.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                checkThurs.setChecked(true);
+                thurs = b;
             }
         });
 
-        final CheckBox checkFri = findViewById(R.id.checkFri);
+        final CheckBox checkFri = linearlayoutview3.findViewById(R.id.checkFri);
+        if (checkFri==null)
+        {
+            Log.d("CheckBox issue", "Fri is null");
+        }
         checkFri.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                checkFri.setChecked(true);
+                fri = b;
             }
         });
 
-        final CheckBox checkSat = findViewById(R.id.checkSat);
+        final CheckBox checkSat = linearlayoutview3.findViewById(R.id.checkSat);
+        if (checkSat==null)
+        {
+            Log.d("CheckBox issue", "Sat is null");
+        }
         checkSat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                checkSat.setChecked(true);
+                sat = b;
             }
         });
         final CheckBox checkSun = findViewById(R.id.checkSun);
+        if (checkSun==null)
+        {
+            Log.d("CheckBox issue", "Sun is null");
+        }
+           checkSun.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+               @Override
+               public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                  sun = b;
+               }
+           });
 
-        checkSun.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                checkSun.setChecked(true);
-            }
-        });
 
     }
 
@@ -148,9 +174,8 @@ public class Assignment extends AppCompatActivity {
         }
         else
         {
-          //  if (checkMon.isChecked()==true|| checkTues.isChecked()==true||checkWed.isChecked()==true||checkThurs
-           //       .isChecked()==true||checkFri.isChecked()==true||checkSat.isChecked()==true||checkSun.isChecked()==true)
-            //{
+            if (mon == true || tues ==true || wed==true || thurs ==true || fri ==true || sat==true ||sun ==true )
+            {
                 String name = assignmentName.getText().toString();
 
                 Integer syear = Integer.parseInt(assignmentStartYear.getText().toString());
@@ -182,6 +207,7 @@ public class Assignment extends AppCompatActivity {
                 bundle.putString("nm",name);
                 bundle.putInt("sy",syear);
                 bundle.putInt("sm",smonth);
+                bundle.putInt("sd",sday);
                 bundle.putInt("sh",shour);
                 bundle.putInt("smin",sminute);
                 bundle.putInt("dy",dyear);
@@ -226,38 +252,19 @@ public class Assignment extends AppCompatActivity {
                 {
                     Log.d("Intent no error", "well at least something is in there");
                 }
+
                 startActivity(intent);
             }
-            //else
-            //{
-             //  showToast ("Please select at least one day to work.");
-            //}
-        }
-
-
-    /**
-     * Brings the user to the AssignmentsPreview activity
-     * @param view the view the method is being used for
-     */
-    public void goToPreview (View view)
-    {
-
-                //startActivity(intent);
+            else
+            {
+               showToast ("Please select at least one day to work.");
             }
-           // else
-            //{
-              // showToast ("Please select at least one day to work.");
-            //}
-        //}
+        }
+    }
 
-
-    /**
-     * Brings the user to the ExistingAssignmentsToday activity
-     * @param view the view the method is being used for
-     */
     public void goToExist (View view)
     {
-        Intent exist  = new Intent (Assignment.this, ExistingAssignmentsToday.class);
+        Intent exist  = new Intent (Assignment.this, CalendarScreen.class);
         startActivity(exist);
     }
 }
