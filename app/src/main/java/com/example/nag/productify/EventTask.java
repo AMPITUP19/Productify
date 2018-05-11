@@ -692,7 +692,7 @@ public class EventTask implements Serializable{
 	 */
 	public int getDaysBetween()
 	{
-		int totalDays;
+		/**int totalDays;
 		int removedDays;
 		LocalDateTime sDate = LocalDateTime.of(startYear, startMonth, startDay, startHour, startMinute);
 		LocalDateTime eDate = LocalDateTime.of(endYear, endMonth, endDay, endHour, endMinute);
@@ -732,9 +732,10 @@ public class EventTask implements Serializable{
 			{
 				removedDays++;
 			}
-		}
+		} */
 
-		return (totalDays - removedDays);
+		//return (totalDays - removedDays);
+		return 5; //hardcoded temporarily because android studio doesn't like LocalDateTime class
 	}
 	/*public String checkIfFree(DateTime startTimeCheck, DateTime endTimeCheck)
 	{

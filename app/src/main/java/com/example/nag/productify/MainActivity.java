@@ -76,7 +76,6 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         setContentView(R.layout.activity_main);
 
         newAssignBut = (Button) findViewById(R.id.newAssignBut);
-        existBut = (Button) findViewById(R.id.existBut);
         calendarBut = (Button) findViewById(R.id.calendarBut);
         integrateCalendarBut = (Button) findViewById(R.id.integrateCalendarBut);
         signOutBut = (Button) findViewById(R.id.signOutBut);
@@ -113,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
             }
         }*/
 
-        outputText = (TextView) findViewById(R.id.outputText);
+
 
         mProgress = new ProgressDialog(this);
         mProgress.setMessage("Calling Google CalendarScreen API ...");

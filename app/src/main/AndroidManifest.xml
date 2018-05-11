@@ -35,7 +35,6 @@
             android:name=".ExistingAssignmentsToday"
             android:label="Productify" />
         <activity android:name=".Date" />
-        <activity android:name=".MainActivity"></activity>
 
         <meta-data
             android:name="preloaded_fonts"
