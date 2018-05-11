@@ -22,6 +22,9 @@ import org.w3c.dom.Text;
 
 import java.util.Calendar;
 
+/**
+ * Creates class Assignment which input the variables below and creates an EventTask object
+ */
 public class Assignment extends AppCompatActivity {
 
     Button createBut, viewBut;
@@ -30,6 +33,9 @@ public class Assignment extends AppCompatActivity {
     CheckedTextView checkMon, checkTues, checkWed, checkThurs, checkFri, checkSat, checkSun;
 
     @Override
+    /**
+     * Instantiates the Assignment activity
+     */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_assignment);
@@ -116,12 +122,19 @@ public class Assignment extends AppCompatActivity {
 
     }
 
+    /**
+     * Creates a toast to show to the user.
+     * @param text the String shown to the user
+     */
     private void showToast (String text)
     {
         Toast.makeText(Assignment.this,text,Toast.LENGTH_SHORT).show();
     }
 
-
+    /**
+     * Creates an EventTask object from user's input values
+     * @param view the view the method is being used for
+     */
     public void create (View view)
     {
         if (assignmentName.getText().toString().isEmpty()||assignmentDueYear.getText().toString().isEmpty()||assignmentDueMonth
@@ -213,16 +226,35 @@ public class Assignment extends AppCompatActivity {
                 {
                     Log.d("Intent no error", "well at least something is in there");
                 }
-
                 startActivity(intent);
+            }
+            //else
+            //{
+             //  showToast ("Please select at least one day to work.");
+            //}
+        }
+
+
+    /**
+     * Brings the user to the AssignmentsPreview activity
+     * @param view the view the method is being used for
+     */
+    public void goToPreview (View view)
+    {
+
+                //startActivity(intent);
             }
            // else
             //{
               // showToast ("Please select at least one day to work.");
             //}
         //}
-    }
 
+
+    /**
+     * Brings the user to the ExistingAssignmentsToday activity
+     * @param view the view the method is being used for
+     */
     public void goToExist (View view)
     {
         Intent exist  = new Intent (Assignment.this, ExistingAssignmentsToday.class);

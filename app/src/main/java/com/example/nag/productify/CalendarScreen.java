@@ -10,12 +10,20 @@ import android.widget.Button;
 import android.widget.CalendarView;
 
 import java.util.Calendar;
+import java.util.Date;
 
+/**
+ * Shows the user's calendar
+ */
 public class CalendarScreen extends AppCompatActivity {
 
     Button returnHomeBut;
     CalendarView mCalendarView;
     @Override
+
+    /**
+     * Instantiates the CalendarScreen activity
+     */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar);
@@ -103,6 +111,10 @@ public class CalendarScreen extends AppCompatActivity {
 
     }
 
+    /**
+     * Brings the user to the MainActivity
+     * @param view the view the method is being used for
+     */
     public void goHome(View view)
     {
         Intent home = new Intent (CalendarScreen.this, MainActivity.class);

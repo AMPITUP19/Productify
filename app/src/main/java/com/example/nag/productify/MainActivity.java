@@ -8,7 +8,7 @@ import android.os.Bundle;
 import android.view.View;import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.tasks.OnCompleteListener;
-
+import com.google.android.gms.tasks.Task;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException;
@@ -46,6 +46,9 @@ import java.util.List;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
+/**
+ * Allows a user to sign in to his/her Google account, access his/her calendar, and create EventTask objects
+ */
 public class MainActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks
 {
 
@@ -67,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
 
 
     /**
-     * Create the main activity.
+     * Creates the main activity
      * @param savedInstanceState previously saved instance data.
      */
     @Override
@@ -113,6 +116,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
             }
         }*/
 
+        // outputText = (TextView) findViewById(R.id.outputText);
         //outputText = (TextView) findViewById(R.id.outputText);
 
         mProgress = new ProgressDialog(this);
@@ -152,18 +156,30 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         }
     }
 
+    /**
+     * Brings the user to the Assignment activity
+     * @param view the view used for the method
+     */
     public void newAssign (View view)
     {
         Intent assign = new Intent (MainActivity.this,Assignment.class);
         startActivity(assign);
     }
 
+    /**
+     * Brings the user to the ExistingAssignmentsToday activity
+     * @param view the view used for the method
+     */
     public void exist(View view)
     {
         Intent exist = new Intent (MainActivity.this,ExistingAssignmentsToday.class);
         startActivity(exist);
     }
 
+    /**
+     * Brings the user to the CalendarScreen activity
+     * @param view the view used for the method
+     */
     public void goToCalendar (View view)
     {
         Intent calendar = new Intent (MainActivity.this,CalendarScreen.class);
