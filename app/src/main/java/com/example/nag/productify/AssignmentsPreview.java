@@ -51,6 +51,9 @@ import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
 
+/**
+ * * Shows the user the event they are creating and allows them to either confir, edit, or cancel it.
+ * */
 public class AssignmentsPreview extends Activity implements EasyPermissions.PermissionCallbacks {
 
     Button confirmBut, editBut, cancelBut;
@@ -75,6 +78,9 @@ public class AssignmentsPreview extends Activity implements EasyPermissions.Perm
     private ArrayList <DateTime> interims;
 
     @Override
+    /**
+     * Instantiates the AssignmentsPreview activity
+     */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_assignments_preview);
@@ -181,6 +187,10 @@ public class AssignmentsPreview extends Activity implements EasyPermissions.Perm
         Toast.makeText(AssignmentsPreview.this,text,Toast.LENGTH_LONG).show();
     }
 
+    /**
+     * Confirms the EventTask's addition to the calendar
+     * @param view the view the method is being used for
+     */
     public void goConfirm (View view)
     {
         getResultsFromApi();
@@ -189,6 +199,9 @@ public class AssignmentsPreview extends Activity implements EasyPermissions.Perm
         startActivity(confirm);
     }
 
+    /**
+     * Gets the user's Google play services
+     */
          private void getResultsFromApi()
         {
             if (! isGooglePlayServicesAvailable()) {
@@ -515,6 +528,10 @@ public class AssignmentsPreview extends Activity implements EasyPermissions.Perm
         startActivity(edit);
     }
 
+    /**
+     * Brings the user to the MainActivity activity and cancels the EventTask
+     * @param view the view the method is being used for
+     */
     public void goCancel (View view)
     {
         Intent cancel = new Intent (AssignmentsPreview.this, MainActivity.class);

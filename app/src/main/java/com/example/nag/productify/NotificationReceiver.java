@@ -8,11 +8,13 @@ import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 
 /**
- * Created by miche on 2/18/2018.
+ * Manages the notifications which are sent to the user reminding them to begin working.
  */
-
 public class NotificationReceiver extends BroadcastReceiver {
     @Override
+    /**
+     * Sends the user a notification
+     */
     public void onReceive(Context context, Intent intent) {
 
         /** NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
