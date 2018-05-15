@@ -13,6 +13,9 @@ import com.google.api.services.calendar.model.EventReminder;
 import com.google.api.services.calendar.model.FreeBusyRequest;
 import com.google.api.services.calendar.model.FreeBusyResponse;
 
+import org.joda.time.Days;
+import org.joda.time.ReadableDuration;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.text.DateFormat;
@@ -692,50 +695,47 @@ public class EventTask implements Serializable{
 	 */
 	public int getDaysBetween()
 	{
-		/**int totalDays;
-		int removedDays;
-		LocalDateTime sDate = LocalDateTime.of(startYear, startMonth, startDay, startHour, startMinute);
-		LocalDateTime eDate = LocalDateTime.of(endYear, endMonth, endDay, endHour, endMinute);
+		org.joda.time.DateTime startD = new org.joda.time.DateTime(startYear, startMonth, startDay, startHour, startMinute);
+		org.joda.time.DateTime endD = new org.joda.time.DateTime(endYear, endMonth, endDay, endHour, endMinute);
 
-		Duration timeBetween = Duration.between(sDate, eDate);
-		totalDays = (int) timeBetween.toDays();
-		removedDays = 0;
+		int totalDays = Days.daysBetween(startD, endD).getDays();
+		int removedDays = 0;
 
-		for(LocalDateTime chosenDate = sDate.plusDays(1); chosenDate.isBefore(eDate); chosenDate = chosenDate.plusDays(1))
+		for(org.joda.time.DateTime chosenDate = startD.plusDays(1); !chosenDate.equals(endD.minusDays(1)); chosenDate = chosenDate.plusDays(1))
 		{
-			String weekDay = chosenDate.getDayOfWeek().toString();
-			if(!mon && weekDay == "MONDAY")
-			{
-				removedDays++;
-			}
-			else if(!tues && weekDay == "TUESDAY")
-			{
-				removedDays++;
-			}
-			else if(!wed && weekDay == "WEDNESDAY")
-			{
-				removedDays++;
-			}
-			else if(!thurs && weekDay == "THURSDAY")
-			{
-				removedDays++;
-			}
-			else if(!fri && weekDay == "FRIDAY")
-			{
-				removedDays++;
-			}
-			else if(!sat && weekDay == "SATURDAY")
-			{
-				removedDays++;
-			}
-			else if(!sund && weekDay == "SUNDAY")
-			{
-				removedDays++;
-			}
-		} */
+			int weekDay = chosenDate.getDayOfWeek();
 
-		//return (totalDays - removedDays);
-		return 5; //hardcoded temporarily because android studio doesn't like LocalDateTime class
+			if(!mon && weekDay == 1)
+			{
+				removedDays++;
+			}
+			if(!tues && weekDay == 2)
+			{
+				removedDays++;
+			}
+			if(!wed && weekDay == 3)
+			{
+				removedDays++;
+			}
+			if(!thurs && weekDay == 4)
+			{
+				removedDays++;
+			}
+			if(!fri && weekDay == 5)
+			{
+				removedDays++;
+			}
+			if(!sat && weekDay == 6)
+			{
+				removedDays++;
+			}
+			if(!sund && weekDay == 7)
+			{
+				removedDays++;
+			}
+		}
+
+		return (totalDays - removedDays);
 	}
 
 	/*public String checkIfFree(DateTime startTimeCheck, DateTime endTimeCheck)
