@@ -536,22 +536,22 @@ public class EventTask implements Serializable{
 
                     int day = d;
 
-                    LocalDateTime checkDate = LocalDateTime.of(year, month, day, 0, 0);
-                    String dayOfWeek = checkDate.getDayOfWeek().toString();
+                    org.joda.time.DateTime checkDate = new org.joda.time.DateTime(year, month, day, 0, 0);
+                    int dayOfWeek = checkDate.getDayOfWeek();
 
-                    if (!mon && dayOfWeek == "MONDAY") {
+                    if (!mon && dayOfWeek == 1) {
 
-                    } else if (!tues && dayOfWeek == "TUESDAY") {
+                    } else if (!tues && dayOfWeek == 2) {
 
-                    } else if (!wed && dayOfWeek == "WEDNESDAY") {
+                    } else if (!wed && dayOfWeek == 3) {
 
-                    } else if (!thurs && dayOfWeek == "THURSDAY") {
+                    } else if (!thurs && dayOfWeek == 4) {
 
-                    } else if (!fri && dayOfWeek == "FRIDAY") {
+                    } else if (!fri && dayOfWeek == 5) {
 
-                    } else if (!sat && dayOfWeek == "SATURDAY") {
+                    } else if (!sat && dayOfWeek == 6) {
 
-                    } else if (!sund && dayOfWeek == "SUNDAY") {
+                    } else if (!sund && dayOfWeek == 7) {
 
                     } else {
                         DateTime beginTime = createDateTime(year, month, day, 0, 0);
@@ -577,22 +577,22 @@ public class EventTask implements Serializable{
 
                         int day = d;
 
-                        LocalDateTime checkDate = LocalDateTime.of(year, month, day, 0, 0);
-                        String dayOfWeek = checkDate.getDayOfWeek().toString();
+                        org.joda.time.DateTime checkTime = new org.joda.time.DateTime(year, month, day, 0, 0);
+                        int dayOfWeek = checkTime.getDayOfWeek();
 
-                        if (!mon && dayOfWeek == "MONDAY") {
+                        if (!mon && dayOfWeek == 1) {
 
-                        } else if (!tues && dayOfWeek == "TUESDAY") {
+                        } else if (!tues && dayOfWeek == 2) {
 
-                        } else if (!wed && dayOfWeek == "WEDNESDAY") {
+                        } else if (!wed && dayOfWeek == 3) {
 
-                        } else if (!thurs && dayOfWeek == "THURSDAY") {
+                        } else if (!thurs && dayOfWeek == 4) {
 
-                        } else if (!fri && dayOfWeek == "FRIDAY") {
+                        } else if (!fri && dayOfWeek == 5) {
 
-                        } else if (!sat && dayOfWeek == "SATURDAY") {
+                        } else if (!sat && dayOfWeek == 6) {
 
-                        } else if (!sund && dayOfWeek == "SUNDAY") {
+                        } else if (!sund && dayOfWeek == 7) {
 
                         } else {
                             DateTime beginTime = createDateTime(year, month, day, 0, 0);
