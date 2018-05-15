@@ -1,5 +1,6 @@
 package com.example.nag.productify;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -11,7 +12,7 @@ import android.widget.CalendarView;
 
 import java.util.Calendar;
 
-public class CalendarScreen extends AppCompatActivity {
+public class CalendarScreen extends Activity {
 
     Button returnHomeBut;
     CalendarView mCalendarView;
@@ -79,19 +80,19 @@ public class CalendarScreen extends AppCompatActivity {
                 String dayofweek = "";
 
                 switch (dayofwint) {
-                    case 1:  dayofweek = "Friday";
+                    case 1:  dayofweek = "Thursday";
                         break;
-                    case 2:  dayofweek = "Saturday";
+                    case 2:  dayofweek = "Friday";
                         break;
-                    case 3:  dayofweek = "Sunday"; //Sunday
+                    case 3:  dayofweek = "Saturday";
                         break;
-                    case 4:  dayofweek = "Monday"; //Monday
+                    case 4:  dayofweek = "Sunday";
                         break;
-                    case 5:  dayofweek = "Tuesday"; //Tuesday
+                    case 5:  dayofweek = "Monday";
                         break;
-                    case 6:  dayofweek = "Wednesday";
+                    case 6:  dayofweek = "Tuesday";
                         break;
-                    case 7:  dayofweek = "Thursday";
+                    case 7:  dayofweek = "Wednesday";
                         break;
                     default: dayofweek = "D.O.W";
                         break;

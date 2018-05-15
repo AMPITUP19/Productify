@@ -1,5 +1,6 @@
 package com.example.nag.productify;
 
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.usage.UsageEvents;
@@ -23,7 +24,7 @@ import org.w3c.dom.Text;
 
 import java.util.Calendar;
 
-public class Assignment extends AppCompatActivity {
+public class Assignment extends Activity {
 
     Button createBut, viewBut;
     TextView assignmentText, newAssignmentText, dueDateText, daysText;

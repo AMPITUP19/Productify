@@ -52,7 +52,7 @@ import java.util.List;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class Date extends AppCompatActivity implements EasyPermissions.PermissionCallbacks
+public class Date extends Activity implements EasyPermissions.PermissionCallbacks
 {
     GoogleAccountCredential mCredential;
     private TextView mOutputText, currentYearText, currentMonthText, currentDayText, dayOfWeekText;

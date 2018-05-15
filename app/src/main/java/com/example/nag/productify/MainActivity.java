@@ -2,6 +2,7 @@ package com.example.nag.productify;
 
 //used google calendar tutorials on google calendar api website
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.view.View;import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.tasks.OnCompleteListener;
 
+import com.google.android.gms.tasks.Task;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException;
@@ -46,7 +48,7 @@ import java.util.List;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class MainActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks
+public class MainActivity extends Activity implements EasyPermissions.PermissionCallbacks
 {
 
     GoogleAccountCredential mCredential;
@@ -60,8 +62,6 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
     static final int REQUEST_PERMISSION_GET_ACCOUNTS = 1003;
 
-    private static final String BUTTON_TEXT = "Call Google CalendarScreen API";
-    private static final String signout_text = "Sign out";
     private static final String PREF_ACCOUNT_NAME = "accountName";
     private static final String[] SCOPES = { CalendarScopes.CALENDAR_READONLY };
 
@@ -96,24 +96,12 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
             @Override
             public void onClick(View v) {
                 integrateCalendarBut.setEnabled(false);
-                integrateCalendarBut.setText("");
                 getResultsFromApi();
                 integrateCalendarBut.setEnabled(true);
             }
         });
         
-        /*@Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-                // ...
-                case R.id.signOutBut:
-                    signOut();
-                    break;
-                // ...
-            }
-        }*/
 
-        //outputText = (TextView) findViewById(R.id.outputText);
 
         mProgress = new ProgressDialog(this);
         mProgress.setMessage("Calling Google CalendarScreen API ...");
@@ -132,6 +120,28 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                 service.calendars().get('primary').execute(); */
 
     }
+
+     /*@Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                // ...
+                case R.id.signOutBut:
+                    signOut();
+                    break;
+                // ...
+            }
+        }*/
+
+        /*private void signOut() {
+            mCredential.signOut()
+                    .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            // ...
+                        }
+                    });
+        } */
+
 
     /**
      * Attempt to call the API, after verifying that all the preconditions are
