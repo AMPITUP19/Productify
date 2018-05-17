@@ -8,5 +8,5 @@
     android:background="@drawable/background">
     <!-- The background image was taken from
     https://fineartamerica.com/featured/blue-sky-abstract-low-polygon-background-aloysius-patrimonio.html -->
-
+    <!-- /-->
 </android.support.constraint.ConstraintLayout>

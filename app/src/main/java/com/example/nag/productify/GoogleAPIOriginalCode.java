@@ -107,7 +107,7 @@ public class GoogleAPIOriginalCode extends Activity implements EasyPermissions.P
 
         setContentView(activityLayout);
 
-        // Initialize credentials and service object.
+        // /Initialize credentials and service object.
         mCredential = GoogleAccountCredential.usingOAuth2(
                 getApplicationContext(), Arrays.asList(SCOPES))
                 .setBackOff(new ExponentialBackOff());

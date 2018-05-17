@@ -12,7 +12,7 @@
         android:id="@+id/calendarView"
         android:layout_width="match_parent"
         android:layout_height="770dp" />
-
+    <!-- /-->
     <Button
         android:id="@+id/returnHomeBut"
         android:layout_width="match_parent"

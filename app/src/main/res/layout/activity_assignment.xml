@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".Assignment"
     android:background="@drawable/background">
-    <!-- The background image was taken from
+    <!-- /The background image was taken from
     https://fineartamerica.com/featured/blue-sky-abstract-low-polygon-background-aloysius-patrimonio.html -->
 
     <LinearLayout

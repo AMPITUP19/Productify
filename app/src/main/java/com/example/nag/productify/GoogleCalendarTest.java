@@ -603,7 +603,7 @@ public class GoogleCalendarTest extends Activity implements EasyPermissions.Perm
         }
     }
 
-    //adds event to Google Calendar
+    ///adds event to Google Calendar
    /* private void addEvent () {
 
 

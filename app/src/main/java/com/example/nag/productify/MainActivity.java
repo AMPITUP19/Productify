@@ -378,7 +378,7 @@ public class MainActivity extends Activity implements EasyPermissions.Permission
             for (Event event : items) {
                 DateTime start = event.getStart().getDateTime();
                 if (start == null) {
-                    // All-day events don't have start times, so just use
+                    // /All-day events don't have start times, so just use
                     // the start date.
                     start = event.getStart().getDate();
                 }

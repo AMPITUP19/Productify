@@ -225,6 +225,10 @@ public class AssignmentsPreview extends Activity implements EasyPermissions.Perm
         list.setAdapter(adapter);
     }
 
+    /**
+     * Shows a pop up message
+     * @param text the message to pop up
+     */
     private void showToast (String text)
     {
         Toast.makeText(AssignmentsPreview.this,text,Toast.LENGTH_LONG).show();

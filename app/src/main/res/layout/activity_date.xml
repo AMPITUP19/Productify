@@ -16,7 +16,7 @@
         android:text="@string/returnHome"
         android:textSize="20sp"
         android:onClick="goMain"/>
-
+    <!-- /-->
     <TextView
         android:id="@+id/currentYearText"
         android:layout_width="wrap_content"

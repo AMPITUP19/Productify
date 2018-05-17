@@ -157,6 +157,10 @@ public class Assignment extends Activity {
 
     }
 
+    /**
+     * Shows a pop up message
+     * @param text the message to pop up
+     */
     private void showToast (String text)
     {
         Toast.makeText(Assignment.this,text,Toast.LENGTH_SHORT).show();

@@ -422,7 +422,7 @@ public class Date extends Activity implements EasyPermissions.PermissionCallback
         private List<String> getDataFromApi() throws IOException {
 
             DateTime beginTime = createDateTime(year, monthint, day, 0, 0);
-          //  DateTime now = new DateTime(System.currentTimeMillis());
+          ///  DateTime now = new DateTime(System.currentTimeMillis());
             DateTime endTime = createDateTime(year, monthint, day+1, 0, 0);
             //DateTime endhours = new DateTime ((System.currentTimeMillis() /
             //        (1000*60*60*24)+1)*(1000*60*60*24*20)+14400000); //mult second part by number of days

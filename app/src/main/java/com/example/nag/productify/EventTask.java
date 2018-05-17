@@ -870,7 +870,7 @@ public class EventTask implements Serializable{
             minuteStr = minute + ":00-04:00";
 
         DateTime DT = new DateTime(yearStr + monthStr + dayStr + hourStr + minuteStr);
-        //DateTime DT = new DateTime(year+"-"+month+"-"+day+"T"+hour+":"+minute+":00-04:00");
+        ///DateTime DT = new DateTime(year+"-"+month+"-"+day+"T"+hour+":"+minute+":00-04:00");
         return DT;
     }
 

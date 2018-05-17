@@ -37,7 +37,7 @@ public class CalendarScreen extends Activity {
                 Log.d("methodCheck", "IT WORKS");
                 //i is year
                 //i1 is month where January is 0
-                //i2 is day
+                //i2 is day/
                 mCalendarView.getDate();
                 int monthint = i1+1;
 
