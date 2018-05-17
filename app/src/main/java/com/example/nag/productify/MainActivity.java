@@ -39,6 +39,7 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -52,8 +53,7 @@ public class MainActivity extends Activity implements EasyPermissions.Permission
 {
 
     GoogleAccountCredential mCredential;
-    Button integrateCalendarBut, newAssignBut, calendarBut, existBut, signOutBut;
-    TextView outputText;
+    Button integrateCalendarBut, newAssignBut, calendarBut;
 
     ProgressDialog mProgress;
 
@@ -76,21 +76,8 @@ public class MainActivity extends Activity implements EasyPermissions.Permission
         setContentView(R.layout.activity_main);
 
         newAssignBut = (Button) findViewById(R.id.newAssignBut);
-       // existBut = (Button) findViewById(R.id.existBut);
         calendarBut = (Button) findViewById(R.id.calendarBut);
         integrateCalendarBut = (Button) findViewById(R.id.integrateCalendarBut);
-        signOutBut = (Button) findViewById(R.id.signOutBut);
-
-
-      /*private void signOut()
-        {
-            mCredential.signOut().addOnCompleteListener(this, new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            // ...
-                        }
-                    });
-        }*/
 
         integrateCalendarBut.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,27 +108,6 @@ public class MainActivity extends Activity implements EasyPermissions.Permission
 
     }
 
-     /*@Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-                // ...
-                case R.id.signOutBut:
-                    signOut();
-                    break;
-                // ...
-            }
-        }*/
-
-        /*private void signOut() {
-            mCredential.signOut()
-                    .addOnCompleteListener(this, new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            // ...
-                        }
-                    });
-        } */
-
 
     /**
      * Attempt to call the API, after verifying that all the preconditions are
@@ -150,16 +116,10 @@ public class MainActivity extends Activity implements EasyPermissions.Permission
      * of the preconditions are not satisfied, the app will prompt the user as
      * appropriate.
      */
-    private void getResultsFromApi() {
-        if (! isGooglePlayServicesAvailable()) {
-            acquireGooglePlayServices();
-        } else if (mCredential.getSelectedAccountName() == null) {
-            chooseAccount();
-        } else if (! isDeviceOnline()) {
-            outputText.setText("No network connection available.");
-        } else {
-            new MakeRequestTask(mCredential).execute();
-        }
+
+    private void showToast (String text)
+    {
+        Toast.makeText(MainActivity.this,text,Toast.LENGTH_SHORT).show();
     }
 
     public void newAssign (View view)
@@ -172,6 +132,18 @@ public class MainActivity extends Activity implements EasyPermissions.Permission
     {
         Intent calendar = new Intent (MainActivity.this,CalendarScreen.class);
         startActivity(calendar);
+    }
+
+    private void getResultsFromApi() {
+        if (! isGooglePlayServicesAvailable()) {
+            acquireGooglePlayServices();
+        } else if (mCredential.getSelectedAccountName() == null) {
+            chooseAccount();
+        } else if (! isDeviceOnline()) {
+            showToast("No network connection available.");
+        } else {
+            new MakeRequestTask5(mCredential).execute();
+        }
     }
 
     /**
@@ -226,7 +198,7 @@ public class MainActivity extends Activity implements EasyPermissions.Permission
         switch(requestCode) {
             case REQUEST_GOOGLE_PLAY_SERVICES:
                 if (resultCode != RESULT_OK) {
-                    outputText.setText(
+                    showToast(
                             "This app requires Google Play Services. Please install " +
                                     "Google Play Services on your device and relaunch this app.");
                 } else {
@@ -354,24 +326,24 @@ public class MainActivity extends Activity implements EasyPermissions.Permission
     }
 
     /**
-     * An asynchronous task that handles the Google CalendarScreen API call.
+     * An asynchronous task that handles the Google Calendar API call.
      * Placing the API calls in their own task ensures the UI stays responsive.
      */
-    private class MakeRequestTask extends AsyncTask<Void, Void, List<String>> {
+    private class MakeRequestTask5 extends AsyncTask<Void, Void, List<String>> {
         private com.google.api.services.calendar.Calendar mService = null;
         private Exception mLastError = null;
 
-        MakeRequestTask(GoogleAccountCredential credential) {
+        MakeRequestTask5(GoogleAccountCredential credential) {
             HttpTransport transport = AndroidHttp.newCompatibleTransport();
             JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
             mService = new com.google.api.services.calendar.Calendar.Builder(
                     transport, jsonFactory, credential)
-                    .setApplicationName("Google CalendarScreen API Android Quickstart")
+                    .setApplicationName("Google Calendar API Android Quickstart")
                     .build();
         }
 
         /**
-         * Background task to call Google CalendarScreen API.
+         * Background task to call Google Calendar API.
          * @param params no parameters needed for this task.
          */
         @Override
@@ -391,11 +363,12 @@ public class MainActivity extends Activity implements EasyPermissions.Permission
          * @throws IOException
          */
         private List<String> getDataFromApi() throws IOException {
-            // List the next 10 events from the primary calendar.
+
             DateTime now = new DateTime(System.currentTimeMillis());
+            DateTime endhours = new DateTime ((System.currentTimeMillis() / (1000*60*60*24)+1)*(1000*60*60*24*7)+14400000); //mult second part by number of days
             List<String> eventStrings = new ArrayList<String>();
             Events events = mService.events().list("primary")
-                    .setMaxResults(10)
+                    .setTimeMax(endhours)     //returns data events
                     .setTimeMin(now)
                     .setOrderBy("startTime")
                     .setSingleEvents(true)
@@ -415,10 +388,11 @@ public class MainActivity extends Activity implements EasyPermissions.Permission
             return eventStrings;
         }
 
-
+        /**
+         *
+         */
         @Override
         protected void onPreExecute() {
-            outputText.setText("");
             mProgress.show();
         }
 
@@ -426,10 +400,9 @@ public class MainActivity extends Activity implements EasyPermissions.Permission
         protected void onPostExecute(List<String> output) {
             mProgress.hide();
             if (output == null || output.size() == 0) {
-                outputText.setText("No results returned.");
+                showToast("No results returned.");
             } else {
-                output.add(0, "Data retrieved using the Google CalendarScreen API:");
-                outputText.setText(TextUtils.join("\n", output));
+                showToast("Success");
             }
         }
 
@@ -446,14 +419,13 @@ public class MainActivity extends Activity implements EasyPermissions.Permission
                             ((UserRecoverableAuthIOException) mLastError).getIntent(),
                             MainActivity.REQUEST_AUTHORIZATION);
                 } else {
-                    outputText.setText("The following error occurred:\n"
+                    showToast("The following error occurred:\n"
                             + mLastError.getMessage());
                 }
             } else {
-                outputText.setText("Request cancelled.");
+                showToast("Request cancelled.");
             }
         }
     }
-
 
 }

@@ -45,6 +45,7 @@ import android.widget.TextView;
 import org.w3c.dom.Text;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -68,6 +69,7 @@ public class Date extends Activity implements EasyPermissions.PermissionCallback
     private static final String PREF_ACCOUNT_NAME = "accountName";
     private static final String[] SCOPES = { CalendarScopes.CALENDAR_READONLY };
 
+    private int monthint, year, day;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,9 +77,40 @@ public class Date extends Activity implements EasyPermissions.PermissionCallback
         setContentView(R.layout.activity_date);
 
         Bundle bundle = getIntent().getExtras();
-        String month  = bundle.getString("month");
-        int year  = bundle.getInt("year");
-        int day = bundle.getInt("day");
+         monthint  = bundle.getInt("month");
+         year  = bundle.getInt("year");
+         day = bundle.getInt("day");
+
+        String month = "";
+        switch (monthint) {
+            case 1:  month = "January";
+                break;
+            case 2:  month = "February";
+                break;
+            case 3:  month = "March";
+                break;
+            case 4:  month = "April";
+                break;
+            case 5:  month = "May";
+                break;
+            case 6:  month = "June";
+                break;
+            case 7:  month = "July";
+                break;
+            case 8:  month = "August";
+                break;
+            case 9:  month = "September";
+                break;
+            case 10: month = "October";
+                break;
+            case 11: month = "November";
+                break;
+            case 12: month = "December";
+                break;
+            default: month = "Month";
+                break;
+        }
+
         String dayofweek = bundle.getString("dayofweek");
 
         currentDayText = findViewById(R.id.currentDayText);
@@ -112,6 +145,43 @@ public class Date extends Activity implements EasyPermissions.PermissionCallback
         Intent i = new Intent(Date.this, MainActivity.class);
 
         startActivity(i);
+    }
+
+    private DateTime createDateTime(int year, int month, int day, int hour, int minute)
+    {
+        String monthStr;
+        String dayStr;
+        String hourStr;
+        String minuteStr;
+        String yearStr = year + "-";
+        if(month < 10)
+        {
+            monthStr = "0" + month + "-";
+        }
+        else
+            monthStr = month + "-";
+        if(day < 10)
+        {
+            dayStr = "0" + day + "T";
+        }
+        else
+            dayStr = day + "T";
+        if(hour < 10)
+        {
+            hourStr = "0" + hour + ":";
+        }
+        else
+            hourStr = hour + ":";
+        if(minute < 10)
+        {
+            minuteStr = "0" + minute + ":00-04:00";
+        }
+        else
+            minuteStr = minute + ":00-04:00";
+
+        DateTime DT = new DateTime(yearStr + monthStr + dayStr + hourStr + minuteStr);
+        //DateTime DT = new DateTime(year+"-"+month+"-"+day+"T"+hour+":"+minute+":00-04:00");
+        return DT;
     }
 
     /**
@@ -350,13 +420,16 @@ public class Date extends Activity implements EasyPermissions.PermissionCallback
          * @throws IOException
          */
         private List<String> getDataFromApi() throws IOException {
-            DateTime now = new DateTime(System.currentTimeMillis());
-            DateTime endhours = new DateTime ((System.currentTimeMillis() /
-                    (1000*60*60*24)+1)*(1000*60*60*24*1)+14400000); //mult second part by number of days
+
+            DateTime beginTime = createDateTime(year, monthint, day, 0, 0);
+          //  DateTime now = new DateTime(System.currentTimeMillis());
+            DateTime endTime = createDateTime(year, monthint, day+1, 0, 0);
+            //DateTime endhours = new DateTime ((System.currentTimeMillis() /
+            //        (1000*60*60*24)+1)*(1000*60*60*24*20)+14400000); //mult second part by number of days
             List<String> eventStrings = new ArrayList<String>();
             Events events = mService.events().list("primary")
-                    .setTimeMax(endhours)     //returns data events
-                    .setTimeMin(now)
+                    .setTimeMax(endTime)     //returns data events
+                    .setTimeMin(beginTime)
                     .setOrderBy("startTime")
                     .setSingleEvents(true)
                     .execute();
@@ -370,9 +443,11 @@ public class Date extends Activity implements EasyPermissions.PermissionCallback
                     start = event.getStart().getDate();
                 }
                 eventStrings.add(
-                        String.format("%s (%s)", event.getSummary(), start));
+                        String.format("%s (%s)", event.getSummary(), start));   //change format to return what you want
+                //"description", "location", "start", "end" or "recurrence" are the parts of summary, in date time objects
+                //try pull substrings of this then display on calendar
             }
-            return eventStrings;
+            return eventStrings; //returns arraylists,
         }
 
 
@@ -386,7 +461,7 @@ public class Date extends Activity implements EasyPermissions.PermissionCallback
         protected void onPostExecute(List<String> output) {
             mProgress.hide();
             if (output == null || output.size() == 0) {
-                mOutputText.setText("No assignments schedule for this day.");
+                mOutputText.setText("No assignments scheduled for this day.");
             } else {
                 mOutputText.setText(TextUtils.join("\n", output));
             }

@@ -300,7 +300,7 @@ public class EventTask implements Serializable{
 	 * Determines if Sunday is an available day
 	 * @param sunday if true, means that Sunday is available for working, if false, means that Sunday is not available
 	 */
-	public void setSund(Boolean sunday)
+	public void setSun(Boolean sunday)
 	{
 		sund = sunday;
 	}
@@ -536,22 +536,22 @@ public class EventTask implements Serializable{
 
                     int day = d;
 
-                    LocalDateTime checkDate = LocalDateTime.of(year, month, day, 0, 0);
-                    String dayOfWeek = checkDate.getDayOfWeek().toString();
+                    org.joda.time.DateTime checkDate = new org.joda.time.DateTime(year,month,day,0,0);
+                    int dayOfWeek = checkDate.getDayOfWeek();
 
-                    if (!mon && dayOfWeek == "MONDAY") {
+                    if (!mon && dayOfWeek == 1) {
 
-                    } else if (!tues && dayOfWeek == "TUESDAY") {
+                    } else if (!tues && dayOfWeek == 2) {
 
-                    } else if (!wed && dayOfWeek == "WEDNESDAY") {
+                    } else if (!wed && dayOfWeek == 3) {
 
-                    } else if (!thurs && dayOfWeek == "THURSDAY") {
+                    } else if (!thurs && dayOfWeek == 4) {
 
-                    } else if (!fri && dayOfWeek == "FRIDAY") {
+                    } else if (!fri && dayOfWeek == 5) {
 
-                    } else if (!sat && dayOfWeek == "SATURDAY") {
+                    } else if (!sat && dayOfWeek == 6) {
 
-                    } else if (!sund && dayOfWeek == "SUNDAY") {
+                    } else if (!sund && dayOfWeek == 7) {
 
                     } else {
                         DateTime beginTime = createDateTime(year, month, day, 0, 0);
@@ -577,22 +577,22 @@ public class EventTask implements Serializable{
 
                         int day = d;
 
-                        LocalDateTime checkDate = LocalDateTime.of(year, month, day, 0, 0);
-                        String dayOfWeek = checkDate.getDayOfWeek().toString();
+                        org.joda.time.DateTime checkTime = new org.joda.time.DateTime(year,month,day,0,0);
+                        int dayOfWeek = checkTime.getDayOfWeek();
 
-                        if (!mon && dayOfWeek == "MONDAY") {
+                        if (!mon && dayOfWeek == 1) {
 
-                        } else if (!tues && dayOfWeek == "TUESDAY") {
+                        } else if (!tues && dayOfWeek == 2) {
 
-                        } else if (!wed && dayOfWeek == "WEDNESDAY") {
+                        } else if (!wed && dayOfWeek == 3) {
 
-                        } else if (!thurs && dayOfWeek == "THURSDAY") {
+                        } else if (!thurs && dayOfWeek == 4) {
 
-                        } else if (!fri && dayOfWeek == "FRIDAY") {
+                        } else if (!fri && dayOfWeek == 5) {
 
-                        } else if (!sat && dayOfWeek == "SATURDAY") {
+                        } else if (!sat && dayOfWeek == 6) {
 
-                        } else if (!sund && dayOfWeek == "SUNDAY") {
+                        } else if (!sund && dayOfWeek == 7) {
 
                         } else {
                             DateTime beginTime = createDateTime(year, month, day, 0, 0);
@@ -701,7 +701,9 @@ public class EventTask implements Serializable{
 		int totalDays = Days.daysBetween(startD, endD).getDays();
 		int removedDays = 0;
 
-		for(org.joda.time.DateTime chosenDate = startD.plusDays(1); !chosenDate.equals(endD.minusDays(1)); chosenDate = chosenDate.plusDays(1))
+
+
+		for(org.joda.time.DateTime chosenDate = startD.plusDays(1); chosenDate.equals(endD.minusDays(1)); chosenDate = chosenDate.plusDays(1))
 		{
 			int weekDay = chosenDate.getDayOfWeek();
 
@@ -736,6 +738,7 @@ public class EventTask implements Serializable{
 		}
 
 		return (totalDays - removedDays);
+
 	}
 
 	/*public String checkIfFree(DateTime startTimeCheck, DateTime endTimeCheck)
@@ -836,36 +839,6 @@ public class EventTask implements Serializable{
      */
     private DateTime createDateTime(int year, int month, int day, int hour, int minute)
     {
-        /*String infoString = year + "-";
-        if(month < 10)
-        {
-            infoString += "0" + month + "-";
-        }
-        else
-            infoString += month + "-";
-
-        if(day < 10)
-        {
-            infoString += "0" + day + "T";
-        }
-        else
-            infoString += day + "T";
-
-        if(hour < 10)
-        {
-            infoString += "0" + hour + ":";
-        }
-        else
-            infoString += hour + ":";
-
-        if(minute < 10)
-        {
-            infoString += "0" + minute + ":00.00Z";
-        }
-        else
-            infoString += minute + ":00.00Z";
-
-      DateTime DT = DateTime.parseRfc3339(infoString);*/
         String monthStr;
         String dayStr;
         String hourStr;

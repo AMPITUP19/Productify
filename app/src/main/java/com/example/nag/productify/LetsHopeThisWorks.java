@@ -358,13 +358,13 @@ public class LetsHopeThisWorks extends Activity implements EasyPermissions.Permi
                     .setLocation("800 Howard St., San Francisco, CA 94103")
                     .setDescription("A chance to hear more about Google's developer products.");
 
-            DateTime startDateTime = new DateTime("2018-05-28T09:00:00-07:00");
+            DateTime startDateTime = new DateTime("2018-08-17T00:00:00.000-04:00");
             EventDateTime s = new EventDateTime()
                     .setDateTime(startDateTime)
                     .setTimeZone("America/New_York");
             thingy.setStart(s);
 
-            DateTime endDateTime = new DateTime("2018-05-28T17:00:00-20:00");
+            DateTime endDateTime = new DateTime("2018-08-17T00:00:00.000-04:00");
             EventDateTime end = new EventDateTime()
                     .setDateTime(endDateTime)
                     .setTimeZone("America/New_York");

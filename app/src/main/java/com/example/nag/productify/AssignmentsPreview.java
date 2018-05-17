@@ -43,6 +43,7 @@ import com.google.api.services.calendar.model.Events;
 
 import java.io.IOException;
 import java.lang.reflect.Array;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -77,6 +78,8 @@ public class AssignmentsPreview extends Activity implements EasyPermissions.Perm
     private EventTask  event1;
     private ArrayList <DateTime> interims;
 
+    private String dM, sM;
+
     @Override
     /**
      * Instantiates the AssignmentsPreview activity
@@ -98,10 +101,8 @@ public class AssignmentsPreview extends Activity implements EasyPermissions.Perm
         TextView assignmentName = findViewById(R.id.assignmentName);
         TextView dueDateText = findViewById(R.id.dueDateText);
         TextView timeWorkHeading = findViewById(R.id.timeWorkHeading);
-        //TextView date1text = findViewById(R.id.date1text);
-        //TextView date2text = findViewById(R.id.date2text);
-        //TextView date3text = findViewById(R.id.date3text);
-        //TextView date4text = findViewById(R.id.date4text);
+        TextView startDate = findViewById(R.id.startDate);
+        TextView lengthText = findViewById(R.id.lengthText);
 
         //EventTask event1 = (EventTask) getIntent().getExtras().getSerializable("event");
 
@@ -140,9 +141,46 @@ public class AssignmentsPreview extends Activity implements EasyPermissions.Perm
         Log.d("interims", interims.toString());
 
         assignmentName.setText(name);
-        dueDateText.setText(dMonth+ "/" + dDay + "/" + dYear + " at " + dHour + ":" + dMinute);
 
-        populateListView ();
+        dM = "";
+        sM = "";
+
+        if (dMinute < 10)
+        {
+            dM = ("0" +dMinute);
+        }
+        else
+        {
+            dM = (dMinute + "");
+        }
+
+        if (sMinute < 10)
+        {
+            sM = ("0" +sMinute);
+        }
+        else
+        {
+            sM = (sMinute + "");
+        }
+
+        dueDateText.setText("Due: " + dMonth+ "/" + dDay + "/" + dYear + " at " + dHour + ":" + dM);
+        startDate.setText("Start: " + sMonth+ "/" + sDay + "/" + sYear + " at " + sHour + ":" + sM);
+        lengthText.setText("Length: " + predictedLength);
+
+      populateListView ();
+
+      confirmBut.setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View view) {
+              confirmBut.setEnabled(false);
+              getResultsFromApi();
+              confirmBut.setEnabled(true);
+
+              showToast("Your Assignment Has Been Added.");
+              Intent confirm =  new Intent (AssignmentsPreview.this, CalendarScreen.class);
+              startActivity(confirm);
+          }
+      });
 
     }
 
@@ -155,18 +193,23 @@ public class AssignmentsPreview extends Activity implements EasyPermissions.Perm
 
         ArrayList<String> interimDates = new ArrayList<String>();
 
-        interimDates.add("March 5, 2017 8:00 to March 5, 2017 to 9:00");
-        interimDates.add("March 7, 2017 4:00 to March 8, 2017 to 5:00");
-        interimDates.add("March 8, 2017 13:00 to March 12, 2017 to 14:00");
-
-        /**for (int n = 0; n <interims.size(); n+=2)
+        if (interims!=null)
         {
-            DateTime start = interims.get(n); //first item is start, second is end then repeats
-            DateTime end  = interims.get(n+1);
-            String date = (start.toString() + " to " + end.toString()); //fix this later so it is in the proper form
-            interimDates.add(date);
-        } */
-
+            for (int n = 0; n < interims.size(); n += 2) {
+                DateTime start = interims.get(n); //first item is start, second is end then repeats
+                DateTime end = interims.get(n + 1);
+//            String sDate = sdf.format(start.toString());
+                //           String eDate = sdf.format(end.toString());
+                //           String date = (sDate + " to " + eDate); //fix this later so it is in the proper form
+                String date = (start.toString() + " to " + end.toString());
+                interimDates.add(date);
+            }
+        }
+        else
+        {
+            interimDates.add("There were no possible times to work added.");
+            interimDates.add("Please adjust your assignment inputs.");
+        }
         //now somehow add all the datetime objects in the right format to be displayed (see above) does it say how much percent?
         //just do the math to find the percent probably
         // from the algorithm into this arraylist, probably with a for loop
@@ -199,136 +242,148 @@ public class AssignmentsPreview extends Activity implements EasyPermissions.Perm
         startActivity(confirm);
     }
 
+    public void goEdit (View view)
+    {
+        Intent confirm =  new Intent (AssignmentsPreview.this, Assignment.class);
+        startActivity(confirm);
+    }
+
+    public void goCancel (View view)
+    {
+        Intent confirm =  new Intent (AssignmentsPreview.this,MainActivity.class);
+        startActivity(confirm);
+    }
+
     /**
-     * Gets the user's Google play services
+     * Attempt to call the API, after verifying that all the preconditions are
+     * satisfied. The preconditions are: Google Play Services installed, an
+     * account was selected and the device currently has online access. If any
+     * of the preconditions are not satisfied, the app will prompt the user as
+     * appropriate.
      */
-         private void getResultsFromApi()
-        {
-            if (! isGooglePlayServicesAvailable()) {
-                acquireGooglePlayServices();
-            } else if (mCredential.getSelectedAccountName() == null) {
-                chooseAccount();
-            } else if (! isDeviceOnline()) {
-                mOutputText.setText("No network connection available.");
-            } else {
-                new AssignmentsPreview.MakeRequestTask4(mCredential).execute();
-            }
+    private void getResultsFromApi() {
+        if (! isGooglePlayServicesAvailable()) {
+            acquireGooglePlayServices();
+        } else if (mCredential.getSelectedAccountName() == null) {
+            chooseAccount();
+        } else if (! isDeviceOnline()) {
+            mOutputText.setText("No network connection available.");
+        } else {
+            new AssignmentsPreview.MakeRequestTask3(mCredential).execute();
         }
+    }
 
-        /**
-         * Attempts to set the account used with the API credentials. If an account
-         * name was previously saved it will use that one; otherwise an account
-         * picker dialog will be shown to the user. Note that the setting the
-         * account to use with the credentials object requires the app to have the
-         * GET_ACCOUNTS permission, which is requested here if it is not already
-         * present. The AfterPermissionGranted annotation indicates that this
-         * function will be rerun automatically whenever the GET_ACCOUNTS permission
-         * is granted.
-         */
-        @AfterPermissionGranted(REQUEST_PERMISSION_GET_ACCOUNTS)
-        private void chooseAccount()
-        {
-            if (EasyPermissions.hasPermissions(
-                    this, android.Manifest.permission.GET_ACCOUNTS)) {
-                String accountName = getPreferences(Context.MODE_PRIVATE)
-                        .getString(PREF_ACCOUNT_NAME, null);
-                if (accountName != null) {
-                    mCredential.setSelectedAccountName(accountName);
-                    getResultsFromApi();
+    /**
+     * Attempts to set the account used with the API credentials. If an account
+     * name was previously saved it will use that one; otherwise an account
+     * picker dialog will be shown to the user. Note that the setting the
+     * account to use with the credentials object requires the app to have the
+     * GET_ACCOUNTS permission, which is requested here if it is not already
+     * present. The AfterPermissionGranted annotation indicates that this
+     * function will be rerun automatically whenever the GET_ACCOUNTS permission
+     * is granted.
+     */
+    @AfterPermissionGranted(REQUEST_PERMISSION_GET_ACCOUNTS)
+    private void chooseAccount() {
+        if (EasyPermissions.hasPermissions(
+                this, Manifest.permission.GET_ACCOUNTS)) {
+            String accountName = getPreferences(Context.MODE_PRIVATE)
+                    .getString(PREF_ACCOUNT_NAME, null);
+            if (accountName != null) {
+                mCredential.setSelectedAccountName(accountName);
+                getResultsFromApi();
+            } else {
+                // Start a dialog from which the user can choose an account
+                startActivityForResult(
+                        mCredential.newChooseAccountIntent(),
+                        REQUEST_ACCOUNT_PICKER);
+            }
+        } else {
+            // Request the GET_ACCOUNTS permission via a user dialog
+            EasyPermissions.requestPermissions(
+                    this,
+                    "This app needs to access your Google account (via Contacts).",
+                    REQUEST_PERMISSION_GET_ACCOUNTS,
+                    Manifest.permission.GET_ACCOUNTS);
+        }
+    }
+
+    /**
+     * Called when an activity launched here (specifically, AccountPicker
+     * and authorization) exits, giving you the requestCode you started it with,
+     * the resultCode it returned, and any additional data from it.
+     * @param requestCode code indicating which activity result is incoming.
+     * @param resultCode code indicating the result of the incoming
+     *     activity result.
+     * @param data Intent (containing result data) returned by incoming
+     *     activity result.
+     */
+    @Override
+    protected void onActivityResult(
+            int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch(requestCode) {
+            case REQUEST_GOOGLE_PLAY_SERVICES:
+                if (resultCode != RESULT_OK) {
+                    mOutputText.setText(
+                            "This app requires Google Play Services. Please install " +
+                                    "Google Play Services on your device and relaunch this app.");
                 } else {
-                    // Start a dialog from which the user can choose an account
-                    startActivityForResult(
-                            mCredential.newChooseAccountIntent(),
-                            REQUEST_ACCOUNT_PICKER);
+                    getResultsFromApi();
                 }
-            } else {
-                // Request the GET_ACCOUNTS permission via a user dialog
-                EasyPermissions.requestPermissions(
-                        this,
-                        "This app needs to access your Google account (via Contacts).",
-                        REQUEST_PERMISSION_GET_ACCOUNTS,
-                        Manifest.permission.GET_ACCOUNTS);
-            }
-        }
-
-        /**
-         * Called when an activity launched here (specifically, AccountPicker
-         * and authorization) exits, giving you the requestCode you started it with,
-         * the resultCode it returned, and any additional data from it.
-         * @param requestCode code indicating which activity result is incoming.
-         * @param resultCode code indicating the result of the incoming
-         *     activity result.
-         * @param data Intent (containing result data) returned by incoming
-         *     activity result.
-         */
-        @Override
-        protected void onActivityResult(
-                int requestCode, int resultCode, Intent data) {
-            super.onActivityResult(requestCode, resultCode, data);
-            switch(requestCode) {
-                case REQUEST_GOOGLE_PLAY_SERVICES:
-                    if (resultCode != RESULT_OK) {
-                        mOutputText.setText(
-                                "This app requires Google Play Services. Please install " +
-                                        "Google Play Services on your device and relaunch this app.");
-                    } else {
+                break;
+            case REQUEST_ACCOUNT_PICKER:
+                if (resultCode == RESULT_OK && data != null &&
+                        data.getExtras() != null) {
+                    String accountName =
+                            data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
+                    if (accountName != null) {
+                        SharedPreferences settings =
+                                getPreferences(Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = settings.edit();
+                        editor.putString(PREF_ACCOUNT_NAME, accountName);
+                        editor.apply();
+                        mCredential.setSelectedAccountName(accountName);
                         getResultsFromApi();
                     }
-                    break;
-                case REQUEST_ACCOUNT_PICKER:
-                    if (resultCode == RESULT_OK && data != null &&
-                            data.getExtras() != null) {
-                        String accountName =
-                                data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
-                        if (accountName != null) {
-                            SharedPreferences settings =
-                                    getPreferences(Context.MODE_PRIVATE);
-                            SharedPreferences.Editor editor = settings.edit();
-                            editor.putString(PREF_ACCOUNT_NAME, accountName);
-                            editor.apply();
-                            mCredential.setSelectedAccountName(accountName);
-                            getResultsFromApi();
-                        }
-                    }
-                    break;
-                case REQUEST_AUTHORIZATION:
-                    if (resultCode == RESULT_OK) {
-                        getResultsFromApi();
-                    }
-                    break;
-            }
+                }
+                break;
+            case REQUEST_AUTHORIZATION:
+                if (resultCode == RESULT_OK) {
+                    getResultsFromApi();
+                }
+                break;
         }
+    }
 
-        /**
-         * Respond to requests for permissions at runtime for API 23 and above.
-         * @param requestCode The request code passed in
-         *     requestPermissions(android.app.Activity, String, int, String[])
-         * @param permissions The requested permissions. Never null.
-         * @param grantResults The grant results for the corresponding permissions
-         *     which is either PERMISSION_GRANTED or PERMISSION_DENIED. Never null.
-         *///
-        @Override
-        public void onRequestPermissionsResult(int requestCode,
-                  @NonNull String[] permissions,
-                  @NonNull int[] grantResults)
-        {
-            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-            EasyPermissions.onRequestPermissionsResult(
-                    requestCode, permissions, grantResults, this);
-        }
+    /**
+     * Respond to requests for permissions at runtime for API 23 and above.
+     * @param requestCode The request code passed in
+     *     requestPermissions(android.app.Activity, String, int, String[])
+     * @param permissions The requested permissions. Never null.
+     * @param grantResults The grant results for the corresponding permissions
+     *     which is either PERMISSION_GRANTED or PERMISSION_DENIED. Never null.
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        EasyPermissions.onRequestPermissionsResult(
+                requestCode, permissions, grantResults, this);
+    }
 
-        /**
-         * Callback for when a permission is granted using the EasyPermissions
-         * library.
-         * @param requestCode The request code associated with the requested
-         *         permission
-         * @param list The requested permission list. Never null.
-         */
-        @Override
-        public void onPermissionsGranted(int requestCode, List<String> list)
-        {
-            // Do nothing.
-        }
+    /**
+     * Callback for when a permission is granted using the EasyPermissions
+     * library.
+     * @param requestCode The request code associated with the requested
+     *         permission
+     * @param list The requested permission list. Never null.
+     */
+    @Override
+    public void onPermissionsGranted(int requestCode, List<String> list) {
+        // Do nothing.
+    }
 
     /**
      * Callback for when a permission is denied using the EasyPermissions
@@ -337,205 +392,185 @@ public class AssignmentsPreview extends Activity implements EasyPermissions.Perm
      *         permission
      * @param list The requested permission list. Never null.
      */
-        @Override
-        public void onPermissionsDenied(int requestCode, List<String> list)
-        {
-            // Do nothing.
-        }
-
-        /**
-         * Checks whether the device currently has a network connection.
-         * @return true if the device has a network connection, false otherwise.
-         */
-        private boolean isDeviceOnline() {
-            ConnectivityManager connMgr =
-                    (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-            return (networkInfo != null && networkInfo.isConnected());
-        }
-
-        /**
-         * Check that Google Play services APK is installed and up to date.
-         * @return true if Google Play Services is available and up to
-         *     date on this device; false otherwise.
-         */
-        private boolean isGooglePlayServicesAvailable() {
-            GoogleApiAvailability apiAvailability =
-                    GoogleApiAvailability.getInstance();
-            final int connectionStatusCode =
-                    apiAvailability.isGooglePlayServicesAvailable(this);
-            return connectionStatusCode == ConnectionResult.SUCCESS;
-        }
-
-        /**
-         * Attempt to resolve a missing, out-of-date, invalid or disabled Google
-         * Play Services installation via a user dialog, if possible.
-         */
-        private void acquireGooglePlayServices() {
-            GoogleApiAvailability apiAvailability =
-                    GoogleApiAvailability.getInstance();
-            final int connectionStatusCode =
-                    apiAvailability.isGooglePlayServicesAvailable(this);
-            if (apiAvailability.isUserResolvableError(connectionStatusCode)) {
-                showGooglePlayServicesAvailabilityErrorDialog(connectionStatusCode);
-            }
-        }
-
-
-        /**
-         * Display an error dialog showing that Google Play Services is missing
-         * or out of date.
-         * @param connectionStatusCode code describing the presence (or lack of)
-         *     Google Play Services on this device.
-         */
-        void showGooglePlayServicesAvailabilityErrorDialog(
-                final int connectionStatusCode) {
-            GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
-            Dialog dialog = apiAvailability.getErrorDialog(
-                    AssignmentsPreview.this,
-                    connectionStatusCode,
-                    REQUEST_GOOGLE_PLAY_SERVICES);
-            dialog.show();
-        }
-
-        /**
-         * An asynchronous task that handles the Google Calendar API call.
-         * Placing the API calls in their own task ensures the UI stays responsive.
-         */
-        private class MakeRequestTask4 extends AsyncTask<Void, Void, List<String>> {
-            private com.google.api.services.calendar.Calendar mService = null;
-            private Exception mLastError = null;
-
-            MakeRequestTask4(GoogleAccountCredential credential) {
-                HttpTransport transport = AndroidHttp.newCompatibleTransport();
-                JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
-                mService = new com.google.api.services.calendar.Calendar.Builder(
-                        transport, jsonFactory, credential)
-                        .setApplicationName("Google Calendar API Android Quickstart")
-                        .build();
-            }
-
-            /**
-             * Background task to call Google Calendar API.
-             *
-             * @param params no parameters needed for this task.
-             */
-            @Override
-            protected ArrayList<String> doInBackground(Void... params) {
-                try {
-                    return addEvent();
-
-                } catch (Exception e) {
-                    mLastError = e;
-                    cancel(true);
-                    return null;
-                }
-            }
-
-            /**
-             * Adds and returns events added to google calendar
-             *
-             * @return List of Strings describing returned events.
-             * @throws IOException
-             */
-            private ArrayList<String> addEvent() throws IOException {
-
-                ArrayList<String> items = new ArrayList<>();
-
-                for (int i =0; i<interims.size(); i+=2) {
-                    Event thingy = new Event()
-                            .setSummary(name);
-                    DateTime startDateTime = interims.get(i);
-
-                            //new DateTime("2018-05-28T09:00:00-07:00");
-                    EventDateTime s = new EventDateTime()
-                            .setDateTime(startDateTime)
-                            .setTimeZone("America/New_York");
-                    thingy.setStart(s);
-
-                    DateTime endDateTime = interims.get(i+1);
-                            //new DateTime("2018-05-28T17:00:00-20:00");
-                    EventDateTime end = new EventDateTime()
-                            .setDateTime(endDateTime)
-                            .setTimeZone("America/New_York");
-                    thingy.setEnd(end);
-
-                    EventReminder[] reminderOverrides = new EventReminder[]{
-                            new EventReminder().setMethod("email").setMinutes(24 * 60),
-                            new EventReminder().setMethod("popup").setMinutes(10),
-                    };
-                    Event.Reminders reminders = new Event.Reminders()
-                            .setUseDefault(false)
-                            .setOverrides(Arrays.asList(reminderOverrides));
-                    thingy.setReminders(reminders);
-
-                    Event events = mService.events().insert("primary", thingy)
-                            .execute();
-
-                    Log.d("Event success?", (events.getHtmlLink()).toString());
-
-                    String eventObj = events.getSummary().toString();
-
-                    items.add(eventObj);
-                }
-                return items;
-
-            }
-
-
-            @Override
-            protected void onPreExecute() {
-                mOutputText.setText("");
-                mProgress.show();
-            }
-
-            @Override
-            protected void onPostExecute(List<String> output) {
-                mProgress.hide();
-                if (output == null || output.size() == 0) {
-                    mOutputText.setText("No results returned.");
-                } else {
-                    output.add(0, "Data retrieved using the Google Calendar API:");
-                    mOutputText.setText(TextUtils.join("\n", output));
-                }
-            }
-
-            @Override
-            protected void onCancelled() {
-                mProgress.hide();
-                if (mLastError != null) {
-                    if (mLastError instanceof GooglePlayServicesAvailabilityIOException) {
-                        showGooglePlayServicesAvailabilityErrorDialog(
-                                ((GooglePlayServicesAvailabilityIOException) mLastError)
-                                        .getConnectionStatusCode());
-                    } else if (mLastError instanceof UserRecoverableAuthIOException) {
-                        startActivityForResult(
-                                ((UserRecoverableAuthIOException) mLastError).getIntent(),
-                                MainActivity.REQUEST_AUTHORIZATION);
-                    } else {
-                        mOutputText.setText("The following error occurred:\n"
-                                + mLastError.getMessage());
-                    }
-                } else {
-                    mOutputText.setText("Request cancelled.");
-                }
-            }
-        }
-
-    public void goEdit (View view)
-    {
-        Intent edit = new Intent (AssignmentsPreview.this, Assignment.class);
-        startActivity(edit);
+    @Override
+    public void onPermissionsDenied(int requestCode, List<String> list) {
+        // Do nothing.
     }
 
     /**
-     * Brings the user to the MainActivity activity and cancels the EventTask
-     * @param view the view the method is being used for
+     * Checks whether the device currently has a network connection.
+     * @return true if the device has a network connection, false otherwise.
      */
-    public void goCancel (View view)
-    {
-        Intent cancel = new Intent (AssignmentsPreview.this, MainActivity.class);
-        showToast("Canceling assignment creation...");
-        startActivity(cancel);
+    private boolean isDeviceOnline() {
+        ConnectivityManager connMgr =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        return (networkInfo != null && networkInfo.isConnected());
     }
+
+    /**
+     * Check that Google Play services APK is installed and up to date.
+     * @return true if Google Play Services is available and up to
+     *     date on this device; false otherwise.
+     */
+    private boolean isGooglePlayServicesAvailable() {
+        GoogleApiAvailability apiAvailability =
+                GoogleApiAvailability.getInstance();
+        final int connectionStatusCode =
+                apiAvailability.isGooglePlayServicesAvailable(this);
+        return connectionStatusCode == ConnectionResult.SUCCESS;
+    }
+
+    /**
+     * Attempt to resolve a missing, out-of-date, invalid or disabled Google
+     * Play Services installation via a user dialog, if possible.
+     */
+    private void acquireGooglePlayServices() {
+        GoogleApiAvailability apiAvailability =
+                GoogleApiAvailability.getInstance();
+        final int connectionStatusCode =
+                apiAvailability.isGooglePlayServicesAvailable(this);
+        if (apiAvailability.isUserResolvableError(connectionStatusCode)) {
+            showGooglePlayServicesAvailabilityErrorDialog(connectionStatusCode);
+        }
+    }
+
+
+    /**
+     * Display an error dialog showing that Google Play Services is missing
+     * or out of date.
+     * @param connectionStatusCode code describing the presence (or lack of)
+     *     Google Play Services on this device.
+     */
+    void showGooglePlayServicesAvailabilityErrorDialog(
+            final int connectionStatusCode) {
+        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+        Dialog dialog = apiAvailability.getErrorDialog(
+                AssignmentsPreview.this,
+                connectionStatusCode,
+                REQUEST_GOOGLE_PLAY_SERVICES);
+        dialog.show();
+    }
+
+    /**
+     * An asynchronous task that handles the Google Calendar API call.
+     * Placing the API calls in their own task ensures the UI stays responsive.
+     */
+    private class MakeRequestTask3 extends AsyncTask<Void, Void, List<String>> {
+        private com.google.api.services.calendar.Calendar mService = null;
+        private Exception mLastError = null;
+
+        MakeRequestTask3(GoogleAccountCredential credential) {
+            HttpTransport transport = AndroidHttp.newCompatibleTransport();
+            JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
+            mService = new com.google.api.services.calendar.Calendar.Builder(
+                    transport, jsonFactory, credential)
+                    .setApplicationName("Google Calendar API Android Quickstart")
+                    .build();
+        }
+
+        /**
+         * Background task to call Google Calendar API.
+         * @param params no parameters needed for this task.
+         */
+        @Override
+        protected ArrayList<String> doInBackground(Void... params) {
+            try {
+                return addEvent();
+
+            } catch (Exception e) {
+                mLastError = e;
+                cancel(true);
+                return null;
+            }
+        }
+
+        /**
+         * Adds and returns events added to google calendar
+         * @return List of Strings describing returned events.
+         * @throws IOException
+         */
+        private ArrayList<String> addEvent() throws IOException {
+
+            Event thingy = new Event()
+                    .setSummary("Google I/O 2018")
+                    .setLocation("800 Howard St., San Francisco, CA 94103")
+                    .setDescription("A chance to hear more about Google's developer products.");
+
+            DateTime startDateTime = new DateTime("2018-08-17T00:00:00.000-04:00");
+            EventDateTime s = new EventDateTime()
+                    .setDateTime(startDateTime)
+                    .setTimeZone("America/New_York");
+            thingy.setStart(s);
+
+            DateTime endDateTime = new DateTime("2018-08-17T00:00:00.000-04:00");
+            EventDateTime end = new EventDateTime()
+                    .setDateTime(endDateTime)
+                    .setTimeZone("America/New_York");
+            thingy.setEnd(end);
+
+            EventReminder[] reminderOverrides = new EventReminder[] {
+                    new EventReminder().setMethod("email").setMinutes(24 * 60),
+                    new EventReminder().setMethod("popup").setMinutes(10),
+            };
+            Event.Reminders reminders = new Event.Reminders()
+                    .setUseDefault(false)
+                    .setOverrides(Arrays.asList(reminderOverrides));
+            thingy.setReminders(reminders);
+
+            Event events = mService.events().insert("primary",thingy)
+                    .execute();
+
+            Log.d("Event success?" , (events.getHtmlLink()).toString());
+
+            ArrayList<String> items = new ArrayList <> ();
+
+            String eventObj = events.getSummary().toString();
+
+            items.add(eventObj);
+
+            return items;
+
+        }
+
+
+        @Override
+        protected void onPreExecute() {
+            mOutputText.setText("");
+            mProgress.show();
+        }
+
+        @Override
+        protected void onPostExecute(List<String> output) {
+            mProgress.hide();
+            if (output == null || output.size() == 0) {
+                mOutputText.setText("No results returned.");
+            } else {
+                output.add(0, "Data retrieved using the Google Calendar API:");
+                mOutputText.setText(TextUtils.join("\n", output));
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+            mProgress.hide();
+            if (mLastError != null) {
+                if (mLastError instanceof GooglePlayServicesAvailabilityIOException) {
+                    showGooglePlayServicesAvailabilityErrorDialog(
+                            ((GooglePlayServicesAvailabilityIOException) mLastError)
+                                    .getConnectionStatusCode());
+                } else if (mLastError instanceof UserRecoverableAuthIOException) {
+                    startActivityForResult(
+                            ((UserRecoverableAuthIOException) mLastError).getIntent(),
+                            MainActivity.REQUEST_AUTHORIZATION);
+                } else {
+                    mOutputText.setText("The following error occurred:\n"
+                            + mLastError.getMessage());
+                }
+            } else {
+                mOutputText.setText("Request cancelled.");
+            }
+        }
+    }
+
 }

@@ -4,6 +4,7 @@
     <string name="assignName">Assignment Name</string>
     <string name="assignDate">Due Date</string>
     <string name="assignLength">Total Anticipated Length in Hours</string>
+    <string name="sampleLength">Length: 8 hours</string>
     <string name="assignDays">Days of the Week to Work:</string>
     <string name="mon">Monday</string>
     <string name="tues">Tuesday</string>
@@ -25,7 +26,7 @@
     <string name="confirm"> Confirm</string>
     <string name="assignmentName"> Elevens Solitaire</string>
     <string name="accesscalendar">Access Calendar</string>
-    <string name="timesToWorkText"> Times To Work </string>
+    <string name="timesToWorkText"> Times To Work (Scroll to see all)</string>
     <string name="preview">Preview</string>
     <string name="returnHome"> Return to Home</string>
     <string name="existing">Existing </string>
@@ -39,7 +40,8 @@
     <string name="sampleAssignProg4">CS Exercises (75%) 8PM - 9PM</string>
     <string name="sampleAssignProg5">Hum Essay (75%) 4PM - 5PM</string>
     <string name="sampleAssignProg6">Physics Lab (50%) 6PM - 8PM</string>
-    <string name="sampleDueDate">Due: March 11, 2018 - 10 PM</string>
+    <string name="sampleDueDate">Due: March 11, 2018 - 10:00</string>
+    <string name="sampleStartDate">Start: March 8, 2018- 10:00 </string>
     <string name="sampleWorkTime1">March 5th: 10AM - 12PM (25%)</string>
     <string name="sampleWorkTime2">March 7th: 1PM - 3PM (50%)</string>
     <string name="sampleWorkTime3">March 9th: 7PM - 9PM (75%)</string>
