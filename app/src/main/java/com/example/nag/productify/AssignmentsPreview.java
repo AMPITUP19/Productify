@@ -1,3 +1,7 @@
+/**
+ * Shows the user the interims due dates created by the algorithm and allows them to either confirm, edit, or cancel it.
+ * code adapted from https://developers.google.com/calendar/create-events
+ */
 package com.example.nag.productify;
 
 import android.Manifest;
@@ -13,8 +17,6 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -34,16 +36,12 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.DateTime;
 import com.google.api.client.util.ExponentialBackOff;
-import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.CalendarScopes;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.EventDateTime;
 import com.google.api.services.calendar.model.EventReminder;
-import com.google.api.services.calendar.model.Events;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -51,18 +49,12 @@ import java.util.List;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
-
-/**
- * * Shows the user the event they are creating and allows them to either confir, edit, or cancel it.
- * */
 public class AssignmentsPreview extends Activity implements EasyPermissions.PermissionCallbacks {
 
     Button confirmBut, editBut, cancelBut;
     GoogleAccountCredential mCredential;
     private static final String[] SCOPES = { CalendarScopes.CALENDAR_READONLY };
 
-    private TextView mOutputText;
-    private Button mCallApiButton;
     ProgressDialog mProgress;
 
     static final int REQUEST_ACCOUNT_PICKER = 1000;
@@ -70,20 +62,17 @@ public class AssignmentsPreview extends Activity implements EasyPermissions.Perm
     static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
     static final int REQUEST_PERMISSION_GET_ACCOUNTS = 1003;
 
-    private static final String BUTTON_TEXT = "Add an event to your schedule";
     private static final String PREF_ACCOUNT_NAME = "accountName";
 
     private String name;
-    private int sYear, sMonth, sDay, sHour, sMinute, dYear, dMonth, dDay, dHour, dMinute;
-    private EventTask  event1;
     private ArrayList <DateTime> interims;
 
-    private String dM, sM;
 
-    @Override
     /**
-     * Instantiates the AssignmentsPreview activity
+     * Instantiates the AssignmentPreview activity
+     * @param savedInstanceState previously saved app state
      */
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_assignments_preview);
@@ -92,33 +81,28 @@ public class AssignmentsPreview extends Activity implements EasyPermissions.Perm
                 getApplicationContext(), Arrays.asList(SCOPES))
                 .setBackOff(new ExponentialBackOff());
 
-        confirmBut = (Button) findViewById(R.id.confirmBut);
-        editBut = (Button) findViewById(R.id.editBut);
-        cancelBut = (Button) findViewById(R.id.cancelBut);
+        confirmBut = findViewById(R.id.confirmBut);
+        editBut =  findViewById(R.id.editBut);
+        cancelBut = findViewById(R.id.cancelBut);
 
-        TextView heading = findViewById(R.id.heading);
-        TextView previewText = findViewById(R.id.previewText);
         TextView assignmentName = findViewById(R.id.assignmentName);
         TextView dueDateText = findViewById(R.id.dueDateText);
-        TextView timeWorkHeading = findViewById(R.id.timeWorkHeading);
         TextView startDate = findViewById(R.id.startDate);
         TextView lengthText = findViewById(R.id.lengthText);
 
-        //EventTask event1 = (EventTask) getIntent().getExtras().getSerializable("event");
-
         Bundle bundle = getIntent().getExtras();
         name = bundle.getString("nm");
-        sYear = bundle.getInt("sy");
-        sMonth = bundle.getInt("sm");
-        sDay = bundle.getInt("sd");
-        sHour = bundle.getInt("sh");
-        sMinute = bundle.getInt("smin");
-        dYear = bundle.getInt("dy");
-        dMonth = bundle.getInt("dm");
-        dDay = bundle.getInt("dd");
-        dHour = bundle.getInt("dh");
-        dMinute = bundle.getInt("dmin");
-        double predictedLength = bundle.getInt("predicted");
+        int sYear = bundle.getInt("sy");
+        int sMonth = bundle.getInt("sm");
+        int sDay = bundle.getInt("sd");
+        int sHour = bundle.getInt("sh");
+        int sMinute = bundle.getInt("smin");
+        int dYear = bundle.getInt("dy");
+        int dMonth = bundle.getInt("dm");
+        int dDay = bundle.getInt("dd");
+        int dHour = bundle.getInt("dh");
+        int dMinute = bundle.getInt("dmin");
+        double predictedLength = bundle.getDouble("pred");
         Boolean mon = bundle.getBoolean("mo");
         Boolean tues = bundle.getBoolean("tu");
         Boolean wed = bundle.getBoolean("we");
@@ -134,7 +118,7 @@ public class AssignmentsPreview extends Activity implements EasyPermissions.Perm
                 getApplicationContext(), Arrays.asList(SCOPES))
                 .setBackOff(new ExponentialBackOff());
 
-        event1 = new EventTask(sYear, sMonth, sDay, sHour, sMinute, dYear, dMonth, dDay, dHour, dMinute, name, predictedLength, mon, tues, wed, thurs, fri, sat, sun);
+        EventTask event1 = new EventTask(sYear, sMonth, sDay, sHour, sMinute, dYear, dMonth, dDay, dHour, dMinute, name, predictedLength, mon, tues, wed, thurs, fri, sat, sun);
 
         interims = event1.createEventDates();
 
@@ -142,30 +126,30 @@ public class AssignmentsPreview extends Activity implements EasyPermissions.Perm
 
         assignmentName.setText(name);
 
-        dM = "";
-        sM = "";
+        String dM;
+        String sM;
 
         if (dMinute < 10)
-        {
-            dM = ("0" +dMinute);
-        }
+            {
+                dM = ("0" +dMinute);
+            }
         else
-        {
-            dM = (dMinute + "");
-        }
+            {
+                dM = (dMinute + "");
+            }
 
         if (sMinute < 10)
-        {
-            sM = ("0" +sMinute);
-        }
+            {
+                sM = ("0" +sMinute);
+            }
         else
-        {
-            sM = (sMinute + "");
-        }
+            {
+                sM = (sMinute + "");
+            }
 
         dueDateText.setText("Due: " + dMonth+ "/" + dDay + "/" + dYear + " at " + dHour + ":" + dM);
         startDate.setText("Start: " + sMonth+ "/" + sDay + "/" + sYear + " at " + sHour + ":" + sM);
-        lengthText.setText("Length: " + predictedLength);
+        lengthText.setText("Length: " + predictedLength + " hours");
 
       populateListView ();
 
@@ -176,7 +160,6 @@ public class AssignmentsPreview extends Activity implements EasyPermissions.Perm
               getResultsFromApi();
               confirmBut.setEnabled(true);
 
-              showToast("Your Assignment Has Been Added.");
               Intent confirm =  new Intent (AssignmentsPreview.this, CalendarScreen.class);
               startActivity(confirm);
           }
@@ -191,7 +174,7 @@ public class AssignmentsPreview extends Activity implements EasyPermissions.Perm
     {
         //create list of items
 
-        ArrayList<String> interimDates = new ArrayList<String>();
+        ArrayList<String> interimDates = new ArrayList<>();
 
         if (interims!=null)
         {
@@ -201,22 +184,27 @@ public class AssignmentsPreview extends Activity implements EasyPermissions.Perm
 //            String sDate = sdf.format(start.toString());
                 //           String eDate = sdf.format(end.toString());
                 //           String date = (sDate + " to " + eDate); //fix this later so it is in the proper form
-                String date = (start.toString() + " to " + end.toString());
+                String s = start.toString();
+                String e = end.toString();
+                String date  = (s.substring(5,7) + "/" + s.substring(8,10) + "/" +  s.substring(0,4) + " at " +
+                        s.substring(11,13) + ":" + s.substring(14, 16) + " to " + e.substring(5,7) + "/" + e.substring(8,10) + "/" +  e.substring(0,4) + " at " +
+                        e.substring(11,13) + ":" + e.substring(14, 16));
+
                 interimDates.add(date);
             }
         }
         else
-        {
-            interimDates.add("There were no possible times to work added.");
-            interimDates.add("Please adjust your assignment inputs.");
-        }
+            {
+                interimDates.add("There were no possible times to work added.");
+                interimDates.add("Please adjust your assignment inputs.");
+            }
         //now somehow add all the datetime objects in the right format to be displayed (see above) does it say how much percent?
         //just do the math to find the percent probably
         // from the algorithm into this arraylist, probably with a for loop
 
         //make adapter
 
-        ArrayAdapter <String> adapter = new ArrayAdapter<String>(this, //context
+        ArrayAdapter <String> adapter = new ArrayAdapter<>(this, //context
                 R.layout.listofcreateddates, //layout to use (create)
                 interimDates);                //items to be displayed
         //configure listview
@@ -226,8 +214,8 @@ public class AssignmentsPreview extends Activity implements EasyPermissions.Perm
     }
 
     /**
-     * Shows a pop up message
-     * @param text the message to pop up
+     * Creates a toast to show to the user.
+     * @param text the String shown to the user
      */
     private void showToast (String text)
     {
@@ -235,22 +223,19 @@ public class AssignmentsPreview extends Activity implements EasyPermissions.Perm
     }
 
     /**
-     * Confirms the EventTask's addition to the calendar
-     * @param view the view the method is being used for
+     * brings the user back to the assignment class on button click
+     * @param view view
      */
-    public void goConfirm (View view)
-    {
-        getResultsFromApi();
-        showToast("Your Assignment Has Been Added.");
-        Intent confirm =  new Intent (AssignmentsPreview.this, CalendarScreen.class);
-        startActivity(confirm);
-    }
-
     public void goEdit (View view)
     {
         Intent confirm =  new Intent (AssignmentsPreview.this, Assignment.class);
         startActivity(confirm);
     }
+
+    /**
+     * Brings the user to the MainActivity activity and cancels the EventTask
+     * @param view the view the method is being used for
+     */
 
     public void goCancel (View view)
     {
@@ -271,7 +256,7 @@ public class AssignmentsPreview extends Activity implements EasyPermissions.Perm
         } else if (mCredential.getSelectedAccountName() == null) {
             chooseAccount();
         } else if (! isDeviceOnline()) {
-            mOutputText.setText("No network connection available.");
+            showToast("No network connection available.");
         } else {
             new AssignmentsPreview.MakeRequestTask3(mCredential).execute();
         }
@@ -329,7 +314,7 @@ public class AssignmentsPreview extends Activity implements EasyPermissions.Perm
         switch(requestCode) {
             case REQUEST_GOOGLE_PLAY_SERVICES:
                 if (resultCode != RESULT_OK) {
-                    mOutputText.setText(
+                    showToast(
                             "This app requires Google Play Services. Please install " +
                                     "Google Play Services on your device and relaunch this app.");
                 } else {
@@ -461,7 +446,7 @@ public class AssignmentsPreview extends Activity implements EasyPermissions.Perm
      * Placing the API calls in their own task ensures the UI stays responsive.
      */
     private class MakeRequestTask3 extends AsyncTask<Void, Void, List<String>> {
-        private com.google.api.services.calendar.Calendar mService = null;
+        private com.google.api.services.calendar.Calendar mService;
         private Exception mLastError = null;
 
         MakeRequestTask3(GoogleAccountCredential credential) {
@@ -497,64 +482,71 @@ public class AssignmentsPreview extends Activity implements EasyPermissions.Perm
         private ArrayList<String> addEvent() throws IOException {
 
             Event thingy = new Event()
-                    .setSummary("Google I/O 2018")
-                    .setLocation("800 Howard St., San Francisco, CA 94103")
-                    .setDescription("A chance to hear more about Google's developer products.");
-
-            DateTime startDateTime = new DateTime("2018-08-17T00:00:00.000-04:00");
-            EventDateTime s = new EventDateTime()
-                    .setDateTime(startDateTime)
-                    .setTimeZone("America/New_York");
-            thingy.setStart(s);
-
-            DateTime endDateTime = new DateTime("2018-08-17T00:00:00.000-04:00");
-            EventDateTime end = new EventDateTime()
-                    .setDateTime(endDateTime)
-                    .setTimeZone("America/New_York");
-            thingy.setEnd(end);
+                    .setSummary(name)
+                    .setDescription(name);
 
             EventReminder[] reminderOverrides = new EventReminder[] {
                     new EventReminder().setMethod("email").setMinutes(24 * 60),
                     new EventReminder().setMethod("popup").setMinutes(10),
             };
-            Event.Reminders reminders = new Event.Reminders()
-                    .setUseDefault(false)
-                    .setOverrides(Arrays.asList(reminderOverrides));
-            thingy.setReminders(reminders);
 
-            Event events = mService.events().insert("primary",thingy)
-                    .execute();
+            ArrayList<String> items = new ArrayList<>();
 
-            Log.d("Event success?" , (events.getHtmlLink()).toString());
+            for (int i = 0; i <interims.size(); i+=2)
 
-            ArrayList<String> items = new ArrayList <> ();
+            {
+                DateTime startDateTime = interims.get(i);
+                EventDateTime s = new EventDateTime()
+                        .setDateTime(startDateTime)
+                        .setTimeZone("America/New_York");
+                thingy.setStart(s);
+                DateTime endDateTime = interims.get(i+1);
+                EventDateTime end = new EventDateTime()
+                        .setDateTime(endDateTime)
+                        .setTimeZone("America/New_York");
+                thingy.setEnd(end);
 
-            String eventObj = events.getSummary().toString();
+                Event.Reminders reminders = new Event.Reminders()
+                        .setUseDefault(false)
+                        .setOverrides(Arrays.asList(reminderOverrides));
+                thingy.setReminders(reminders);
 
-            items.add(eventObj);
+                Event events = mService.events().insert("primary", thingy)
+                        .execute();
 
+                String eventObj = events.getSummary().toString();
+
+                items.add(eventObj);
+            }
             return items;
-
         }
 
-
+        /**
+         * before executing show progress
+         */
         @Override
         protected void onPreExecute() {
-            mOutputText.setText("");
             mProgress.show();
         }
 
+        /**
+         * After executing display success to user
+         * @param output output ArrayList to display success to user
+         */
         @Override
         protected void onPostExecute(List<String> output) {
             mProgress.hide();
             if (output == null || output.size() == 0) {
-                mOutputText.setText("No results returned.");
+                showToast("No results returned.");
             } else {
-                output.add(0, "Data retrieved using the Google Calendar API:");
-                mOutputText.setText(TextUtils.join("\n", output));
+                //output.add(0, "Data retrieved using the Google Calendar API:");
+                showToast("Your task was added to your Google Calendar:");
             }
         }
 
+        /**
+         * If the process is interrupted and cancelled by an error, tell the user in a pop-up
+         */
         @Override
         protected void onCancelled() {
             mProgress.hide();
@@ -568,11 +560,11 @@ public class AssignmentsPreview extends Activity implements EasyPermissions.Perm
                             ((UserRecoverableAuthIOException) mLastError).getIntent(),
                             MainActivity.REQUEST_AUTHORIZATION);
                 } else {
-                    mOutputText.setText("The following error occurred:\n"
+                    showToast("The following error occurred:\n"
                             + mLastError.getMessage());
                 }
             } else {
-                mOutputText.setText("Request cancelled.");
+                showToast("Request cancelled.");
             }
         }
     }

@@ -1,31 +1,15 @@
 package com.example.nag.productify;
 
-import android.accounts.Account;
 import android.annotation.TargetApi;
-import android.content.Intent;
+import android.util.Log;
 
-import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.util.DateTime;
-import com.google.api.services.calendar.Calendar;
-import com.google.api.services.calendar.model.Event;
-import com.google.api.services.calendar.model.EventDateTime;
-import com.google.api.services.calendar.model.EventReminder;
-import com.google.api.services.calendar.model.FreeBusyRequest;
-import com.google.api.services.calendar.model.FreeBusyResponse;
 
-import org.joda.time.Days;
-import org.joda.time.ReadableDuration;
+//import org.joda.time.Days;
+//import org.joda.time.ReadableDuration;
 
-import java.io.IOException;
 import java.io.Serializable;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.time.*;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.TimeZone;
 
 @TargetApi(26)
 
@@ -47,27 +31,19 @@ public class EventTask implements Serializable{
 	private int endHour;
 	private int endMinute;
 
-	private Boolean mon;
-	private Boolean tues;
-	private Boolean wed;
-	private Boolean thurs;
-	private Boolean fri;
-	private Boolean sat;
-	private Boolean sund;
+	private boolean mon;
+	private boolean tues;
+	private boolean wed;
+	private boolean thurs;
+	private boolean fri;
+	private boolean sat;
+	private boolean sund;
 
 	private String name;
 	private double predictedTime;
 
 	private DateTime dst;
 	private DateTime det;
-
-	/* Use later to take time zones into account
-	private TimeZone tz;
-	private ZoneId zi;
-
-	private ZonedDateTime zdst;
-	private ZonedDateTime zdet;
-	*/
 
 	/*
 	 * An empty constructor for an com.example.nag.productify.EventTask object.
@@ -100,20 +76,12 @@ public class EventTask implements Serializable{
 		dst = makeDST();
 		det = makeDET();
 
-		/* Use later to take time zones into account
-		tz = TimeZone.getDefault();
-		zi = tz.toZoneId();
-
-
-		zdst = ZonedDateTime.of(startYear, startMonth, startDay, startHour, startMinute, startSecond, startNanoSecond, zi);
-		zdet = ZonedDateTime.of(endYear, endMonth,endDay,endHour,endMinute,endSecond,endNanoSecond,zi);
-		*/
 	}
 
 	/*
 	 * An com.example.nag.productify.EventTask object;
 	 */
-	public EventTask(int sy, int sm, int sd, int sh, int smin, int ey, int em, int ed, int eh, int emin, String nm, double pred, Boolean mo, Boolean tu, Boolean we, Boolean th, Boolean fr, Boolean sa, Boolean su)
+	public EventTask(int sy, int sm, int sd, int sh, int smin, int ey, int em, int ed, int eh, int emin, String nm, double pred, boolean mo, boolean tu, boolean we, boolean th, boolean fr, boolean sa, boolean su)
 	{
 		startYear = sy;
 		startMonth = sm;
@@ -141,13 +109,6 @@ public class EventTask implements Serializable{
 		dst = makeDST();
 		det = makeDET();
 
-		/* Use in future to take time zones into account
-		tz = TimeZone.getDefault();
-		zi = tz.toZoneId();
-
-		zdst = ZonedDateTime.of(startYear, startMonth, startDay, startHour, startMinute, startSecond, startNanoSecond, zi);
-		zdet = ZonedDateTime.of(endYear, endMonth,endDay,endHour,endMinute,endSecond,endNanoSecond,zi);
-		*/
 	}
 
 	// ---------------SETTERS---------------
@@ -246,7 +207,7 @@ public class EventTask implements Serializable{
 	 * Determines if Monday is an available day
 	 * @param monday if true, means that Monday is available for working, if false, means that Monday is not available
 	 */
-	public void setMon(Boolean monday)
+	public void setMon(boolean monday)
 	{
 		mon = monday;
 	}
@@ -255,7 +216,7 @@ public class EventTask implements Serializable{
 	 * Determines if Tuesday is an available day
 	 * @param tuesday if true, means that Tuesday is available for working, if false, means that Tuesday is not available
 	 */
-	public void setTues(Boolean tuesday)
+	public void setTues(boolean tuesday)
 	{
 		tues = tuesday;
 	}
@@ -264,7 +225,7 @@ public class EventTask implements Serializable{
 	 * Determines if Wednesday is an available day
 	 * @param wednesday if true, means that Wednesday is available for working, if false, means that Wednesday is not available
 	 */
-	public void setWed(Boolean wednesday)
+	public void setWed(boolean wednesday)
 	{
 		wed = wednesday;
 	}
@@ -273,7 +234,7 @@ public class EventTask implements Serializable{
 	 * Determines if Thursday is an available day
 	 * @param thursday if true, means that Thursday is available for working, if false, means that Thursday is not available
 	 */
-	public void setThurs(Boolean thursday)
+	public void setThurs(boolean thursday)
 	{
 		thurs = thursday;
 	}
@@ -282,7 +243,7 @@ public class EventTask implements Serializable{
 	 * Determines if Friday is an available day
 	 * @param friday if true, means that Friday is available for working, if false, means that Friday is not available
 	 */
-	public void setFri(Boolean friday)
+	public void setFri(boolean friday)
 	{
 		fri = friday;
 	}
@@ -291,7 +252,7 @@ public class EventTask implements Serializable{
 	 * Determines if Saturday is an available day
 	 * @param saturday if true, means that Saturday is available for working, if false, means that Saturday is not available
 	 */
-	public void setSat(Boolean saturday)
+	public void setSat(boolean saturday)
 	{
 		sat = saturday;
 	}
@@ -300,7 +261,7 @@ public class EventTask implements Serializable{
 	 * Determines if Sunday is an available day
 	 * @param sunday if true, means that Sunday is available for working, if false, means that Sunday is not available
 	 */
-	public void setSun(Boolean sunday)
+	public void setSun(boolean sunday)
 	{
 		sund = sunday;
 	}
@@ -419,7 +380,7 @@ public class EventTask implements Serializable{
 	 * Gets the user's availability for Monday
 	 * @return the availability of Monday
 	 */
-	public Boolean getMon()
+	public boolean getMon()
 	{
 		return mon;
 	}
@@ -428,7 +389,7 @@ public class EventTask implements Serializable{
 	 * Gets the user's availability for Tuesday
 	 * @return the availability of Tuesday
 	 */
-	public Boolean getTues()
+	public boolean getTues()
 	{
 		return tues;
 	}
@@ -437,7 +398,7 @@ public class EventTask implements Serializable{
 	 * Gets the user's availability for Wednesday
 	 * @return the availability of Wednesday
 	 */
-	public Boolean getWed()
+	public boolean getWed()
 	{
 		return wed;
 	}
@@ -446,7 +407,7 @@ public class EventTask implements Serializable{
 	 * Gets the user's availability for Thursday
 	 * @return the availability of Thursday
 	 */
-	public Boolean getThurs()
+	public boolean getThurs()
 	{
 		return thurs;
 	}
@@ -455,7 +416,7 @@ public class EventTask implements Serializable{
 	 * Gets the user's availability for Friday
 	 * @return the availability of Friday
 	 */
-	public Boolean getFri()
+	public boolean getFri()
 	{
 		return fri;
 	}
@@ -464,7 +425,7 @@ public class EventTask implements Serializable{
 	 * Gets the user's availability for Saturday
 	 * @return the availability of Saturday
 	 */
-	public Boolean getSat()
+	public boolean getSat()
 	{
 		return sat;
 	}
@@ -473,10 +434,7 @@ public class EventTask implements Serializable{
 	 * Gets the user's availability for Sunday
 	 * @return the availability of Sunday
 	 */
-	public Boolean getSund()
-	{
-		return sund;
-	}
+	public boolean getSun() { return sund; }
 	/**
 	 * Gets the assignment's name
 	 * @return name of the com.example.nag.productify.EventTask
@@ -515,55 +473,55 @@ public class EventTask implements Serializable{
 
 	// ---------------FUNCTIONAL METHODS---------------
 
+	/**
+	 * Creates an arraylist of datetimes which contain the starting time and ending time of the interim due dates
+	 * @return an arraylist of datetimes which contain the starting time and ending time of the interim due dates
+	 */
 	public ArrayList<DateTime> createEventDates()
     {
-        ArrayList<DateTime> dateList = new ArrayList<DateTime>();
+		ArrayList<DateTime> dateList = new ArrayList<>();
 
-        int scheduledDays = getDaysBetween();
-        double eventLength = predictedTime / ((double) scheduledDays);
+		int scheduledDays = getDaysBetween();
+		Log.d("days between", scheduledDays + "");
+		double eventTime = ((double) predictedTime)/scheduledDays;
+		int hourLength = (int) eventTime;
+		int minuteLength = (int) ((double)(eventTime - hourLength)*60);
 
-        int hourLength = (int) eventLength;
-        int minuteLength = (int) (eventLength - ((int) eventLength)) * 60;
 
-        for(int j = getSY(); j == getSY(); j++)
-        {
-            int year = j;
-            for (int k = getSM(); k <= getEM(); k++) {
+		org.joda.time.DateTime start = new org.joda.time.DateTime(startYear, startMonth, startDay, startHour, startMinute, 0);
+		org.joda.time.DateTime end = new org.joda.time.DateTime(endYear,endMonth,endDay,endHour,endMinute,0);
 
-                int month = k;
+			for(org.joda.time.DateTime currentDate = start.plusDays(1); currentDate.isBefore(end); currentDate = currentDate.plusDays(1))
+			{
+				int year = currentDate.getYear();
+				int month = currentDate.getMonthOfYear();
+				int day = currentDate.getDayOfMonth();
 
-                for (int d = getSD() + 1; d < getED(); d++) {
+				int dayOfWeek = currentDate.getDayOfWeek();
 
-                    int day = d;
+				if (!mon && dayOfWeek == 1) {
 
-                    org.joda.time.DateTime checkDate = new org.joda.time.DateTime(year,month,day,0,0);
-                    int dayOfWeek = checkDate.getDayOfWeek();
+				} else if (!tues && dayOfWeek == 2) {
 
-                    if (!mon && dayOfWeek == 1) {
+				} else if (!wed && dayOfWeek == 3) {
 
-                    } else if (!tues && dayOfWeek == 2) {
+				} else if (!thurs && dayOfWeek == 4) {
 
-                    } else if (!wed && dayOfWeek == 3) {
+				} else if (!fri && dayOfWeek == 5) {
 
-                    } else if (!thurs && dayOfWeek == 4) {
+				} else if (!sat && dayOfWeek == 6) {
 
-                    } else if (!fri && dayOfWeek == 5) {
+				} else if (!sund && dayOfWeek == 7) {
 
-                    } else if (!sat && dayOfWeek == 6) {
+				} else {
+					DateTime beginTime = createDateTime(year, month, day, 8, 0);
+					DateTime endTime = createDateTime(year, month, day, hourLength + 8, minuteLength);
 
-                    } else if (!sund && dayOfWeek == 7) {
+					dateList.add(beginTime);
+					dateList.add(endTime);
 
-                    } else {
-                        DateTime beginTime = createDateTime(year, month, day, 0, 0);
-                        DateTime endTime = createDateTime(year, month, day, hourLength, minuteLength);
-
-                        dateList.add(beginTime);
-                        dateList.add(endTime);
-                    }
-                }
-            }
-
-        }
+				}
+			}
 
         if(getSY() != getEY()) {
 
@@ -607,231 +565,48 @@ public class EventTask implements Serializable{
         }
         return dateList;
     }
-    /**
-	 * Puts events into the Google Calendar.
-	 */
-	/*public ArrayList<String> createEvents() throws IOException {
-
-        int scheduledDays = getDaysBetween();
-        double eventLength = predictedTime / ((double) scheduledDays);
-
-        int hourLength = (int) eventLength;
-        int minuteLength = (int) (eventLength - ((int) eventLength)) * 60;
-
-        for (int j = getSY(); j <= getEY(); j++) {
-
-            int year = j;
-
-            for (int k = getSM(); k <= getEM(); k++) {
-
-                int month = k;
-
-                for (int d = getSD() + 1; d < getED(); d++) {
-
-                    int day = d;
-
-                    LocalDateTime checkDate = LocalDateTime.of(year, month, day, 0, 0);
-                    String dayOfWeek = checkDate.getDayOfWeek().toString();
-
-                    if (!mon && dayOfWeek == "MONDAY") {
-
-                    } else if (!tues && dayOfWeek == "TUESDAY") {
-
-                    } else if (!wed && dayOfWeek == "WEDNESDAY") {
-
-                    } else if (!thurs && dayOfWeek == "THURSDAY") {
-
-                    } else if (!fri && dayOfWeek == "FRIDAY") {
-
-                    } else if (!sat && dayOfWeek == "SATURDAY") {
-
-                    } else if (!sund && dayOfWeek == "SUNDAY") {
-
-                    } else {
-                        DateTime beginTime = createDateTime(year, month, day, 0, 0);
-                        DateTime endTime = createDateTime(year, month, day, hourLength, minuteLength);
-
-                        Event event = new Event();
-                        event.setSummary(name + "Assignment: " + month + "/" + day + "/" + year);
-
-                        EventDateTime start = new EventDateTime();
-                        start.setDateTime(beginTime);
-                        start.setTimeZone("America/New_York");
-                        event.setStart(start);
-
-                        EventDateTime finish = new EventDateTime();
-                        finish.setDateTime(endTime);
-                        finish.setTimeZone("America/New York");
-                        event.setEnd(finish);
-
-                        EventReminder[] reminderOverrides = new EventReminder[]{
-                                new EventReminder().setMethod("email").setMinutes(24 * 60),
-                                new EventReminder().setMethod("popup").setMinutes(10),
-                        };
-
-                        Event.Reminders reminders = new Event.Reminders()
-                                .setUseDefault(false)
-                                .setOverrides(Arrays.asList(reminderOverrides));
-                        event.setReminders(reminders);
-
-//                        Event events = mService.events().insert("primary", event)
-  //                              .execute();
-
-                        ArrayList<String> items = new ArrayList<>();
-
-    //                    String eventObj = events.getSummary().toString();
-
-       //                 items.add(eventObj);
-
-                    }
-                }
-            }
-        }
-    }*/
 
 	/**
 	 * Calculates the number of days from the state date to the end date
 	 * @return the number of days from the start date to the end date
 	 */
-	public int getDaysBetween()
-	{
-		org.joda.time.DateTime startD = new org.joda.time.DateTime(startYear, startMonth, startDay, startHour, startMinute);
-		org.joda.time.DateTime endD = new org.joda.time.DateTime(endYear, endMonth, endDay, endHour, endMinute);
+    private int getDaysBetween()
+    {
+        int scheduledDays = 0;
+        org.joda.time.DateTime start = new org.joda.time.DateTime(startYear, startMonth, startDay, startHour, startMinute);
+        org.joda.time.DateTime end = new org.joda.time.DateTime(endYear, endMonth, endDay, endHour, endMinute);
 
-		int totalDays = Days.daysBetween(startD, endD).getDays();
-		int removedDays = 0;
+        for (org.joda.time.DateTime currentDate = start.plusDays(1); currentDate.isBefore(end); currentDate = currentDate.plusDays(1)) {
+            int year = currentDate.getYear();
+            int month = currentDate.getMonthOfYear();
+            int day = currentDate.getDayOfMonth();
 
+            int dayOfWeek = currentDate.getDayOfWeek();
 
+            if (!mon && dayOfWeek == 1) {
 
-		for(org.joda.time.DateTime chosenDate = startD.plusDays(1); chosenDate.equals(endD.minusDays(1)); chosenDate = chosenDate.plusDays(1))
-		{
-			int weekDay = chosenDate.getDayOfWeek();
+            } else if (!tues && dayOfWeek == 2) {
 
-			if(!mon && weekDay == 1)
-			{
-				removedDays++;
-			}
-			if(!tues && weekDay == 2)
-			{
-				removedDays++;
-			}
-			if(!wed && weekDay == 3)
-			{
-				removedDays++;
-			}
-			if(!thurs && weekDay == 4)
-			{
-				removedDays++;
-			}
-			if(!fri && weekDay == 5)
-			{
-				removedDays++;
-			}
-			if(!sat && weekDay == 6)
-			{
-				removedDays++;
-			}
-			if(!sund && weekDay == 7)
-			{
-				removedDays++;
-			}
-		}
+            } else if (!wed && dayOfWeek == 3) {
 
-		return (totalDays - removedDays);
+            } else if (!thurs && dayOfWeek == 4) {
 
-	}
+            } else if (!fri && dayOfWeek == 5) {
 
-	/*public String checkIfFree(DateTime startTimeCheck, DateTime endTimeCheck)
-	{
-		FreeBusyRequest req = new FreeBusyRequest();
-		req.setTimeMin(startTimeCheck);
-		req.setTimeMax(endTimeCheck);
+            } else if (!sat && dayOfWeek == 6) {
 
-		Calendar.Freebusy.Query fbquery = client.freebusy().query(req);
+            } else if (!sund && dayOfWeek == 7) {
 
-		FreeBusyResponse fbresponse = fbquery.execute();
+            } else {
+                scheduledDays++;
 
-	}*/
+            }
+        }
 
-
+        return scheduledDays;
+    }
 
 	// ---------------HELPER METHODS---------------
-
-	/**
-	 * Creates a string containing the information of the assignment's start date
-	 * @return start date infoString of the com.example.nag.productify.EventTask
-	 */
-	/*private String makeInfoStringStart()
-	{
-		String infoString = startYear + "-";
-		if(startMonth < 10)
-		{
-			infoString += "0" + startMonth + "-";
-		}
-		else
-			infoString += startMonth + "-";
-
-		if(startDay < 10)
-		{
-			infoString += "0" + startDay + "T";
-		}
-		else
-			infoString += startDay + "T";
-
-		if(startHour < 10)
-		{
-			infoString += "0" + startHour + ":";
-		}
-		else
-			infoString += startHour + ":";
-
-		if(startMinute < 10)
-		{
-			infoString += "0" + startMinute + ":00.00Z";
-		}
-		else
-			infoString += startMinute + ":00.00Z";
-
-		return infoString;
-	}*/
-
-	/**
-	 * Creates a string containing the information of the assignment's end date
-	 * @return end date infoString of the com.example.nag.productify.EventTask
-	 */
-	/*private String makeInfoStringEnd()
-	{
-		String infoString = endYear + "-";
-		if(endMonth < 10)
-		{
-			infoString += "0" + endMonth + "-";
-		}
-		else
-			infoString += endMonth + "-";
-
-		if(endDay < 10)
-		{
-			infoString += "0" + endDay + "T";
-		}
-		else
-			infoString += endDay + "T";
-
-		if(endHour < 10)
-		{
-			infoString += "0" + endHour + ":";
-		}
-		else
-			infoString += endHour + ":";
-
-		if(endMinute < 10)
-		{
-			infoString += "0" + endMinute + ":00.00Z";
-		}
-		else
-			infoString += endMinute + ":00.00Z";
-
-		return infoString;
-	}*/
 
     /**
      * Creates a DateTime to be used in the arraylist of Events
@@ -870,7 +645,6 @@ public class EventTask implements Serializable{
             minuteStr = minute + ":00-04:00";
 
         DateTime DT = new DateTime(yearStr + monthStr + dayStr + hourStr + minuteStr);
-        ///DateTime DT = new DateTime(year+"-"+month+"-"+day+"T"+hour+":"+minute+":00-04:00");
         return DT;
     }
 
@@ -880,11 +654,6 @@ public class EventTask implements Serializable{
 	 */
 	private DateTime makeDST()
 	{
-		//String infoString = makeInfoStringStart();
-		//DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-
-		//DateTime DST = DateTime.parseRfc3339(infoString);
-
         String monthStr;
         String dayStr;
         String hourStr;
@@ -925,10 +694,6 @@ public class EventTask implements Serializable{
      */
     private DateTime makeDET()
     {
-        //String infoString = makeInfoStringEnd();
-        //DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-
-        //DateTime DET = DateTime.parseRfc3339(infoString);
         String monthStr;
         String dayStr;
         String hourStr;
@@ -963,17 +728,5 @@ public class EventTask implements Serializable{
 
         return DET;
     }
-
-	/* Use in future to take time zones into account
-	public ZonedDateTime getZDST()
-	{
-		return zdst;
-	}
-
-	public ZonedDateTime getZDET()
-	{
-		return zdet;
-	}
-	*/
 
 }

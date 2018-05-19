@@ -1,16 +1,14 @@
+/**
+ * Allows a user to sign in to his/her Google account, access his/her calendar, and create EventTask objects
+ * Code adapted from https://developers.google.com/calendar/quickstart/android
+ */
 package com.example.nag.productify;
-
-//used google calendar tutorials on google calendar api website
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.tasks.OnCompleteListener;
-
-import com.google.android.gms.tasks.Task;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException;
@@ -24,7 +22,6 @@ import com.google.api.client.util.ExponentialBackOff;
 import com.google.api.services.calendar.CalendarScopes;
 import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.model.*;
-import com.google.api.services.calendar.Calendar;
 
 import android.Manifest;
 import android.accounts.AccountManager;
@@ -36,9 +33,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -67,7 +62,7 @@ public class MainActivity extends Activity implements EasyPermissions.Permission
 
 
     /**
-     * Create the main activity.
+     * Instantiate the main activity.
      * @param savedInstanceState previously saved instance data.
      */
     @Override
@@ -75,9 +70,9 @@ public class MainActivity extends Activity implements EasyPermissions.Permission
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        newAssignBut = (Button) findViewById(R.id.newAssignBut);
-        calendarBut = (Button) findViewById(R.id.calendarBut);
-        integrateCalendarBut = (Button) findViewById(R.id.integrateCalendarBut);
+        newAssignBut = findViewById(R.id.newAssignBut);
+        calendarBut = findViewById(R.id.calendarBut);
+        integrateCalendarBut = findViewById(R.id.integrateCalendarBut);
 
         integrateCalendarBut.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,8 +82,6 @@ public class MainActivity extends Activity implements EasyPermissions.Permission
                 integrateCalendarBut.setEnabled(true);
             }
         });
-        
-
 
         mProgress = new ProgressDialog(this);
         mProgress.setMessage("Calling Google CalendarScreen API ...");
@@ -97,17 +90,36 @@ public class MainActivity extends Activity implements EasyPermissions.Permission
         mCredential = GoogleAccountCredential.usingOAuth2(
                 getApplicationContext(), Arrays.asList(SCOPES))
                 .setBackOff(new ExponentialBackOff());
-
-    /*    // Initialize Calendar service with valid OAuth credentials
-        Calendar service = new Calendar.Builder(httpTransport, jsonFactory, credentials)
-                .setApplicationName("applicationName").build();
-
-        // Retrieve the calendar
-        com.google.api.services.calendar.model.Calendar calendar =
-                service.calendars().get('primary').execute(); */
-
     }
 
+    /**
+     * Creates a pop-up message and displays to user
+     * @param text the message to be displayed
+     */
+    private void showToast (String text)
+    {
+        Toast.makeText(MainActivity.this,text,Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * Sends the user to new assignment activity on button click
+     * @param view view
+     */
+    public void newAssign (View view)
+    {
+        Intent assign = new Intent (MainActivity.this,Assignment.class);
+        startActivity(assign);
+    }
+
+    /**
+     * Sends the user to calendar screen activity on button click
+     * @param view view
+     */
+    public void goToCalendar (View view)
+    {
+        Intent calendar = new Intent (MainActivity.this,CalendarScreen.class);
+        startActivity(calendar);
+    }
 
     /**
      * Attempt to call the API, after verifying that all the preconditions are
@@ -116,24 +128,6 @@ public class MainActivity extends Activity implements EasyPermissions.Permission
      * of the preconditions are not satisfied, the app will prompt the user as
      * appropriate.
      */
-
-    private void showToast (String text)
-    {
-        Toast.makeText(MainActivity.this,text,Toast.LENGTH_SHORT).show();
-    }
-
-    public void newAssign (View view)
-    {
-        Intent assign = new Intent (MainActivity.this,Assignment.class);
-        startActivity(assign);
-    }
-
-    public void goToCalendar (View view)
-    {
-        Intent calendar = new Intent (MainActivity.this,CalendarScreen.class);
-        startActivity(calendar);
-    }
-
     private void getResultsFromApi() {
         if (! isGooglePlayServicesAvailable()) {
             acquireGooglePlayServices();
@@ -308,7 +302,6 @@ public class MainActivity extends Activity implements EasyPermissions.Permission
         }
     }
 
-
     /**
      * Display an error dialog showing that Google Play Services is missing
      * or out of date.
@@ -360,15 +353,15 @@ public class MainActivity extends Activity implements EasyPermissions.Permission
         /**
          * Fetch a list of the next 10 events from the primary calendar.
          * @return List of Strings describing returned events.
-         * @throws IOException
+         * @throws IOException the input output exception
          */
         private List<String> getDataFromApi() throws IOException {
 
             DateTime now = new DateTime(System.currentTimeMillis());
             DateTime endhours = new DateTime ((System.currentTimeMillis() / (1000*60*60*24)+1)*(1000*60*60*24*7)+14400000); //mult second part by number of days
-            List<String> eventStrings = new ArrayList<String>();
+            List<String> eventStrings = new ArrayList<>();
             Events events = mService.events().list("primary")
-                    .setTimeMax(endhours)     //returns data events
+                    .setTimeMax(endhours)
                     .setTimeMin(now)
                     .setOrderBy("startTime")
                     .setSingleEvents(true)
@@ -377,11 +370,10 @@ public class MainActivity extends Activity implements EasyPermissions.Permission
 
             for (Event event : items) {
                 DateTime start = event.getStart().getDateTime();
-                if (start == null) {
-                    // /All-day events don't have start times, so just use
-                    // the start date.
-                    start = event.getStart().getDate();
-                }
+                if (start == null)
+                    {
+                        start = event.getStart().getDate();
+                    }
                 eventStrings.add(
                         String.format("%s (%s)", event.getSummary(), start));
             }
@@ -389,13 +381,17 @@ public class MainActivity extends Activity implements EasyPermissions.Permission
         }
 
         /**
-         *
+         * before executing show progress
          */
         @Override
         protected void onPreExecute() {
             mProgress.show();
         }
 
+        /**
+         * After executing
+         * @param output output ArrayList to display success to user
+         */
         @Override
         protected void onPostExecute(List<String> output) {
             mProgress.hide();
@@ -406,6 +402,9 @@ public class MainActivity extends Activity implements EasyPermissions.Permission
             }
         }
 
+        /**
+         * If the process is cancelled, tell the user in a pop-up
+         */
         @Override
         protected void onCancelled() {
             mProgress.hide();

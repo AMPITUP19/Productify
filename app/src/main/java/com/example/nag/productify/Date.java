@@ -1,6 +1,5 @@
 package com.example.nag.productify;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 
@@ -32,20 +31,11 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.text.method.ScrollingMovementMethod;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -56,8 +46,7 @@ import pub.devrel.easypermissions.EasyPermissions;
 public class Date extends Activity implements EasyPermissions.PermissionCallbacks
 {
     GoogleAccountCredential mCredential;
-    private TextView mOutputText, currentYearText, currentMonthText, currentDayText, dayOfWeekText;
-    private Button mCallApiButton;
+    private TextView mOutputText;
     ProgressDialog mProgress;
 
     static final int REQUEST_ACCOUNT_PICKER = 1000;
@@ -65,12 +54,15 @@ public class Date extends Activity implements EasyPermissions.PermissionCallback
     static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
     static final int REQUEST_PERMISSION_GET_ACCOUNTS = 1003;
 
-    private static final String BUTTON_TEXT = "Call Google Calendar API";
     private static final String PREF_ACCOUNT_NAME = "accountName";
     private static final String[] SCOPES = { CalendarScopes.CALENDAR_READONLY };
 
     private int monthint, year, day;
 
+    /**
+     * Instantiates the Date activity
+     * @param savedInstanceState previously saved app state
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,7 +73,7 @@ public class Date extends Activity implements EasyPermissions.PermissionCallback
          year  = bundle.getInt("year");
          day = bundle.getInt("day");
 
-        String month = "";
+        String month;
         switch (monthint) {
             case 1:  month = "January";
                 break;
@@ -113,17 +105,17 @@ public class Date extends Activity implements EasyPermissions.PermissionCallback
 
         String dayofweek = bundle.getString("dayofweek");
 
-        currentDayText = findViewById(R.id.currentDayText);
-        currentMonthText = findViewById(R.id.currentMonthText);
-        currentYearText = findViewById(R.id.currentYearText);
-        dayOfWeekText = findViewById(R.id.dayOfWeekText);
+        TextView currentDayText = findViewById(R.id.currentDayText);
+        TextView currentMonthText = findViewById(R.id.currentMonthText);
+        TextView currentYearText = findViewById(R.id.currentYearText);
+        TextView dayOfWeekText = findViewById(R.id.dayOfWeekText);
 
         currentDayText.setText(""+day);
         currentMonthText.setText(month);
         currentYearText.setText(""+year);
         dayOfWeekText.setText(dayofweek);
 
-        mOutputText = (TextView) findViewById(R.id.mOutputText);
+        mOutputText = findViewById(R.id.mOutputText);
 
         mProgress = new ProgressDialog(this);
         mProgress.setMessage("Calling Google Calendar API ...");
@@ -138,7 +130,7 @@ public class Date extends Activity implements EasyPermissions.PermissionCallback
 
     /**
      * Upon button click, user is returned to the main screen
-     * @param view
+     * @param view view
      */
     public void goMain (View view)
     {
@@ -147,6 +139,26 @@ public class Date extends Activity implements EasyPermissions.PermissionCallback
         startActivity(i);
     }
 
+    /**
+     * Upon button click, user is returned to the calendar screen
+     * @param view view
+     */
+    public void goCalendar (View view)
+    {
+        Intent i = new Intent(Date.this, CalendarScreen.class);
+
+        startActivity(i);
+    }
+
+    /**
+     * Creates a datetime object with the parameters
+     * @param year the year of the datetime object
+     * @param month the month of the datetime object
+     * @param day the day of the datetime object
+     * @param hour the hour for the datetime object
+     * @param minute the minite for the date time object
+     * @return returns a datetime object
+     */
     private DateTime createDateTime(int year, int month, int day, int hour, int minute)
     {
         String monthStr;
@@ -326,7 +338,6 @@ public class Date extends Activity implements EasyPermissions.PermissionCallback
     public void onPermissionsDenied(int requestCode, List<String> list) {
         // Do nothing.
     }
-
     /**
      * Checks whether the device currently has a network connection.
      * @return true if the device has a network connection, false otherwise.
@@ -365,7 +376,6 @@ public class Date extends Activity implements EasyPermissions.PermissionCallback
         }
     }
 
-
     /**
      * Display an error dialog showing that Google Play Services is missing
      * or out of date.
@@ -387,7 +397,7 @@ public class Date extends Activity implements EasyPermissions.PermissionCallback
      * Placing the API calls in their own task ensures the UI stays responsive.
      */
     private class MakeRequestTask2 extends AsyncTask<Void, Void, List<String>> {
-        private com.google.api.services.calendar.Calendar mService = null;
+        private com.google.api.services.calendar.Calendar mService;
         private Exception mLastError = null;
 
         MakeRequestTask2(GoogleAccountCredential credential) {
@@ -417,16 +427,12 @@ public class Date extends Activity implements EasyPermissions.PermissionCallback
         /**
          * Fetch a list of the next 10 events from the primary calendar.
          * @return List of Strings describing returned events.
-         * @throws IOException
+         * @throws IOException input output exception
          */
         private List<String> getDataFromApi() throws IOException {
-
             DateTime beginTime = createDateTime(year, monthint, day, 0, 0);
-          ///  DateTime now = new DateTime(System.currentTimeMillis());
             DateTime endTime = createDateTime(year, monthint, day+1, 0, 0);
-            //DateTime endhours = new DateTime ((System.currentTimeMillis() /
-            //        (1000*60*60*24)+1)*(1000*60*60*24*20)+14400000); //mult second part by number of days
-            List<String> eventStrings = new ArrayList<String>();
+            List<String> eventStrings = new ArrayList<>();
             Events events = mService.events().list("primary")
                     .setTimeMax(endTime)     //returns data events
                     .setTimeMin(beginTime)
@@ -437,26 +443,33 @@ public class Date extends Activity implements EasyPermissions.PermissionCallback
 
             for (Event event : items) {
                 DateTime start = event.getStart().getDateTime();
+                DateTime end  = event.getEnd().getDateTime();
                 if (start == null) {
-                    // All-day events don't have start times, so just use
-                    // the start date.
                     start = event.getStart().getDate();
+                    end = event.getEnd().getDate();
                 }
                 eventStrings.add(
-                        String.format("%s (%s)", event.getSummary(), start));   //change format to return what you want
-                //"description", "location", "start", "end" or "recurrence" are the parts of summary, in date time objects
-                //try pull substrings of this then display on calendar
+                        (event.getSummary() + " from " +
+                                start.toString().substring(11,13) + ":" + start.toString()
+                                .substring(14,16) + " to " + end.toString().substring(11,13)
+                + ":" + end.toString().substring(14,16)));
             }
-            return eventStrings; //returns arraylists,
+            return eventStrings;
         }
 
-
+        /**
+         * before executing show progress
+         */
         @Override
         protected void onPreExecute() {
             mOutputText.setText("");
             mProgress.show();
         }
 
+        /**
+         * After executing display success to user
+         * @param output output ArrayList to display success to user
+         */
         @Override
         protected void onPostExecute(List<String> output) {
             mProgress.hide();
@@ -468,8 +481,7 @@ public class Date extends Activity implements EasyPermissions.PermissionCallback
         }
 
         /**
-         *
-         *
+         * If the process is cancelled, tell the user in a pop-up
          */
         @Override
         protected void onCancelled() {

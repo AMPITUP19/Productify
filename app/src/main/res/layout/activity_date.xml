@@ -9,13 +9,30 @@
     android:orientation="vertical"
     android:gravity="center">
 
-    <Button
-        android:id="@+id/returnHomebut"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/returnHome"
-        android:textSize="20sp"
-        android:onClick="goMain"/>
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/backtocalendarBut"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/calendargo"
+            android:textSize="20sp"
+            android:onClick="goCalendar"/>
+
+        <Button
+            android:id="@+id/returnHomebut"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="goMain"
+            android:text="@string/returnHome"
+            android:textSize="20sp" />
+    </LinearLayout>
+
     <!-- /-->
     <TextView
         android:id="@+id/currentYearText"

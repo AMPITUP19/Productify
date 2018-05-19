@@ -26,6 +26,7 @@
     <string name="confirm"> Confirm</string>
     <string name="assignmentName"> Elevens Solitaire</string>
     <string name="accesscalendar">Access Calendar</string>
+    <string name="calendargo">Back to Calendar</string>
     <string name="timesToWorkText"> Times To Work (Scroll to see all)</string>
     <string name="preview">Preview</string>
     <string name="returnHome"> Return to Home</string>
@@ -49,7 +50,7 @@
     <string name="assignYear">Year</string>
     <string name="assignMonth">Month</string>
     <string name="assignDay">Day</string>
-    <string name="assignHour">Hour (0-24)</string>
+    <string name="assignHour">Hour (0-23)</string>
     <string name="assignMinute">Minute</string>
     <string name="start">Start Date</string>
     <string name="heading">Home</string>

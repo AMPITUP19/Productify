@@ -1,9 +1,11 @@
+/**
+ * Shows the user's calendar
+ */
 package com.example.nag.productify;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -18,9 +20,8 @@ public class CalendarScreen extends Activity {
     CalendarView mCalendarView;
 
     /**
-     *
-     *
-     * @param savedInstanceState
+     *Instantiates the Calendar Screen Activity
+     *@param savedInstanceState saved instance of the app
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,9 +36,6 @@ public class CalendarScreen extends Activity {
             public void onSelectedDayChange(@NonNull CalendarView calendarView, int i, int i1, int i2) {
 
                 Log.d("methodCheck", "IT WORKS");
-                //i is year
-                //i1 is month where January is 0
-                //i2 is day/
                 mCalendarView.getDate();
                 int monthint = i1+1;
 
@@ -82,6 +80,10 @@ public class CalendarScreen extends Activity {
 
     }
 
+    /**
+     * On button click, redirects user to Main Activity
+     * @param view view
+     */
     public void goHome(View view)
     {
         Intent home = new Intent (CalendarScreen.this, MainActivity.class);

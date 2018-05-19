@@ -1,27 +1,22 @@
+/**
+ * Creates class Assignment which input the variables below and creates an EventTask object
+ */
 package com.example.nag.productify;
 
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.app.usage.UsageEvents;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CheckedTextView;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.api.services.calendar.model.Event;
-
-import org.w3c.dom.Text;
-
 import java.util.Calendar;
 
 public class Assignment extends Activity {
@@ -33,8 +28,8 @@ public class Assignment extends Activity {
     Boolean mon, tues, wed, thurs, fri, sat, sun;
 
     /**
-     *
-     * @param savedInstanceState
+     * Instantiates the Assignment activity
+     * @param savedInstanceState the saved instance of the activity
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,26 +63,17 @@ public class Assignment extends Activity {
         assignmentDueMinute =  findViewById(R.id.assignmentDueMinute);
         assignmentLength = findViewById(R.id.assignmentLength);
 
-       final CheckBox checkMon = linearlayoutview1.findViewById(R.id.checkMon);
-
-       if (checkMon==null)
-       {
-           Log.d("CheckBox issue", "Mon is null");
-       }
-
-        checkMon.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        checkMon = linearlayoutview1.findViewById(R.id.checkMon);
+        checkMon.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
+        {
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b)
+            {
                 mon = b;
             }
         });
 
-
-        final CheckBox checkTues = linearlayoutview1.findViewById(R.id.checkTues);
-        if (checkTues==null)
-        {
-            Log.d("CheckBox issue", "Tues is null");
-        }
+        checkTues = linearlayoutview1.findViewById(R.id.checkTues);
         checkTues.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -95,11 +81,7 @@ public class Assignment extends Activity {
             }
         });
 
-        final CheckBox checkWed = linearlayoutview2.findViewById(R.id.checkWed);
-        if (checkWed==null)
-        {
-            Log.d("CheckBox issue", "Wed is null");
-        }
+        checkWed = linearlayoutview2.findViewById(R.id.checkWed);
         checkWed.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -107,23 +89,14 @@ public class Assignment extends Activity {
             }
         });
 
-        final  CheckBox checkThurs = linearlayoutview2.findViewById(R.id.checkThurs);
-        if (checkThurs==null)
-        {
-            Log.d("CheckBox issue", "Thurs is null");
-        }
+        checkThurs = linearlayoutview2.findViewById(R.id.checkThurs);
         checkThurs.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                thurs = b;
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) { thurs = b;
             }
         });
 
-        final CheckBox checkFri = linearlayoutview3.findViewById(R.id.checkFri);
-        if (checkFri==null)
-        {
-            Log.d("CheckBox issue", "Fri is null");
-        }
+        checkFri = linearlayoutview3.findViewById(R.id.checkFri);
         checkFri.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -131,42 +104,36 @@ public class Assignment extends Activity {
             }
         });
 
-        final CheckBox checkSat = linearlayoutview3.findViewById(R.id.checkSat);
-        if (checkSat==null)
-        {
-            Log.d("CheckBox issue", "Sat is null");
-        }
+        checkSat = linearlayoutview3.findViewById(R.id.checkSat);
         checkSat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 sat = b;
             }
         });
-        final CheckBox checkSun = findViewById(R.id.checkSun);
-        if (checkSun==null)
-        {
-            Log.d("CheckBox issue", "Sun is null");
-        }
-           checkSun.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-               @Override
-               public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                  sun = b;
-               }
-           });
 
-
+        checkSun = linearlayoutview3.findViewById(R.id.checkSun);
+        checkSun.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                sun = b;
+            }
+        });
     }
 
     /**
-     * Shows a pop up message
-     * @param text the message to pop up
+     * Creates a toast to show to the user.
+     * @param text the String shown to the user
      */
     private void showToast (String text)
-    {
-        Toast.makeText(Assignment.this,text,Toast.LENGTH_SHORT).show();
-    }
+        {
+            Toast.makeText(Assignment.this,text,Toast.LENGTH_SHORT).show();
+        }
 
-
+    /**
+     * Creates an EventTask object from user's input values
+     * @param view the view the method is being used for
+     */
     public void create (View view)
     {
         if (assignmentName.getText().toString().isEmpty()||assignmentDueYear.getText().toString().isEmpty()||assignmentDueMonth
@@ -180,7 +147,8 @@ public class Assignment extends Activity {
         }
         else
         {
-            if (mon == true || tues ==true || wed==true || thurs ==true || fri ==true || sat==true ||sun ==true )
+            if (checkMon.isChecked() || checkTues.isChecked() ||checkWed.isChecked() ||checkThurs.isChecked()
+                    ||checkFri.isChecked() || checkSat.isChecked() || checkSun.isChecked())
             {
                 String name = assignmentName.getText().toString();
 
@@ -198,80 +166,108 @@ public class Assignment extends Activity {
 
                 Double predicted = Double.parseDouble(assignmentLength.getText().toString());
 
-                Boolean monday = true; //checkMon.isChecked();
-                Boolean tuesday = true; //checkTues.isChecked();
-                Boolean wednesday = true; //checkWed.isChecked();
-                Boolean thursday = true; //checkThurs.isChecked();
-                Boolean friday = true; //checkFri.isChecked();
-                Boolean saturday = true; //checkSat.isChecked();
-                Boolean sunday = true; //checkSun.isChecked();
+                Boolean monday = (checkMon.isChecked());
+                Boolean tuesday = (checkTues.isChecked());
+                Boolean wednesday = (checkWed.isChecked());
+                Boolean thursday =(checkThurs.isChecked());
+                Boolean friday = (checkFri.isChecked());
+                Boolean saturday =  (checkSat.isChecked());
+                Boolean sunday =(checkSun.isChecked());
 
-                //EventTask event  =  new EventTask (syear, smonth, sday, shour, sminute, dyear, dmonth, dday, dhour, dminute, name, predicted, monday, tuesday, wednesday, thursday, friday, saturday, sunday);
+                if ((dmonth<13 && dmonth > 0) && (smonth < 13 && smonth > 0))
+                    {
+                        if (sday == dday -1 && smonth == dmonth)
+                        {
+                         showToast("Your assignment is due tomorrow. Just do it all now.");
+                        }
 
-                Intent intent = new Intent (Assignment.this, AssignmentsPreview.class);
-                Bundle bundle  =  new Bundle();
-                bundle.putString("nm",name);
-                bundle.putInt("sy",syear);
-                bundle.putInt("sm",smonth);
-                bundle.putInt("sd",sday);
-                bundle.putInt("sh",shour);
-                bundle.putInt("smin",sminute);
-                bundle.putInt("dy",dyear);
-                bundle.putInt("dm",dmonth);
-                bundle.putInt("dd",dday);
-                bundle.putInt("dh",dhour);
-                bundle.putInt("dmin",dminute);
-                bundle.putDouble("pred",predicted);
-                bundle.putBoolean("mo",monday);
-                bundle.putBoolean("tu",tuesday);
-                bundle.putBoolean("we",wednesday);
-                bundle.putBoolean("th",thursday);
-                bundle.putBoolean("fr",friday);
-                bundle.putBoolean("sa",saturday);
-                bundle.putBoolean("su",sunday);
+                        else
+                        {
+                            if (shour < 23 && shour>= 0 && dhour >= 0 && dhour < 23 && dminute >= 0 && dminute < 60 && sminute >= 0 && sminute < 60)
+                            {
+                                if (((dmonth == 4 || dmonth == 6 || dmonth == 9 || dmonth == 11 || smonth == 4
+                                        || smonth == 6 || smonth == 9 || smonth == 11) && (dday > 31 || sday > 31 || dday < 0 || sday < 0))
+                                        || ((dmonth == 1 || dmonth == 3 || dmonth == 5 || dmonth == 7 || dmonth == 8 || dmonth == 10
+                                        || dmonth == 12 || smonth == 1 || smonth == 3 || smonth == 5 || smonth == 7 || smonth == 8 || smonth == 10
+                                        || smonth == 12) && (dday > 32 || dday < 0 || sday < 0 || sday > 32)) || ((dmonth == 2 || smonth == 2) &&
+                                        (sday > 29 || sday < 0 || dday > 29 || dday < 0))) //need to check days depending on month
+                                {
 
-                intent.putExtras(bundle);
-                //startActivity(intent);
+                                    showToast("Please review the dates you have selected. That date does not exist.");
+                                }
+                                else {
+                                    Intent intent = new Intent(Assignment.this, AssignmentsPreview.class);
+                                    Bundle bundle = new Bundle();
+                                    bundle.putString("nm", name);
+                                    bundle.putInt("sy", syear);
+                                    bundle.putInt("sm", smonth);
+                                    bundle.putInt("sd", sday);
+                                    bundle.putInt("sh", shour);
+                                    bundle.putInt("smin", sminute);
+                                    bundle.putInt("dy", dyear);
+                                    bundle.putInt("dm", dmonth);
+                                    bundle.putInt("dd", dday);
+                                    bundle.putInt("dh", dhour);
+                                    bundle.putInt("dmin", dminute);
+                                    bundle.putDouble("pred", predicted);
+                                    bundle.putBoolean("mo", monday);
+                                    bundle.putBoolean("tu", tuesday);
+                                    bundle.putBoolean("we", wednesday);
+                                    bundle.putBoolean("th", thursday);
+                                    bundle.putBoolean("fr", friday);
+                                    bundle.putBoolean("sa", saturday);
+                                    bundle.putBoolean("su", sunday);
 
-                Calendar calendar = Calendar.getInstance();
+                                    intent.putExtras(bundle);
 
-                calendar.set(Calendar.HOUR_OF_DAY,dhour );
-                calendar.set(Calendar.MINUTE,dminute);
-                calendar.set(Calendar.DAY_OF_MONTH,dday);
-                calendar.set(Calendar.MONTH,dmonth);
-                calendar.set(Calendar.YEAR,dyear);
+                                    Calendar calendar = Calendar.getInstance();
 
-                Intent intent1 =  new Intent(getApplicationContext(),NotificationReceiver.class);
+                                    calendar.set(Calendar.HOUR_OF_DAY, dhour);
+                                    calendar.set(Calendar.MINUTE, dminute);
+                                    calendar.set(Calendar.DAY_OF_MONTH, dday);
+                                    calendar.set(Calendar.MONTH, dmonth);
+                                    calendar.set(Calendar.YEAR, dyear);
 
-                PendingIntent pendingIntent =  PendingIntent.getBroadcast(getApplicationContext(), 100, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
+                                    Intent intent1 = new Intent(getApplicationContext(), NotificationReceiver.class);
 
-                AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+                                    PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 100, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
 
-                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),AlarmManager.INTERVAL_DAY, pendingIntent);
+                                    AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
-               // intent.putExtra("event", event); */
+                                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
 
-                if (intent == null)
-                {
-                    Log.d("Intent error", "the intent is empty");
-                }
+                                    startActivity(intent);
+                                }
+
+                            }
+                            else
+                                {
+                                    showToast("You have inputted an invalid start and/or due date time of day.");
+                                }
+                        }
+
+                    }
+
                 else
-                {
-                    Log.d("Intent no error", "well at least something is in there");
-                }
+                    {
+                       showToast("Please check that your start and end months are between 1 and 12.");
+                    }
 
-                startActivity(intent);
             }
             else
-            {
-               showToast ("Please select at least one day to work.");
-            }
+                {
+                   showToast ("Please select at least one day to work.");
+                }
         }
     }
 
+    /**
+     * Sends the user to the Calendar screen when button is clicked
+     * @param view view
+     */
     public void goToExist (View view)
-    {
-        Intent exist  = new Intent (Assignment.this, CalendarScreen.class);
-        startActivity(exist);
-    }
+        {
+            Intent exist  = new Intent (Assignment.this, CalendarScreen.class);
+            startActivity(exist);
+        }
 }

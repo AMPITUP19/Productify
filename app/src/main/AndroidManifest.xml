@@ -31,11 +31,14 @@
         <activity
             android:name=".CalendarScreen"
             android:label="Productify" />
-        <activity android:name=".Date" />
+        <activity
+            android:name=".Date"
+            android:label="Productify"/>
 
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
+        <receiver android:name=".NotificationReceiver"/>
 
     </application>
 

@@ -334,17 +334,17 @@
                 android:text="@string/sat"
                 android:textSize="25sp"
                 android:checked="false"/>
-        </LinearLayout>
 
-        <CheckBox
-            android:id="@+id/checkSun"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:fontFamily="@font/advent_pro_semibold"
-            android:text="@string/sun"
-            android:textSize="25sp"
-            android:checked="false"/>
+            <CheckBox
+                android:id="@+id/checkSun"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:checked="false"
+                android:fontFamily="@font/advent_pro_semibold"
+                android:text="@string/sun"
+                android:textSize="25sp" />
+        </LinearLayout>
 
         <LinearLayout
 
